@@ -461,7 +461,11 @@ def test_local_fast_and_standard_prepush_align_with_ci_core_gates() -> None:
     )
     assert "check_upstream_verification_freshness.py" not in local_quality_gate
     assert "check_upstream_receipts.py" not in local_quality_gate
-    assert "check_gate_log_correlation.py" not in local_quality_gate
+    _assert_contains(
+        local_quality_gate,
+        "check_gate_log_correlation.py",
+        "local gate log correlation guard",
+    )
 
 
 def test_local_fast_skips_unrelated_python_and_frontend_work() -> None:

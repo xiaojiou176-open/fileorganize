@@ -351,6 +351,7 @@ run_fast() {
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
+  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   run_parallel_step test-quality bash "$ROOT/gates/test_quality_gate.sh"
 
@@ -476,6 +477,7 @@ run_prepush_lite() {
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
+  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   wait_parallel_steps
   run_step runtime-layout "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_runtime_layout.py" --root "$REPO_ROOT"
