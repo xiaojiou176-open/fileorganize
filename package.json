@@ -1,0 +1,49 @@
+{
+  "name": "movi-organizer",
+  "description": "Review-first local AI file organizer with stdio-first MCP for Codex and Claude Code",
+  "private": true,
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "overrides": {
+    "flatted": "3.4.2"
+  },
+  "scripts": {
+    "dev:stack": "bash tooling/runtime/run_web_stack.sh --mode local",
+    "dev:stack:compose": "bash tooling/runtime/run_web_stack.sh --mode compose",
+    "dev:stack:compose:detached": "bash tooling/runtime/run_web_stack.sh --mode compose --detach",
+    "dev:stack:compose:down": "bash tooling/runtime/run_web_stack.sh --mode compose --action down",
+    "dev": "bash tooling/runtime/run_webui.sh",
+    "mcp:stdio": "bash tooling/runtime/run_mcp_stdio.sh",
+    "mcp:tools": "bash tooling/runtime/run_mcp_stdio.sh --print-tools",
+    "mcp:resources": "bash tooling/runtime/run_mcp_stdio.sh --print-resources",
+    "build": "bash tooling/runtime/run_webui_task.sh build",
+    "ci:local": "bash tooling/gates/ci_local.sh",
+    "upstreams:refresh-receipts": "bash tooling/upstreams/refresh_receipts.sh",
+    "upstreams:import-receipts": "bash tooling/upstreams/import_receipts.sh",
+    "security:history-scan": "bash tooling/gates/history_secret_scan.sh",
+    "ai:eval": "bash tooling/gates/ai_eval_gate.sh",
+    "value:proof": "bash tooling/runtime/run_value_proof.sh",
+    "proof:gate": "bash tooling/gates/proof_gate.sh",
+    "proof:upgrade-pack": "bash tooling/gates/proof_upgrade_pack.sh",
+    "public:readiness": "bash tooling/gates/public_readiness_gate.sh release",
+    "platform:align": "bash tooling/gates/platform_alignment_gate.sh",
+    "release:draft": "python3 tooling/ci/prepare_release_draft.py",
+    "release:evidence": "bash tooling/ci/run_release_evidence.sh",
+    "release:truth": "bash tooling/ci/run_release_evidence.sh",
+    "inbox:scan": "bash tooling/runtime/run_inbox_watch.sh",
+    "runtime:reset": "bash tooling/runtime/runtime_reset.sh --confirm-workspace-reset",
+    "cold-cache:check": "bash tooling/gates/check_cold_start_rebuild.sh",
+    "verify:repo": "bash tooling/gates/verify_repo_final.sh",
+    "lint": "bash tooling/runtime/run_webui_task.sh lint",
+    "lint:frontend": "bash tooling/runtime/run_webui_task.sh lint",
+    "test": "bash tooling/runtime/run_webui_task.sh test"
+  },
+  "devDependencies": {
+    "@stylistic/stylelint-plugin": "^3.1.3",
+    "stylelint": "^16.23.0",
+    "stylelint-config-recommended-scss": "^15.0.1",
+    "stylelint-config-standard": "^39.0.1"
+  }
+}
