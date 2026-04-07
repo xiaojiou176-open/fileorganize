@@ -126,7 +126,7 @@ def test_weekly_mutation_workflow_covers_core_python_modules() -> None:
     repo_root = _repo_root()
     weekly = (repo_root / ".github" / "workflows" / "mutation-weekly.yml").read_text(encoding="utf-8")
 
-    _assert_contains(weekly, "name: mutation-weekly", "weekly mutation workflow header")
+    _assert_contains(weekly, "name: mutation-manual", "manual mutation workflow header")
     _assert_contains(weekly, "python-mutmut:", "weekly mutmut job")
     _assert_contains(weekly, "matrix:", "weekly mutmut matrix")
     _assert_contains(weekly, "max-parallel: 3", "weekly mutmut parallelism cap")
@@ -152,7 +152,7 @@ def test_weekly_mutation_workflow_covers_core_python_modules() -> None:
     _assert_contains(weekly, "--max-suspicious 0", "weekly mutmut suspicious threshold")
     _assert_contains(weekly, "--min-killed 1", "weekly mutmut min killed threshold")
     _assert_contains(weekly, "--require-non-empty-sample", "weekly mutmut non-empty sample threshold")
-    _assert_contains(weekly, "mutation-weekly-diagnostics-${{ matrix.module }}", "weekly mutmut per-module artifacts")
+    _assert_contains(weekly, "mutation-manual-diagnostics-${{ matrix.module }}", "manual mutmut per-module artifacts")
 
     test_paths = _extract_weekly_mutation_test_paths(weekly)
     assert test_paths, "weekly mutation workflow must define at least one tests: path"
@@ -168,11 +168,11 @@ def test_weekly_mutation_workflow_uses_hash_locked_mutmut_install() -> None:
     _assert_contains(weekly, "name: mutation-image-contract", "weekly mutation image contract artifact")
     _assert_contains(weekly, "Load CI runtime image from contract", "weekly mutation image contract load step")
     _assert_contains(weekly, 'echo "MOVI_CI_IMAGE=$IMAGE_REF" >> "$GITHUB_ENV"', "weekly image env export")
-    _assert_contains(weekly, "bash tooling/scripts/container_exec.sh --label mutation-weekly --", "weekly mutation run via container_exec")
+    _assert_contains(weekly, "bash tooling/scripts/container_exec.sh --label mutation-manual --", "manual mutation run via container_exec")
     _assert_contains(
         weekly,
-        "bash tooling/scripts/container_exec.sh --label mutation-weekly-report --",
-        "weekly mutation report via container_exec",
+        "bash tooling/scripts/container_exec.sh --label mutation-manual-report --",
+        "manual mutation report via container_exec",
     )
     _assert_contains(dev_shell, "-r requirements-dev.lock.txt", "dev shell forwards to dev lock")
     _assert_contains(dev_lock, "mutmut==2.5.1", "dev lock includes mutmut pin")
@@ -451,8 +451,38 @@ def test_local_fast_and_standard_prepush_align_with_ci_core_gates() -> None:
     )
     _assert_contains(
         pre_push_gate,
+        'step prepush-lite bash "$ROOT/gates/local_quality_gate.sh" prepush-lite',
+        "pre-push standard prepush-lite lane",
+    )
+    _assert_contains(
+        pre_push_gate,
         'step fast-lane bash "$ROOT/gates/local_quality_gate.sh" fast',
-        "pre-push standard fast lane",
+        "pre-push strict fast lane",
+    )
+    assert "check_upstream_verification_freshness.py" not in local_quality_gate
+    assert "check_upstream_receipts.py" not in local_quality_gate
+    assert "check_gate_log_correlation.py" not in local_quality_gate
+
+
+def test_local_fast_skips_unrelated_python_and_frontend_work() -> None:
+    local_quality_gate = (_repo_root() / "tooling" / "gates" / "local_quality_gate.sh").read_text(encoding="utf-8")
+
+    _assert_contains(local_quality_gate, 'echo "__NONE__"', "local fast no-python-change sentinel")
+    _assert_contains(
+        local_quality_gate,
+        "No changed Python files detected; skip mypy.",
+        "local fast skip mypy on non-python changes",
+    )
+    _assert_contains(
+        local_quality_gate,
+        "No changed Python files detected; skip pytest.",
+        "local fast skip pytest on non-python changes",
+    )
+    _assert_contains(local_quality_gate, "detect_changed_frontend_files()", "local fast frontend change detector")
+    _assert_contains(
+        local_quality_gate,
+        "lint-frontend skipped (no frontend changes detected)",
+        "local fast skip frontend lint on unrelated changes",
     )
 
 
@@ -498,8 +528,8 @@ def test_lock_drift_contract_uses_dev_lock_and_shell_forwarder() -> None:
 def test_prepush_gate_defaults_to_standard_mode() -> None:
     """Pre-push gate defaults to standard mode for faster local feedback.
 
-    Standard mode: fast lane + commit governance (<60s)
-    Strict mode: standard + mutation canary (<90s)
+    Standard mode: prepush-lite + commit governance (<30s)
+    Strict mode: fast lane + mutation canary (<90s)
     Full mode: strict + full quality gate (5-15min)
     """
     pre_push_gate = (_repo_root() / "tooling" / "gates" / "pre_push_gate.sh").read_text(encoding="utf-8")
@@ -617,6 +647,17 @@ def test_env_contract_budget_is_explicit_in_all_gates() -> None:
     _assert_contains(quality_gate, "--max-contract-size 59", "quality_gate env contract budget")
     _assert_contains(local_quality_gate, "--max-contract-size 59", "local_quality_gate env contract budget")
     _assert_contains(ci, "--max-contract-size 59", "ci env contract budget")
+
+
+def test_env_example_points_to_workspace_runtime_env() -> None:
+    repo_root = _repo_root()
+    env_contract_doc = (repo_root / "docs" / "env_contract.md").read_text(encoding="utf-8")
+    env_example = (repo_root / ".env.example").read_text(encoding="utf-8")
+
+    _assert_contains(env_contract_doc, "<workspace-root>/.movi/env/runtime.env", "env contract workspace runtime env path")
+    _assert_contains(env_example, "<workspace-root>/.movi/env/runtime.env", "env example workspace runtime env path")
+    _assert_contains(env_example, "repository root .env file is local-only convenience", "env example repo-root .env warning")
+    assert "Copy to .env and fill real values." not in env_example
 
 
 def test_env_contract_report_is_wired_into_quality_and_ci() -> None:

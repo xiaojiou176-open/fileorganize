@@ -14,6 +14,11 @@ set -euo pipefail
 #   - Detects changed files since last push/merge-base
 #   - Runs targeted checks on changed files only
 #   - Falls back to full check if detection fails
+#
+# Summary-dependent receipt synthesis and gate-summary correlation belong to
+# tooling/gates/quality_gate.sh after it has written the gate envelopes.
+# Keeping them out of fast/prepush-lite preserves the advertised local-burn
+# envelope and avoids false reds on clean local clones.
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(dirname "$DIR")"
@@ -140,17 +145,13 @@ run_runtime_layout_with_frontend_cleanup() {
 }
 
 # Detect changed Python files for incremental checks
-detect_changed_py_files() {
-  local changed_file="$ARTIFACT_LOGS/changed-py-files.txt"
-  mkdir -p "$ARTIFACT_LOGS"
-  : > "$changed_file"
+resolve_change_base_ref() {
+  local base_ref=""
 
   if ! command -v git >/dev/null 2>&1; then
-    echo "__FULL__"
-    return
+    return 1
   fi
 
-  local base_ref=""
   # Try to find merge-base with origin/main or origin/master
   if git rev-parse --verify origin/main >/dev/null 2>&1; then
     base_ref="$(git merge-base HEAD origin/main 2>/dev/null || true)"
@@ -168,11 +169,31 @@ detect_changed_py_files() {
     fi
   fi
 
-  # Get changed .py files (exclude deleted files for mypy/test mapping)
-  git diff --name-only --diff-filter=ACMRT "$base_ref" HEAD 2>/dev/null \
-    | grep -E '\.py$' \
-    | grep -E '^(packages/application/|packages/domain/|packages/infrastructure/|packages/observability/|apps/api/|apps/cli/|tooling/scripts/)' \
-    > "$changed_file" || true
+  if [ -z "$base_ref" ]; then
+    return 1
+  fi
+
+  printf '%s' "$base_ref"
+}
+
+detect_changed_py_files() {
+  local changed_file="$ARTIFACT_LOGS/changed-py-files.txt"
+  local base_ref=""
+  mkdir -p "$ARTIFACT_LOGS"
+  : > "$changed_file"
+
+  if ! command -v git >/dev/null 2>&1; then
+    echo "__FULL__"
+    return
+  fi
+
+  if base_ref="$(resolve_change_base_ref)"; then
+    # Get changed .py files (exclude deleted files for mypy/test mapping)
+    git diff --name-only --diff-filter=ACMRT "$base_ref" HEAD 2>/dev/null \
+      | grep -E '\.py$' \
+      | grep -E '^(packages/application/|packages/domain/|packages/infrastructure/|packages/observability/|apps/api/|apps/cli/|tooling/scripts/)' \
+      > "$changed_file" || true
+  fi
 
   # Also include staged changes
   git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null \
@@ -187,13 +208,43 @@ detect_changed_py_files() {
   count="$(wc -l < "$changed_file" | tr -d ' ')"
 
   if [ "$count" -eq 0 ]; then
-    echo "__FULL__"
+    echo "__NONE__"
   elif [ "$count" -gt 50 ]; then
     # Too many changes, fall back to full check
     echo "__FULL__"
   else
     # Return an incremental marker; concrete paths are consumed from changed-py-files.txt.
     echo "__INCREMENTAL__"
+  fi
+}
+
+detect_changed_frontend_files() {
+  local changed_file="$ARTIFACT_LOGS/changed-frontend-files.txt"
+  local base_ref=""
+  mkdir -p "$ARTIFACT_LOGS"
+  : > "$changed_file"
+
+  if ! command -v git >/dev/null 2>&1; then
+    echo "1"
+    return
+  fi
+
+  if base_ref="$(resolve_change_base_ref)"; then
+    git diff --name-only --diff-filter=ACMRT "$base_ref" HEAD 2>/dev/null \
+      | grep -E '^(apps/webui/|package\.json$|package-lock\.json$|tooling/config/frontend-scope\.yml$|tooling/config/biome\.json$|tooling/config/stylelintrc\.json$|tooling/gates/lint_frontend\.sh$|tooling/runtime/run_webui\.sh$|tooling/runtime/run_webui_task\.sh$|tooling/runtime/run_web_stack\.sh$)' \
+      > "$changed_file" || true
+  fi
+
+  git diff --cached --name-only --diff-filter=ACMRT 2>/dev/null \
+    | grep -E '^(apps/webui/|package\.json$|package-lock\.json$|tooling/config/frontend-scope\.yml$|tooling/config/biome\.json$|tooling/config/stylelintrc\.json$|tooling/gates/lint_frontend\.sh$|tooling/runtime/run_webui\.sh$|tooling/runtime/run_webui_task\.sh$|tooling/runtime/run_web_stack\.sh$)' \
+    >> "$changed_file" || true
+
+  sort -u "$changed_file" -o "$changed_file"
+
+  if [ -s "$changed_file" ]; then
+    echo "1"
+  else
+    echo "0"
   fi
 }
 
@@ -250,8 +301,11 @@ run_fast() {
   echo "    Detecting changed files..."
 
   local changed_files
+  local frontend_changed
   changed_files="$(detect_changed_py_files)"
+  frontend_changed="$(detect_changed_frontend_files)"
   echo "    Changed scope: ${changed_files:0:100}..."
+  echo "    Frontend scope changed: ${frontend_changed}"
 
   PARALLEL_PIDS=()
   PARALLEL_NAMES=()
@@ -293,14 +347,11 @@ run_fast() {
   run_parallel_step upstream-drift "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_drift.py" --root "$REPO_ROOT"
   run_parallel_step upstream-registry "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_registry_completeness.py" --root "$REPO_ROOT"
   run_parallel_step upstream-compat "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_compat_matrix.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-freshness "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_verification_freshness.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-receipts "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_receipts.py" --root "$REPO_ROOT"
   run_parallel_step upstream-host-capabilities "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_host_capabilities.py" --root "$REPO_ROOT"
   run_parallel_step upstream-fetch "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_fetch_surfaces.py" --root "$REPO_ROOT"
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
-  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   run_parallel_step test-quality bash "$ROOT/gates/test_quality_gate.sh"
 
@@ -310,13 +361,17 @@ run_fast() {
   if [ "$changed_files" = "__FULL__" ]; then
     # Full lint - only mypy (ruff already done in pre-commit)
     run_parallel_step mypy-full "$VENV/bin/mypy" apps/api apps/cli packages/domain packages/application packages/infrastructure packages/observability --ignore-missing-imports
+  elif [ "$changed_files" = "__NONE__" ]; then
+    echo "    No changed Python files detected; skip mypy."
   else
     # Incremental mypy: bash array is BSD-compatible and avoids unsafe word splitting.
     run_parallel_step mypy-incremental run_mypy_incremental
   fi
 
   # Unit tests
-  if should_run_full_tests; then
+  if [ "$changed_files" = "__NONE__" ]; then
+    echo "    No changed Python files detected; skip pytest."
+  elif should_run_full_tests; then
     run_parallel_step pytest-fast run_pytest_with_isolated_tmp env -u PRE_COMMIT_FROM_REF -u PRE_COMMIT_TO_REF "$VENV/bin/python" -m pytest -q -o addopts= --strict-config --strict-markers tests/unit --maxfail=3
   else
     # Run only tests related to changed files
@@ -361,9 +416,13 @@ run_fast() {
 
   wait_parallel_steps
 
-  # Frontend lint mutates apps/webui/node_modules during install/cleanup.
-  # Run it after the parallel repo scans settle to avoid transient ENOENT/ENOTEMPTY races.
-  run_step lint-frontend env LINT_FRONTEND_SKIP_GEMINI_AUDIT=1 bash "$ROOT/gates/lint_frontend.sh"
+  if [ "$frontend_changed" = "1" ]; then
+    # Frontend lint mutates apps/webui/node_modules during install/cleanup.
+    # Run it after the parallel repo scans settle to avoid transient ENOENT/ENOTEMPTY races.
+    run_step lint-frontend env LINT_FRONTEND_SKIP_GEMINI_AUDIT=1 bash "$ROOT/gates/lint_frontend.sh"
+  else
+    echo "=== [local_quality_gate] lint-frontend skipped (no frontend changes detected) ==="
+  fi
   cleanup_frontend_runtime_residue
   bash "$ROOT/cleanup/prune_repo_runtime.sh" "$REPO_ROOT" >/dev/null 2>&1 || true
 
@@ -413,14 +472,11 @@ run_prepush_lite() {
   run_parallel_step upstream-drift "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_drift.py" --root "$REPO_ROOT"
   run_parallel_step upstream-registry "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_registry_completeness.py" --root "$REPO_ROOT"
   run_parallel_step upstream-compat "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_compat_matrix.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-freshness "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_verification_freshness.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-receipts "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_receipts.py" --root "$REPO_ROOT"
   run_parallel_step upstream-host-capabilities "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_host_capabilities.py" --root "$REPO_ROOT"
   run_parallel_step upstream-fetch "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_fetch_surfaces.py" --root "$REPO_ROOT"
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
-  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   wait_parallel_steps
   run_step runtime-layout "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_runtime_layout.py" --root "$REPO_ROOT"
