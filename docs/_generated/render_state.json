@@ -1,0 +1,278 @@
+{
+  "generator": "tooling/docs/render_docs.py@1",
+  "renders": [
+    {
+      "id": "env-contract-reference",
+      "kind": "file",
+      "renderer": "env-contract-reference",
+      "output_path": "docs/reference/env_contract.generated.md",
+      "block_id": null,
+      "source_hashes": {
+        "contracts/runtime/env_contract_registry.yaml": "c2cc78fda018fed4f7e7bdda4aff42634e19e2f54ab6f9d4abd8334d413b89e3"
+      },
+      "output_hash": "bb34dd6f5edb4abe14ada1fcfc414a26c10c6ee7a24a9cb7bf5b96df019f9e16"
+    },
+    {
+      "id": "required-checks-matrix",
+      "kind": "file",
+      "renderer": "required-checks-matrix",
+      "output_path": "docs/required_checks_matrix.md",
+      "block_id": null,
+      "source_hashes": {
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3"
+      },
+      "output_hash": "76db4927da6c20357d86b7b0d5f9efbcd12120beeb75a5bfc5c18468624f1e49"
+    },
+    {
+      "id": "web-api-reference",
+      "kind": "file",
+      "renderer": "web-api-reference",
+      "output_path": "docs/reference/web_api_routes.generated.md",
+      "block_id": null,
+      "source_hashes": {
+        "contracts/api/web_api.openapi.yaml": "c97830844b65fd8f76cd23688187ca8648835d787d1819045882dea01e1d7b64"
+      },
+      "output_hash": "2bba2f20891f2bdb3b03c33f824ceba8afd2973c3a8a5946b8cc5c4533809b0c"
+    },
+    {
+      "id": "runtime-topology-reference",
+      "kind": "file",
+      "renderer": "runtime-topology-reference",
+      "output_path": "docs/reference/runtime_topology.generated.md",
+      "block_id": null,
+      "source_hashes": {
+        "ops/compose/docker-compose.yml": "9f3f0a6047c30cc93374b41a2b0acbf5563b5b461812efac90e4e6e9da9a693c",
+        "contracts/governance/governance.defaults.env": "cddb6b33f746b32509f8a49af1f11bef945d0eeaf060028da41c726127d68660",
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc",
+        ".env.example": "e87d8f2d9d6e07b4b0b068de0d86a29a153e603b1015f9dd0b70e94867207792"
+      },
+      "output_hash": "35f928f34d5157b2764465e28ea00c4e234354342d4d26cc1164f9231eebf20d"
+    },
+    {
+      "id": "governance-truth-reference",
+      "kind": "file",
+      "renderer": "governance-truth-reference",
+      "output_path": "docs/reference/governance_truth.generated.md",
+      "block_id": null,
+      "source_hashes": {
+        "contracts/governance/done_signal_policy.yaml": "16e2fc2add45a68406d6a6077ed7b912fe2406905bf1ff68e967bceeda4bd83c",
+        "contracts/governance/public_readiness_policy.yaml": "ae124e580936eb1f3f5b992ace40737b990f48aa729995f730240952438487d9",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/pre-commit.yml": "ed0082256d36108f1bdb3d6c66f6f9805295a4f7f738465b0092d0b3fe0199ed",
+        ".github/workflows/live-integration.yml": "87a1d413bc8d92d2103b5d4a6e19cfcb85fdb30e9e753b88a3267607a41d2b92",
+        ".github/workflows/mutation-weekly.yml": "0dd231d0ef088f8e4d6bd8ceecfda142748a22849962eaca9c354e2550374962"
+      },
+      "output_hash": "1e9db2c2bcd9dc853fd5772bd1edabf7b910d9014dc7bc2cc78f5a835f83e588"
+    },
+    {
+      "id": "root-web-api-routes",
+      "kind": "fragment",
+      "renderer": "readme-web-api-summary",
+      "output_path": "README.md",
+      "block_id": "root-web-api-routes",
+      "source_hashes": {
+        "contracts/api/web_api.openapi.yaml": "c97830844b65fd8f76cd23688187ca8648835d787d1819045882dea01e1d7b64"
+      },
+      "output_hash": "ffb36e9c2b3fa2651083ac92db5bf8b3d825345632c09ca8a1f4256c896a408c"
+    },
+    {
+      "id": "root-runtime-topology",
+      "kind": "fragment",
+      "renderer": "root-runtime-topology-summary",
+      "output_path": "README.md",
+      "block_id": "root-runtime-topology",
+      "source_hashes": {
+        "ops/compose/docker-compose.yml": "9f3f0a6047c30cc93374b41a2b0acbf5563b5b461812efac90e4e6e9da9a693c",
+        "contracts/governance/governance.defaults.env": "cddb6b33f746b32509f8a49af1f11bef945d0eeaf060028da41c726127d68660",
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc",
+        ".env.example": "e87d8f2d9d6e07b4b0b068de0d86a29a153e603b1015f9dd0b70e94867207792"
+      },
+      "output_hash": "ffb36e9c2b3fa2651083ac92db5bf8b3d825345632c09ca8a1f4256c896a408c"
+    },
+    {
+      "id": "root-ci-governance-summary",
+      "kind": "fragment",
+      "renderer": "root-ci-governance-summary",
+      "output_path": "README.md",
+      "block_id": "root-ci-governance-summary",
+      "source_hashes": {
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/reusable-build-runtime-image.yml": "0b79722ad922ec45ce8eb62c2466834855aebb9915f86a8ff65a25b71ebf5793",
+        ".github/workflows/nightly-drift-audit.yml": "485f3ee338c8c951e92047ff1bf600379eebb8a3265c1ded542bd95caad7770c",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc"
+      },
+      "output_hash": "ffb36e9c2b3fa2651083ac92db5bf8b3d825345632c09ca8a1f4256c896a408c"
+    },
+    {
+      "id": "root-release-identity",
+      "kind": "fragment",
+      "renderer": "root-release-identity-summary",
+      "output_path": "README.md",
+      "block_id": "root-release-identity",
+      "source_hashes": {
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495"
+      },
+      "output_hash": "ffb36e9c2b3fa2651083ac92db5bf8b3d825345632c09ca8a1f4256c896a408c"
+    },
+    {
+      "id": "script-readme-web-api-routes",
+      "kind": "fragment",
+      "renderer": "script-readme-web-api-summary",
+      "output_path": "docs/usage.md",
+      "block_id": "script-readme-web-api-routes",
+      "source_hashes": {
+        "contracts/api/web_api.openapi.yaml": "c97830844b65fd8f76cd23688187ca8648835d787d1819045882dea01e1d7b64"
+      },
+      "output_hash": "b12f14d83eedfaf64a31d9b1d02339671513f2f1cef9e6773bbfdf4db5cc1356"
+    },
+    {
+      "id": "script-readme-runtime-topology",
+      "kind": "fragment",
+      "renderer": "script-readme-runtime-topology-summary",
+      "output_path": "docs/usage.md",
+      "block_id": "script-readme-runtime-topology",
+      "source_hashes": {
+        "ops/compose/docker-compose.yml": "9f3f0a6047c30cc93374b41a2b0acbf5563b5b461812efac90e4e6e9da9a693c",
+        "contracts/governance/governance.defaults.env": "cddb6b33f746b32509f8a49af1f11bef945d0eeaf060028da41c726127d68660",
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc",
+        ".env.example": "e87d8f2d9d6e07b4b0b068de0d86a29a153e603b1015f9dd0b70e94867207792"
+      },
+      "output_hash": "b12f14d83eedfaf64a31d9b1d02339671513f2f1cef9e6773bbfdf4db5cc1356"
+    },
+    {
+      "id": "script-readme-ci-governance-summary",
+      "kind": "fragment",
+      "renderer": "script-readme-ci-governance-summary",
+      "output_path": "docs/usage.md",
+      "block_id": "script-readme-ci-governance-summary",
+      "source_hashes": {
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/reusable-build-runtime-image.yml": "0b79722ad922ec45ce8eb62c2466834855aebb9915f86a8ff65a25b71ebf5793",
+        ".github/workflows/nightly-drift-audit.yml": "485f3ee338c8c951e92047ff1bf600379eebb8a3265c1ded542bd95caad7770c",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc"
+      },
+      "output_hash": "b12f14d83eedfaf64a31d9b1d02339671513f2f1cef9e6773bbfdf4db5cc1356"
+    },
+    {
+      "id": "script-readme-release-identity",
+      "kind": "fragment",
+      "renderer": "script-readme-release-identity-summary",
+      "output_path": "docs/usage.md",
+      "block_id": "script-readme-release-identity",
+      "source_hashes": {
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495"
+      },
+      "output_hash": "b12f14d83eedfaf64a31d9b1d02339671513f2f1cef9e6773bbfdf4db5cc1356"
+    },
+    {
+      "id": "script-readme-governance-truth",
+      "kind": "fragment",
+      "renderer": "script-readme-governance-truth-summary",
+      "output_path": "docs/usage.md",
+      "block_id": "script-readme-governance-truth",
+      "source_hashes": {
+        "contracts/governance/done_signal_policy.yaml": "16e2fc2add45a68406d6a6077ed7b912fe2406905bf1ff68e967bceeda4bd83c",
+        "contracts/governance/public_readiness_policy.yaml": "ae124e580936eb1f3f5b992ace40737b990f48aa729995f730240952438487d9",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/pre-commit.yml": "ed0082256d36108f1bdb3d6c66f6f9805295a4f7f738465b0092d0b3fe0199ed",
+        ".github/workflows/live-integration.yml": "87a1d413bc8d92d2103b5d4a6e19cfcb85fdb30e9e753b88a3267607a41d2b92",
+        ".github/workflows/mutation-weekly.yml": "0dd231d0ef088f8e4d6bd8ceecfda142748a22849962eaca9c354e2550374962"
+      },
+      "output_hash": "b12f14d83eedfaf64a31d9b1d02339671513f2f1cef9e6773bbfdf4db5cc1356"
+    },
+    {
+      "id": "architecture-web-api-summary",
+      "kind": "fragment",
+      "renderer": "architecture-web-api-summary",
+      "output_path": "docs/architecture.md",
+      "block_id": "architecture-web-api-summary",
+      "source_hashes": {
+        "contracts/api/web_api.openapi.yaml": "c97830844b65fd8f76cd23688187ca8648835d787d1819045882dea01e1d7b64"
+      },
+      "output_hash": "c0cb776be4feeaa4d6517d934e2d4f541ae1a04d66350c7bd82da6b009f710b4"
+    },
+    {
+      "id": "architecture-runtime-topology",
+      "kind": "fragment",
+      "renderer": "architecture-runtime-topology-summary",
+      "output_path": "docs/architecture.md",
+      "block_id": "architecture-runtime-topology",
+      "source_hashes": {
+        "ops/compose/docker-compose.yml": "9f3f0a6047c30cc93374b41a2b0acbf5563b5b461812efac90e4e6e9da9a693c",
+        "contracts/governance/governance.defaults.env": "cddb6b33f746b32509f8a49af1f11bef945d0eeaf060028da41c726127d68660",
+        "pyproject.toml": "d12c2c415c3900d81c888e91d3a8ec1af88af96a701c6de801c37a1e52b4a495",
+        "package.json": "19ed161b16378601fc42d4baa05b7225fc57a47cfdee28a64131fd57d3cd1efc",
+        ".env.example": "e87d8f2d9d6e07b4b0b068de0d86a29a153e603b1015f9dd0b70e94867207792"
+      },
+      "output_hash": "c0cb776be4feeaa4d6517d934e2d4f541ae1a04d66350c7bd82da6b009f710b4"
+    },
+    {
+      "id": "architecture-governance-truth",
+      "kind": "fragment",
+      "renderer": "architecture-governance-truth-summary",
+      "output_path": "docs/architecture.md",
+      "block_id": "architecture-governance-truth",
+      "source_hashes": {
+        "contracts/governance/done_signal_policy.yaml": "16e2fc2add45a68406d6a6077ed7b912fe2406905bf1ff68e967bceeda4bd83c",
+        "contracts/governance/public_readiness_policy.yaml": "ae124e580936eb1f3f5b992ace40737b990f48aa729995f730240952438487d9",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/pre-commit.yml": "ed0082256d36108f1bdb3d6c66f6f9805295a4f7f738465b0092d0b3fe0199ed",
+        ".github/workflows/live-integration.yml": "87a1d413bc8d92d2103b5d4a6e19cfcb85fdb30e9e753b88a3267607a41d2b92",
+        ".github/workflows/mutation-weekly.yml": "0dd231d0ef088f8e4d6bd8ceecfda142748a22849962eaca9c354e2550374962"
+      },
+      "output_hash": "c0cb776be4feeaa4d6517d934e2d4f541ae1a04d66350c7bd82da6b009f710b4"
+    },
+    {
+      "id": "open-source-platform-truth",
+      "kind": "fragment",
+      "renderer": "open-source-platform-truth-summary",
+      "output_path": "docs/open_source_runbook.md",
+      "block_id": "open-source-platform-truth",
+      "source_hashes": {
+        "contracts/governance/done_signal_policy.yaml": "16e2fc2add45a68406d6a6077ed7b912fe2406905bf1ff68e967bceeda4bd83c",
+        "contracts/governance/public_readiness_policy.yaml": "ae124e580936eb1f3f5b992ace40737b990f48aa729995f730240952438487d9",
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/pre-commit.yml": "ed0082256d36108f1bdb3d6c66f6f9805295a4f7f738465b0092d0b3fe0199ed",
+        ".github/workflows/live-integration.yml": "87a1d413bc8d92d2103b5d4a6e19cfcb85fdb30e9e753b88a3267607a41d2b92",
+        ".github/workflows/mutation-weekly.yml": "0dd231d0ef088f8e4d6bd8ceecfda142748a22849962eaca9c354e2550374962"
+      },
+      "output_hash": "590a2ddf45c93e4e0639c4c4a077e725da6fb8c107a7567d7edb484e714a5b2b"
+    },
+    {
+      "id": "runner-contract-governance-truth",
+      "kind": "fragment",
+      "renderer": "runner-contract-governance-truth-summary",
+      "output_path": "docs/runner_contract.md",
+      "block_id": "runner-contract-governance-truth",
+      "source_hashes": {
+        "contracts/governance/required_checks_policy.yaml": "51f9e8cb17df93c3912ae719a6ba95b74f2c666b6b11c79e1728f7002fb3e3b3",
+        ".github/workflows/ci.yml": "145d243beb087cd6a976d45e4455e0747ace3ee3ad9c77160b57fb17f75c63fe",
+        ".github/workflows/pre-commit.yml": "ed0082256d36108f1bdb3d6c66f6f9805295a4f7f738465b0092d0b3fe0199ed",
+        ".github/workflows/live-integration.yml": "87a1d413bc8d92d2103b5d4a6e19cfcb85fdb30e9e753b88a3267607a41d2b92",
+        ".github/workflows/mutation-weekly.yml": "0dd231d0ef088f8e4d6bd8ceecfda142748a22849962eaca9c354e2550374962"
+      },
+      "output_hash": "6f81c9b2b0e6e733c3f9eaebc0a92d2c05d246683a14750e6cb42f7d4a359700"
+    },
+    {
+      "id": "webui-api-contract",
+      "kind": "fragment",
+      "renderer": "webui-api-contract",
+      "output_path": "apps/webui/README.md",
+      "block_id": "webui-api-contract",
+      "source_hashes": {
+        "contracts/api/web_api.openapi.yaml": "c97830844b65fd8f76cd23688187ca8648835d787d1819045882dea01e1d7b64"
+      },
+      "output_hash": "8bab781114a7fb0369ed066a739c365d7ba307491ca98c6aaeb95b16c0cf657a"
+    }
+  ]
+}

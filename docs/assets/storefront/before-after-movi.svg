@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640" role="img" aria-labelledby="title desc">
+  <title id="title">Movi before and after</title>
+  <desc id="desc">Side-by-side comparison of a messy intake folder and an organized output folder created through manifest review.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8f3ea" />
+      <stop offset="100%" stop-color="#ece0cf" />
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="640" fill="url(#bg)" rx="28" />
+  <text x="82" y="92" fill="#21323b" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700">
+    Before / after, without giving AI move authority
+  </text>
+  <text x="82" y="132" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="23">
+    The difference is not magic. It is review-first classification, dry-run apply, and a rollback-ready paper trail.
+  </text>
+
+  <g transform="translate(82 182)">
+    <rect width="550" height="360" rx="28" fill="#21323b" />
+    <text x="38" y="58" fill="#f7efe2" font-family="'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="700">Before: one mixed intake folder</text>
+    <text x="38" y="98" fill="#d8d1c3" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">Screenshots, audio notes, PDFs,</text>
+    <text x="38" y="122" fill="#d8d1c3" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">and camera shots land together.</text>
+    <text x="52" y="152" fill="#f7efe2" font-family="'Courier New', monospace" font-size="21">IMG_1029.JPG</text>
+    <text x="52" y="188" fill="#f7efe2" font-family="'Courier New', monospace" font-size="21">screen-payroll.png</text>
+    <text x="52" y="224" fill="#f7efe2" font-family="'Courier New', monospace" font-size="21">voice-memo.m4a</text>
+    <text x="52" y="260" fill="#f7efe2" font-family="'Courier New', monospace" font-size="21">receipt-february.pdf</text>
+    <text x="52" y="296" fill="#f7efe2" font-family="'Courier New', monospace" font-size="21">meeting-whiteboard.heic</text>
+  </g>
+
+  <g transform="translate(768 182)">
+    <rect width="550" height="360" rx="28" fill="#fdfaf3" stroke="#c6b98d" stroke-width="3" />
+    <text x="38" y="58" fill="#21323b" font-family="'Helvetica Neue', Arial, sans-serif" font-size="30" font-weight="700">After: reviewed, predictable outputs</text>
+    <text x="38" y="98" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">Outputs stay predictable because the manifest</text>
+    <text x="38" y="122" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">was approved before deterministic apply ran.</text>
+    <text x="52" y="152" fill="#21323b" font-family="'Courier New', monospace" font-size="18">photos/2026/boardwalk-sunset.jpg</text>
+    <text x="52" y="188" fill="#21323b" font-family="'Courier New', monospace" font-size="18">screenshots/2026/payroll-check.png</text>
+    <text x="52" y="224" fill="#21323b" font-family="'Courier New', monospace" font-size="18">audio/notes/project-retro.m4a</text>
+    <text x="52" y="260" fill="#21323b" font-family="'Courier New', monospace" font-size="18">documents/receipts/2026-02.pdf</text>
+    <text x="52" y="296" fill="#21323b" font-family="'Courier New', monospace" font-size="18">reports/apply-report.json</text>
+  </g>
+</svg>
