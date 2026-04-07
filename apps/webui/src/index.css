@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 22% 97%;
+  --foreground: 222 19% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 19% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 19% 16%;
+  --primary: 214 31% 34%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 210 18% 92%;
+  --secondary-foreground: 222 16% 22%;
+  --muted: 210 18% 93%;
+  --muted-foreground: 220 11% 28%;
+  --accent: 204 53% 88%;
+  --accent-strong: 205 41% 66%;
+  --brand: 214 31% 34%;
+  --brand-soft: 205 49% 93%;
+  --destructive: 8 66% 50%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 162 58% 34%;
+  --warning: 36 89% 54%;
+  --warning-ink: 32 70% 32%;
+  --border: 215 17% 86%;
+  --input: 215 17% 84%;
+  --ring: 213 34% 46%;
+  --sidebar: 210 27% 96%;
+  --sidebar-foreground: 222 16% 22%;
+  --sidebar-accent: 208 38% 91%;
+  --sidebar-accent-foreground: 214 31% 28%;
+  --radius: 0.9rem;
+  --motion-fast: 160ms;
+  --motion-base: 220ms;
+  --motion-slow: 320ms;
+  --motion-ease: cubic-bezier(0.2, 0.72, 0.16, 1);
+}
+
+* {
+  @apply border-border;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+
+  font-family: 'IBM Plex Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@layer utilities {
+  .shadow-card {
+    box-shadow: 0 1px 2px hsl(var(--foreground) / 6%), 0 10px 30px -20px hsl(var(--brand) / 45%);
+  }
+
+  .motion-surface {
+    animation: surface-in var(--motion-base) var(--motion-ease);
+  }
+
+  .motion-surface-delay {
+    animation-delay: 80ms;
+    animation-fill-mode: both;
+  }
+
+  .motion-nav-item {
+    transition:
+      background-color var(--motion-fast) var(--motion-ease),
+      color var(--motion-fast) var(--motion-ease),
+      box-shadow var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+  }
+
+  .motion-nav-item:hover {
+    transform: translateY(-1px);
+  }
+
+  .motion-status-pulse {
+    animation: status-pulse 2.3s ease-in-out infinite;
+  }
+
+  .motion-log-row {
+    animation: fade-in-up var(--motion-fast) var(--motion-ease);
+  }
+
+  .skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, hsl(var(--background) / 45%), transparent);
+    animation: shimmer 1.15s linear infinite;
+  }
+}
+
+@keyframes surface-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(var(--success) / 20%);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px hsl(var(--success) / 0%);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+
+  .motion-status-pulse,
+  .skeleton-shimmer::after {
+    animation: none;
+  }
+}

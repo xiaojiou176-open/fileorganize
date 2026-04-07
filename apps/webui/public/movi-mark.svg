@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Movi Mark">
+  <rect width="96" height="96" rx="22" fill="#16212f" />
+  <path d="M24 31h48v10H24z" fill="#f2f5f7" />
+  <path d="M24 47h32v10H24z" fill="#f2f5f7" opacity="0.88" />
+  <path d="M24 63h22v10H24z" fill="#f2f5f7" opacity="0.75" />
+  <circle cx="68" cy="63" r="9" fill="#8fd3b6" />
+</svg>
