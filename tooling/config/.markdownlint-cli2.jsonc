@@ -1,0 +1,18 @@
+{
+  // markdownlint-cli2 expects rule config under the top-level "config" key.
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+  "config": {
+    "default": true,
+    "MD013": false, // Line length: disable to support long Chinese lines/tables.
+    "MD024": {
+      "allow_different_nesting": true
+    },
+    "MD026": {
+      "punctuation": ".,;:!?，。；：！？"
+    },
+    "MD029": false,
+    "MD040": false,
+    "MD033": false, // Allow inline HTML blocks used in docs templates.
+    "MD041": false // Do not force first line heading for notes/snippets.
+  }
+}

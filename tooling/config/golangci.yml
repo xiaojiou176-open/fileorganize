@@ -1,0 +1,17 @@
+run:
+  timeout: 5m
+  tests: false
+  skip-dirs:
+    - data
+    - artifacts
+    - .venv
+
+linters:
+  enable:
+    - govet
+    - staticcheck
+    - errcheck
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

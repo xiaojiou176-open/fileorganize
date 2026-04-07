@@ -1,0 +1,27 @@
+extends: default
+
+ignore: |
+  .venv/
+  .runtime-cache/
+  artifacts/
+  build/
+  dist/
+
+rules:
+  document-start: disable
+  truthy:
+    allowed-values: ["true", "false", "on", "off", "yes", "no"]
+    check-keys: false
+  line-length:
+    max: 180
+    level: warning
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  hyphens:
+    max-spaces-after: 1
