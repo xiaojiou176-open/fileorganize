@@ -6,6 +6,10 @@ entries:
     approval_rule: architecture-review
     tracked_policy: must-remain-untracked
     tracked_policy_reason: repo-local plans and conversations must never enter git tracked public surface
+  .clusterfuzzlite:
+    owner: repo
+    change_class: platform
+    approval_rule: architecture-review
   .env:
     owner: repo
     change_class: local-only

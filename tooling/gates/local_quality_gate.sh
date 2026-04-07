@@ -14,6 +14,10 @@ set -euo pipefail
 #   - Detects changed files since last push/merge-base
 #   - Runs targeted checks on changed files only
 #   - Falls back to full check if detection fails
+#
+# Receipt-driven governance checks stay in tooling/gates/quality_gate.sh after
+# summary generation. Keeping them out of fast/prepush-lite preserves the
+# advertised local-burn envelope and avoids false reds on clean local clones.
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(dirname "$DIR")"
@@ -342,14 +346,11 @@ run_fast() {
   run_parallel_step upstream-drift "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_drift.py" --root "$REPO_ROOT"
   run_parallel_step upstream-registry "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_registry_completeness.py" --root "$REPO_ROOT"
   run_parallel_step upstream-compat "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_compat_matrix.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-freshness "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_verification_freshness.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-receipts "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_receipts.py" --root "$REPO_ROOT"
   run_parallel_step upstream-host-capabilities "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_host_capabilities.py" --root "$REPO_ROOT"
   run_parallel_step upstream-fetch "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_fetch_surfaces.py" --root "$REPO_ROOT"
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
-  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   run_parallel_step test-quality bash "$ROOT/gates/test_quality_gate.sh"
 
@@ -470,14 +471,11 @@ run_prepush_lite() {
   run_parallel_step upstream-drift "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_drift.py" --root "$REPO_ROOT"
   run_parallel_step upstream-registry "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_registry_completeness.py" --root "$REPO_ROOT"
   run_parallel_step upstream-compat "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_compat_matrix.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-freshness "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_verification_freshness.py" --root "$REPO_ROOT"
-  run_parallel_step upstream-receipts "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_receipts.py" --root "$REPO_ROOT"
   run_parallel_step upstream-host-capabilities "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_host_capabilities.py" --root "$REPO_ROOT"
   run_parallel_step upstream-fetch "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_upstream_fetch_surfaces.py" --root "$REPO_ROOT"
   run_parallel_step private-upstream-coupling "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_no_private_upstream_coupling.py" --root "$REPO_ROOT"
   run_parallel_step dependency-boundaries "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_dependency_boundaries.py" --root "$REPO_ROOT"
   run_parallel_step logging-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_logging_contract.py" --root "$REPO_ROOT"
-  run_parallel_step gate-log-correlation "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_gate_log_correlation.py" --root "$REPO_ROOT"
   run_parallel_step run-bundle-contract "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_run_bundle_contract.py" --root "$REPO_ROOT"
   wait_parallel_steps
   run_step runtime-layout "$VENV/bin/python" "$REPO_ROOT/tooling/scripts/check_runtime_layout.py" --root "$REPO_ROOT"
