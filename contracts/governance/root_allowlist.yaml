@@ -11,6 +11,8 @@ canonical_tracked_entries:
   - CLAUDE.md
   - CODE_OF_CONDUCT.md
   - CONTRIBUTING.md
+  - DISTRIBUTION.md
+  - INTEGRATIONS.md
   - LICENSE
   - NOTICE
   - README.md
@@ -58,6 +60,8 @@ entry_purposes:
   CLAUDE.md: repo execution memory
   CODE_OF_CONDUCT.md: public community behavior expectations
   CONTRIBUTING.md: public contribution policy
+  DISTRIBUTION.md: public distribution boundary and current published-surface contract
+  INTEGRATIONS.md: public integration-fit boundary and current client-surface contract
   LICENSE: repository license grant
   NOTICE: public repository notice summary
   README.md: public repo entry document

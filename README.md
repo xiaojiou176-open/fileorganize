@@ -2,7 +2,7 @@
 
 Movi is a review-first local file organizer and workbench for messy photos, screenshots, documents, and audio. It lets AI assist with the manifest first, then lets you inspect, label, and approve the plan before deterministic `apply` or `rollback` touches your files.
 
-[Safe First Look](#safe-first-look) · [10-Second Tour](#10-second-tour) · [Good Fit / Not A Fit](#good-fit--not-a-fit) · [Public Proof](docs/public_proof.md) · [Docs](docs/index.md) · [Browser Surface](#browser-surface) · [Releases](https://github.com/xiaojiou176-open/movi-organizer/releases) · [Discussions](https://github.com/xiaojiou176-open/movi-organizer/discussions) · [Security](SECURITY.md) · [Movi MCP v1](docs/mcp.md) · [Codex Integration](docs/codex_mcp.md) · [Claude Code Integration](docs/claude_code_mcp.md) · [Developer Guide](docs/developer_guide.md)
+[Safe First Look](#safe-first-look) · [10-Second Tour](#10-second-tour) · [Good Fit / Not A Fit](#good-fit--not-a-fit) · [Public Proof](docs/public_proof.md) · [Docs](docs/index.md) · [Distribution](DISTRIBUTION.md) · [Integrations](INTEGRATIONS.md) · [Browser Surface](#browser-surface) · [Releases](https://github.com/xiaojiou176-open/movi-organizer/releases) · [Discussions](https://github.com/xiaojiou176-open/movi-organizer/discussions) · [Security](SECURITY.md) · [Movi MCP v1](docs/mcp.md) · [Codex Integration](docs/codex_mcp.md) · [Claude Code Integration](docs/claude_code_mcp.md) · [Developer Guide](docs/developer_guide.md)
 
 ![Movi overview showing mixed files flowing into manifest review and organized output](docs/assets/storefront/hero-movi-overview.svg)
 
@@ -10,7 +10,7 @@ Movi is a **review-first local AI file organizer**. It turns a chaotic intake fo
 
 Public maintenance posture: limited-maintenance open source.
 
-Current proof posture: reproducible smoke-tier evidence with a live release trail, Pages front door, and repo-side safety gates. It is not public-grade headline proof yet, and the current proof routes are kept explicit in [Public Proof](docs/public_proof.md) instead of being buried in operator-only docs.
+Current proof posture: reproducible smoke-tier evidence with a live release trail, Pages front door, and repo-side safety gates. It is not broad benchmark-grade proof yet, but the current front door already clears a truthful public-entry bar, and the proof routes stay explicit in [Public Proof](docs/public_proof.md) instead of being buried in operator-only docs.
 
 ## Why Movi Exists
 

@@ -6,6 +6,8 @@ required_repo_surface_files:
   - THIRD_PARTY_NOTICES.md
   - SECURITY.md
   - CONTRIBUTING.md
+  - DISTRIBUTION.md
+  - INTEGRATIONS.md
   - SUPPORT.md
   - CODE_OF_CONDUCT.md
   - .github/CODEOWNERS
