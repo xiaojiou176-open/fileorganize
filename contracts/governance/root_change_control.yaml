@@ -68,6 +68,14 @@ entries:
     owner: repo
     change_class: public-doc
     approval_rule: architecture-review
+  DISTRIBUTION.md:
+    owner: repo
+    change_class: public-doc
+    approval_rule: architecture-review
+  INTEGRATIONS.md:
+    owner: repo
+    change_class: public-doc
+    approval_rule: architecture-review
   LICENSE:
     owner: repo
     change_class: legal

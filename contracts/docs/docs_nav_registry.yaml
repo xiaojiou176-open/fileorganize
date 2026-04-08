@@ -9,6 +9,14 @@ docs:
       - root-runtime-topology
       - root-ci-governance-summary
     command_smoke: false
+  - path: DISTRIBUTION.md
+    layer: human-authored
+    scope: strict
+    command_smoke: false
+  - path: INTEGRATIONS.md
+    layer: human-authored
+    scope: strict
+    command_smoke: false
   - path: docs/usage.md
     layer: fragment-rendered
     scope: strict

@@ -84,10 +84,18 @@ active source of truth.
 Use the versioned repository surfaces on `main` instead:
 
 - `README.md` and `docs/` for public product and operator guidance
+- `DISTRIBUTION.md` and `INTEGRATIONS.md` for root-level public boundary truth
 - contracts, workflows, and generated references for executable truth
 - current repository settings and branch protection for GitHub-side policy
 
-Treat `.agents/` as local operator state, not as a committed planning system.
+Repo-local `.agents/Conversations` or other scratch coordination notes may still
+exist during a session, but they are local-only operator residue rather than a
+committed planning contract.
+
+Treat `.agents/` as local operator state, not as a committed planning system
+that needs a mirrored TaskBoard update on `main`.
+If `.agents/Tasks` is absent in a clean checkout, treat that as expected
+repository state rather than as governance drift.
 
 ## Closed Dependabot Pull Requests
 
@@ -101,8 +109,13 @@ Use the following rule when describing them:
   supports that grouping
 - only call a PR later superseded when current `main` clearly carries the same
   or a newer dependency state
+- if current `main` still pins an older version, describe the PR as closed
+  audit history without claiming the proposal landed
 - do not treat a closed PR by itself as proof that the proposed dependency
   state landed
+- maintainer comments on individual closed PRs should follow the same rule and
+  should say when a closure is only grouped audit history, duplicate audit
+  history, or non-landed audit history
 
 ## Atomic Commit Guidance
 
