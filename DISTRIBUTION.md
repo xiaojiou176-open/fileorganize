@@ -23,6 +23,7 @@ shipped yet.
 | :-- | :-- | :-- |
 | Source install from this repository | Ready | The repository ships Python package metadata and console entrypoints such as `movi-organizer`, `movi-web-api`, and `movi-mcp`. |
 | Movi MCP v1 stdio server | Ready | The MCP surface is a local-first stdio integration that can be launched from this repository or an installed environment. |
+| Pure-MCP registry descriptor | Submission-ready-unlisted | Root [`server.json`](./server.json) names the canonical MCP surface without claiming a live registry publication. |
 | Codex / Claude Code setup docs | Ready | The repository ships setup pages for Codex and Claude Code, but those docs describe local wiring, not a separate public distribution channel. |
 | Skills / agent bundle shelf | Submission-ready-unlisted | The repository now ships repo-owned skill bundle examples and install/proof notes without claiming a live skills registry listing. |
 | OpenClaw / ClawHub bundle | Submission-ready-unlisted | The repository now ships an OpenClaw-facing bundle and proof note without claiming a live catalog entry. |
@@ -46,7 +47,8 @@ Use the surfaces above in this order:
 2. GitHub Releases for release history
 3. GitHub Pages for the current public landing route
 4. `manifest.yaml` for the repo-owned submission summary
-5. `examples/skills/README.md` and `examples/openclaw/README.md` for unlisted bundle surfaces
+5. `server.json` for the canonical pure-MCP descriptor
+6. `examples/skills/README.md` and `examples/openclaw/README.md` for unlisted bundle surfaces
 
 If you need to answer a stricter question such as "is the current head verified
 as a published release," do not infer that from a tag alone. Use the release

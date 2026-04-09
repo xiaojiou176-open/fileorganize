@@ -10,6 +10,7 @@ published_surfaces:
   - github-pages-front-door
   - github-releases
 submission_ready_surfaces:
+  - pure-mcp-registry-descriptor
   - codex-mcp-bundle
   - claude-code-mcp-bundle
   - openclaw-public-ready-bundle
@@ -18,14 +19,18 @@ truth_routes:
   storefront: README.md
   distribution: DISTRIBUTION.md
   integrations: INTEGRATIONS.md
+  canonical_public_root: README.md
+  mcp_registry_descriptor: server.json
   mcp: docs/mcp.md
+  mcp_runtime_impl: apps/mcp/README.md
   codex: docs/codex_mcp.md
   claude: docs/claude_code_mcp.md
-  skills_bundle: examples/skills/README.md
+  skills_packet: examples/skills/README.md
   openclaw_bundle: examples/openclaw/README.md
 claims_not_made:
   - no live OpenClaw listing is claimed
   - no live ClawHub listing is claimed
+  - no live official MCP registry publication is claimed
   - no browser extension marketplace listing is claimed
   - no hosted SaaS is claimed
 operator_only_follow_through:

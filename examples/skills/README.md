@@ -1,30 +1,76 @@
-# Movi Agent Bundle
+# Movi Review-First Bundle Public Skill
 
 Status: `submission-ready-unlisted`
 
-This directory is the repo-owned agent/plugin bundle shelf for Movi.
+This folder is the current public, self-contained skill packet for Movi.
 
-Use it when you want one place that answers:
+The canonical public root for the product still lives at the repo root:
+`../../README.md` plus `../../manifest.yaml`.
+The canonical machine-readable descriptor for the pure-MCP lane now lives at
+`../../server.json`.
 
-- how to wire Movi into Codex
-- how to wire Movi into Claude Code
-- how to hand an OpenClaw-style host a truthful starter bundle
-- how to prove the bundle exists without claiming a live listing
+It is meant to travel into OpenHands- or ClawHub-style review flows without
+forcing the reviewer to reopen the whole repo first.
 
-## Included Files
+## Purpose
 
-| File | Role |
-| --- | --- |
-| `manifest.yaml` | repo-owned bundle summary |
-| `SKILL.md` | dedicated skill brief for review-first Movi usage |
-| `codex.mcp.json` | Codex sample config |
-| `claude-code.mcp.json` | Claude Code sample config |
-| `openclaw.mcp.json` | OpenClaw-style sample config |
-| `install-and-proof.md` | shortest install and proof loop |
+Use it when you want one portable skill folder that teaches five things inside
+the packet itself:
 
-## Truth Boundary
+- what Movi helps an agent do
+- how to install and attach the local Movi MCP server
+- which tools are safe first for review-first batch work
+- what one good first-success path looks like
+- what the packet must not claim
 
-- this bundle is **submission-ready-unlisted**
-- it does **not** claim a live OpenClaw or ClawHub listing
-- it does **not** claim a browser-extension marketplace listing
-- it does **not** bypass `review-first -> dry-run -> execute`
+## What this packet includes
+
+- `SKILL.md`
+  - the agent-facing workflow brief
+- `manifest.yaml`
+  - packet metadata and truthful listing boundary
+- `references/README.md`
+  - quick map of the local reference files
+- `references/INSTALL.md`
+  - install and attach walkthrough
+- `references/OPENHANDS_MCP_CONFIG.json`
+  - host config snippet for OpenHands-style `mcpServers`
+- `references/OPENCLAW_MCP_CONFIG.json`
+  - host config snippet for OpenClaw-style `mcp.servers`
+- `references/CAPABILITIES.md`
+  - exact Movi tool surface and safe-first order
+- `references/DEMO.md`
+  - first-success prompt plus expected tool sequence
+- `references/TROUBLESHOOTING.md`
+  - attach, proof, and runtime failure checks
+
+## Best-fit hosts
+
+- OpenHands/extensions contribution flow
+- ClawHub-style skill publication
+- repo-local skill import flows that expect one standalone folder with its own
+  install, capability, and demo notes
+
+## Current state
+
+- the repo-owned packet is ready for review-first host-native evaluation
+- the OpenHands/extensions lane remains future-facing, not a current live claim
+- the packet does not claim a live OpenHands, OpenClaw, or ClawHub listing
+
+## What this packet must not claim
+
+- no live OpenHands listing without fresh PR/read-back
+- no browser-extension marketplace listing
+- no hosted Movi SaaS or hidden execute shortcut
+
+## Existing repo-owned helper files
+
+This packet still ships the repo-owned helper files below because they are
+useful during review:
+
+- `codex.mcp.json`
+- `claude-code.mcp.json`
+- `openclaw.mcp.json`
+- `install-and-proof.md`
+
+They are helper artifacts, not evidence that a live listing already exists.

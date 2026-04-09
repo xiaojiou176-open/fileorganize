@@ -4,6 +4,10 @@ Status: `submission-ready-unlisted`
 
 This page is the OpenClaw-facing integration note for Movi.
 
+The canonical public root for Movi still lives at `../../README.md` plus
+`../../manifest.yaml`. This page is a host-specific supporting bundle, not the
+repo storefront.
+
 In plain language: the repo now ships a truthful bundle you can hand to an
 OpenClaw-style host, but it still refuses to pretend that a live OpenClaw or
 ClawHub listing already exists.
