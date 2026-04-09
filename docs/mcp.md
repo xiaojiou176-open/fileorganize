@@ -7,6 +7,12 @@ description: Local-first stdio MCP surface for Movi with review-safe tools, read
 
 `Movi MCP v1` is the local-first stdio extension surface for Movi.
 
+The canonical public root still lives at the repo root (`README.md` +
+`manifest.yaml`), the canonical machine-readable descriptor now lives at
+`../server.json`, and `../apps/mcp/README.md` explains the runtime
+implementation path. This page explains the pure-MCP support surface; it does
+not mean the repo already ships a live registry listing.
+
 In plain language: it gives an agent or automation client a supervised control window into the same workflow humans use in the app. It can inspect jobs, read reports, patch overlays, preview reusable rules, and queue dry-run-safe follow-up work, but it does not get a secret “move files now” shortcut.
 
 ## What V1 Is

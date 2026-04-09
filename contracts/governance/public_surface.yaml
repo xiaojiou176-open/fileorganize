@@ -2,6 +2,7 @@ version: 1
 public_docs:
   - README.md
   - manifest.yaml
+  - server.json
   - AGENTS.md
   - CLAUDE.md
   - LICENSE
@@ -15,6 +16,7 @@ public_docs:
   - CODE_OF_CONDUCT.md
   - docs/usage.md
   - docs/architecture.md
+  - apps/mcp/README.md
   - examples/skills/README.md
   - examples/openclaw/README.md
 public_doc_globs:

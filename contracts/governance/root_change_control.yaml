@@ -96,6 +96,10 @@ entries:
     owner: repo
     change_class: security
     approval_rule: architecture-review
+  server.json:
+    owner: repo
+    change_class: public-doc
+    approval_rule: architecture-review
   SUPPORT.md:
     owner: repo
     change_class: public-doc
@@ -121,6 +125,10 @@ entries:
     change_class: canonical-root
     approval_rule: architecture-review
   manifest.yaml:
+    owner: repo
+    change_class: public-doc
+    approval_rule: architecture-review
+  server.json:
     owner: repo
     change_class: public-doc
     approval_rule: architecture-review
