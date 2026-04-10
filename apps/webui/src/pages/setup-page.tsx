@@ -221,8 +221,8 @@ export function SetupPage() {
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card>
           <CardHeader>
-            <CardTitle>{t('setup.card.required.title')}</CardTitle>
-            <CardDescription>{t('setup.card.required.description')}</CardDescription>
+            <CardTitle>{t('setup.card.connect.title')}</CardTitle>
+            <CardDescription>{t('setup.card.connect.description')}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-5">
             <div className="space-y-2">
