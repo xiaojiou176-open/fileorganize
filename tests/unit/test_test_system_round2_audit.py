@@ -805,6 +805,17 @@ def test_run_web_stack_uses_compose_project_name_fallback() -> None:
     )
 
 
+def test_run_web_api_hashes_lockfiles_from_repo_root() -> None:
+    run_web_api = (_repo_root() / "tooling" / "runtime" / "run_web_api.sh").read_text(encoding="utf-8")
+
+    _assert_contains(
+        run_web_api,
+        'cat "$REPO_ROOT/tooling/requirements.lock.txt" "$REPO_ROOT/tooling/requirements-dev.lock.txt"',
+        "run_web_api lockfile hash inputs stay anchored at repo root",
+    )
+    assert 'cat "$ROOT/tooling/requirements.lock.txt"' not in run_web_api
+
+
 def test_run_webui_reinstalls_when_lock_hash_changes() -> None:
     run_webui = (_repo_root() / "tooling" / "runtime" / "run_webui.sh").read_text(encoding="utf-8")
     defaults = _load_governance_defaults()

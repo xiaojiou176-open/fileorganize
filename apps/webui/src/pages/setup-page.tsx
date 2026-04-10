@@ -1,4 +1,4 @@
-import { CheckCircle2, FolderOpen, KeyRound, Sparkles, Wand2 } from 'lucide-react'
+import { CheckCircle2, FolderOpen, KeyRound, ListChecks, ShieldCheck, Sparkles, Wand2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -118,6 +118,16 @@ export function SetupPage() {
     return 'not_configured'
   }, [settings])
 
+  const checklistItems = useMemo(
+    () => [
+      { label: t('setup.checklist.apiKey'), ready: Boolean(settings?.has_api_key) },
+      { label: t('setup.checklist.inputRoot'), ready: Boolean(settings?.input_root_exists) },
+      { label: t('setup.checklist.outputRoot'), ready: Boolean(settings?.output_root_exists) },
+    ],
+    [settings?.has_api_key, settings?.input_root_exists, settings?.output_root_exists, t],
+  )
+  const readyCount = checklistItems.filter((item) => item.ready).length
+
   async function handleSave() {
     setSaving(true)
     try {
@@ -211,10 +221,10 @@ export function SetupPage() {
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card>
           <CardHeader>
-            <CardTitle>{t('setup.card.connect.title')}</CardTitle>
-            <CardDescription>{t('setup.card.connect.description')}</CardDescription>
+            <CardTitle>{t('setup.card.required.title')}</CardTitle>
+            <CardDescription>{t('setup.card.required.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-4">
+          <CardContent className="grid gap-5">
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-api-key">
                 {t('setup.field.apiKey')}
@@ -229,6 +239,113 @@ export function SetupPage() {
               <p className="text-xs text-muted-foreground">{t('setup.field.apiKeyStatus', { status: summarizeApiStatus(settings) })}</p>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="setup-input-root">
+                {t('setup.field.inputRoot')}
+              </label>
+              <Input
+                id="setup-input-root"
+                onChange={(event) => setForm((prev) => ({ ...prev, inputRoot: event.target.value }))}
+                placeholder={t('setup.field.inputRootPlaceholder')}
+                value={form.inputRoot}
+              />
+              <p className="text-xs text-muted-foreground">{t('setup.field.inputRootHint')}</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium" htmlFor="setup-output-root">
+                {t('setup.field.outputRoot')}
+              </label>
+              <Input
+                id="setup-output-root"
+                onChange={(event) => setForm((prev) => ({ ...prev, outputRoot: event.target.value }))}
+                placeholder={t('setup.field.outputRootPlaceholder')}
+                value={form.outputRoot}
+              />
+              <p className="text-xs text-muted-foreground">{t('setup.field.outputRootHint')}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-3 pt-2">
+              <Button disabled={saving || checking} onClick={() => void handleSave()}>
+                <Wand2 className="mr-2 h-4 w-4" />
+                {saving ? t('setup.cta.saving') : t('setup.cta.save')}
+              </Button>
+              <Button disabled={checking} onClick={() => void handleValidate()} variant="outline">
+                <Sparkles className="mr-2 h-4 w-4" />
+                {checking ? t('setup.cta.checking') : t('setup.cta.check')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('setup.card.checklist.title')}</CardTitle>
+              <CardDescription>{t('setup.card.checklist.description', { ready: String(readyCount), total: String(checklistItems.length) })}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {checklistItems.map((item) => (
+                <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/20 px-4 py-3" key={item.label}>
+                  <div className="flex items-center gap-3">
+                    <div className="grid h-9 w-9 place-items-center rounded-2xl border border-border bg-background">
+                      {item.ready ? <CheckCircle2 className="h-4 w-4 text-success" /> : <ListChecks className="h-4 w-4 text-muted-foreground" />}
+                    </div>
+                    <div>
+                      <p className="font-medium">{item.label}</p>
+                      <p className="text-xs text-muted-foreground">{item.ready ? t('setup.checklist.ready') : t('setup.checklist.missing')}</p>
+                    </div>
+                  </div>
+                  <Badge variant={item.ready ? 'success' : 'secondary'}>
+                    {item.ready ? t('setup.checklist.badgeReady') : t('setup.checklist.badgePending')}
+                  </Badge>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <StatusCard
+            icon={KeyRound}
+            label={t('setup.status.aiConnection.label')}
+            value={settings?.has_api_key ? t('setup.status.aiConnection.ready') : t('setup.status.aiConnection.pending')}
+          />
+          <StatusCard
+            icon={FolderOpen}
+            label={t('setup.status.sourceFolder.label')}
+            value={settings?.input_root_exists ? t('setup.status.sourceFolder.ready') : t('setup.status.sourceFolder.pending')}
+          />
+          <StatusCard
+            icon={FolderOpen}
+            label={t('setup.status.outputFolder.label')}
+            value={settings?.output_root_exists ? t('setup.status.outputFolder.ready') : t('setup.status.outputFolder.pending')}
+          />
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('setup.next.title')}</CardTitle>
+              <CardDescription>{t('setup.next.description')}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm text-muted-foreground">
+              <p>{t('setup.next.step1')}</p>
+              <p>{t('setup.next.step2')}</p>
+              <p>{t('setup.next.step3')}</p>
+              <Button asChild className="w-full" disabled={!settings?.ready}>
+                <Link {...analyzePrefetch} to="/analyze">
+                  {t('setup.next.cta')}
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('setup.card.defaults.title')}</CardTitle>
+            <CardDescription>{t('setup.card.defaults.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-pack">
                 {t('setup.field.strategyPack')}
@@ -260,16 +377,18 @@ export function SetupPage() {
                 <div className="rounded-xl border border-border bg-muted/30 p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-medium">{selectedPack.name}</p>
-                    <Badge variant="secondary">template only</Badge>
+                    <Badge variant="secondary">{t('setup.card.defaults.templateOnly')}</Badge>
                   </div>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    {selectedPack.description || 'Use this pack when the same kind of batch keeps showing up and you want Analyze to start from a familiar default recipe.'}
+                    {selectedPack.description || t('setup.card.defaults.packFallback')}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <Badge variant="outline">model: {selectedPack.model || 'keep current default'}</Badge>
+                    <Badge variant="outline">model: {selectedPack.model || t('setup.card.defaults.keepCurrent')}</Badge>
                     <Badge variant="outline">workers: {selectedPack.workers}</Badge>
-                    <Badge variant="outline">categories: {selectedPack.categories.join(', ') || 'none'}</Badge>
-                    <Badge variant="outline">review threshold: {Math.round(selectedPack.review_confidence_threshold * 100)}%</Badge>
+                    <Badge variant="outline">categories: {selectedPack.categories.join(', ') || t('setup.card.defaults.none')}</Badge>
+                    <Badge variant="outline">
+                      {t('setup.card.defaults.reviewThreshold', { value: String(Math.round(selectedPack.review_confidence_threshold * 100)) })}
+                    </Badge>
                   </div>
                 </div>
               ) : null}
@@ -277,7 +396,7 @@ export function SetupPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-model">
-                Default model
+                {t('setup.field.model')}
               </label>
               <Select id="setup-model" onValueChange={(value) => setForm((prev) => ({ ...prev, model: value }))} value={form.model}>
                 {MODEL_OPTIONS.map((option) => (
@@ -289,55 +408,37 @@ export function SetupPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="setup-input-root">
-                Default photo source folder
-              </label>
-              <Input
-                id="setup-input-root"
-                onChange={(event) => setForm((prev) => ({ ...prev, inputRoot: event.target.value }))}
-                placeholder="For example: ~/Pictures/to-sort"
-                value={form.inputRoot}
-              />
-              <p className="text-xs text-muted-foreground">Analyze can use this connected folder in one click, or you can still upload a one-off batch.</p>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="setup-output-root">
-                Default organized output folder
-              </label>
-              <Input
-                id="setup-output-root"
-                onChange={(event) => setForm((prev) => ({ ...prev, outputRoot: event.target.value }))}
-                placeholder="For example: ~/Pictures/Movi Organized"
-                value={form.outputRoot}
-              />
-              <p className="text-xs text-muted-foreground">Saving creates missing directories automatically so you do not have to build the folder tree by hand first.</p>
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
               <label className="text-sm font-medium" htmlFor="setup-categories">
-                Default category hint
+                {t('setup.field.categories')}
               </label>
               <Input id="setup-categories" onChange={(event) => setForm((prev) => ({ ...prev, categories: event.target.value }))} value={form.categories} />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-workers">
-                Default parallel workers
+                {t('setup.field.workers')}
               </label>
               <Input id="setup-workers" onChange={(event) => setForm((prev) => ({ ...prev, workers: event.target.value }))} value={form.workers} />
             </div>
+          </CardContent>
+        </Card>
 
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('setup.card.advanced.title')}</CardTitle>
+            <CardDescription>{t('setup.card.advanced.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-max-files">
-                Default file-count limit
+                {t('setup.field.maxFiles')}
               </label>
               <Input id="setup-max-files" onChange={(event) => setForm((prev) => ({ ...prev, maxFiles: event.target.value }))} value={form.maxFiles} />
             </div>
 
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-max-total-mb">
-                Default total-size limit (MB)
+                {t('setup.field.maxTotalMb')}
               </label>
               <Input
                 id="setup-max-total-mb"
@@ -348,43 +449,20 @@ export function SetupPage() {
 
             <div className="space-y-2">
               <label className="text-sm font-medium" htmlFor="setup-max-file-mb">
-                Default single-file limit (MB)
+                {t('setup.field.maxFileMb')}
               </label>
               <Input id="setup-max-file-mb" onChange={(event) => setForm((prev) => ({ ...prev, maxFileMb: event.target.value }))} value={form.maxFileMb} />
             </div>
+
+            <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2 font-medium text-foreground">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                {t('setup.card.advanced.guardrailsTitle')}
+              </div>
+              <p className="mt-2">{t('setup.card.advanced.guardrailsDescription')}</p>
+            </div>
           </CardContent>
         </Card>
-
-        <div className="space-y-4">
-          <StatusCard icon={KeyRound} label="AI connection" value={settings?.has_api_key ? 'API key saved' : 'API key not configured'} />
-          <StatusCard
-            icon={FolderOpen}
-            label="Source folder"
-            value={settings?.input_root_exists ? 'Ready to scan' : 'Created automatically when you save'}
-          />
-          <StatusCard
-            icon={FolderOpen}
-            label="Organized output"
-            value={settings?.output_root_exists ? 'Ready to write' : 'Created automatically when you save'}
-          />
-
-          <Card>
-            <CardHeader>
-              <CardTitle>What to do next</CardTitle>
-              <CardDescription>The smooth path should look like this:</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>1. Connect the API key and default folders here.</p>
-              <p>2. Go to Analyze and use the connected folder or upload the current batch.</p>
-              <p>3. Review the manifest in Review Queue, run a preview, then start the real apply.</p>
-              <Button asChild className="w-full" disabled={!settings?.ready}>
-                <Link {...analyzePrefetch} to="/analyze">
-                  Continue to Analyze
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
       </section>
     </div>
   )
