@@ -446,7 +446,7 @@ jobs:
           TO_REF="HEAD"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_BRANCH="origin/${{ github.base_ref }}"
-            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            git fetch --no-tags --prune --depth=200 origin "${{ github.base_ref }}"
             if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
               HEAD_REF="origin/${CI_HEAD_REF}"
               git fetch --no-tags --prune --depth=200 origin "${CI_HEAD_REF}"
@@ -506,7 +506,7 @@ jobs:
           TO_REF="HEAD"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             BASE_BRANCH="origin/${{ github.base_ref }}"
-            git fetch --no-tags --prune --depth=1 origin "${{ github.base_ref }}"
+            git fetch --no-tags --prune --depth=200 origin "${{ github.base_ref }}"
             if [ "${{ github.event.pull_request.head.repo.full_name }}" = "${{ github.repository }}" ]; then
               HEAD_REF="origin/${CI_HEAD_REF}"
               git fetch --no-tags --prune --depth=200 origin "${CI_HEAD_REF}"
