@@ -18,6 +18,7 @@ canonical_tracked_entries:
   - NOTICE
   - README.md
   - SECURITY.md
+  - server.json
   - SUPPORT.md
   - THIRD_PARTY_NOTICES.md
   - apps
@@ -70,6 +71,7 @@ entry_purposes:
   NOTICE: public repository notice summary
   README.md: public repo entry document
   SECURITY.md: public security reporting policy
+  server.json: canonical machine-readable MCP descriptor for the public pure-MCP lane
   SUPPORT.md: public support boundary
   THIRD_PARTY_NOTICES.md: third-party dependency and asset notices
   apps: repo entry applications

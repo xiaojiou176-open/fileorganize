@@ -11,6 +11,7 @@ required_repo_surface_files:
   - DISTRIBUTION.md
   - INTEGRATIONS.md
   - manifest.yaml
+  - server.json
   - SUPPORT.md
   - CODE_OF_CONDUCT.md
   - .github/CODEOWNERS
@@ -27,6 +28,7 @@ required_repo_surface_files:
   - docs/mcp.md
   - docs/developer_guide.md
   - docs/review_first_ai_file_organizer.md
+  - apps/mcp/README.md
   - examples/skills/README.md
   - examples/skills/SKILL.md
   - examples/openclaw/README.md
