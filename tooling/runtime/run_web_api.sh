@@ -48,7 +48,9 @@ if [ ! -x "$VENV/bin/python" ]; then
 fi
 
 REQ_HASH="$(
-  cat "$ROOT/tooling/requirements.lock.txt" "$ROOT/tooling/requirements-dev.lock.txt" \
+  # Keep runtime bootstrap aligned with quality_gate and pre-push lockfile truth:
+  # when either Python lockfile drifts, reinstall before web-api start.
+  cat "$REPO_ROOT/tooling/requirements.lock.txt" "$REPO_ROOT/tooling/requirements-dev.lock.txt" \
     | shasum -a 256 \
     | awk '{print $1}'
 )"

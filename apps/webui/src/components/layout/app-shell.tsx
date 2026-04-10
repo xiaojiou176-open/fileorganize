@@ -13,6 +13,14 @@ import { getRuntimeSettings, type RuntimeSettings } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
 import { NativeSelect } from '@/components/ui/native-select'
 
+type NavItem = {
+  id: string
+  to: string
+  label: string
+  icon: typeof House
+  prefetch: 'dashboard' | 'setup' | 'jobs' | 'inbox' | 'analyze' | 'review' | 'manifest' | 'conflicts' | 'apply' | 'report' | 'rollback'
+}
+
 function getDocumentMetadata(pathname: string): { title: string; description: string } {
   const fallback = {
     title: 'Movi | Review-first local organizer',
@@ -98,19 +106,43 @@ export function AppShell() {
   const applyJobId = jobs.find((job) => job.kind === 'apply')?.id ?? ''
   const reportJobId = jobs.find((job) => job.report_path)?.id ?? ''
   const rollbackJobId = jobs.find((job) => job.kind === 'rollback')?.id ?? ''
+  const reviewTarget = analyzeJobId ? `/review/${analyzeJobId}` : '/analyze'
+  const applyTarget = applyJobId ? `/apply/${applyJobId}` : analyzeJobId ? `/apply/${analyzeJobId}` : '/jobs'
 
-  const navItems = [
-    { id: 'dashboard', to: '/', label: t('appShell.nav.dashboard'), icon: House, prefetch: 'dashboard' as const },
-    { id: 'jobs', to: '/jobs', label: t('appShell.nav.jobs'), icon: Workflow, prefetch: 'jobs' as const },
-    { id: 'inbox', to: '/inbox', label: t('appShell.nav.inbox'), icon: Inbox, prefetch: 'inbox' as const },
-    { id: 'analyze', to: '/analyze', label: t('appShell.nav.analyze'), icon: Sparkles, prefetch: 'analyze' as const },
-    { id: 'review', to: analyzeJobId ? `/review/${analyzeJobId}` : '/jobs', label: t('appShell.nav.review'), icon: ScanSearch, prefetch: 'review' as const },
-    { id: 'manifest', to: analyzeJobId ? `/manifest/${analyzeJobId}` : '/jobs', label: t('appShell.nav.manifest'), icon: FileStack, prefetch: 'manifest' as const },
-    { id: 'conflicts', to: analyzeJobId ? `/conflicts/${analyzeJobId}` : '/jobs', label: t('appShell.nav.conflicts'), icon: AlertTriangle, prefetch: 'conflicts' as const },
-    { id: 'apply', to: applyJobId ? `/apply/${applyJobId}` : '/jobs', label: t('appShell.nav.apply'), icon: ListTodo, prefetch: 'apply' as const },
-    { id: 'report', to: reportJobId ? `/report/${reportJobId}` : '/jobs', label: t('appShell.nav.report'), icon: ChartPie, prefetch: 'report' as const },
-    { id: 'rollback', to: rollbackJobId ? `/rollback/${rollbackJobId}` : '/jobs', label: t('appShell.nav.rollback'), icon: RotateCcw, prefetch: 'rollback' as const },
+  const mainNavItems: NavItem[] = [
+    { id: 'dashboard', to: '/', label: t('appShell.nav.dashboard'), icon: House, prefetch: 'dashboard' },
+    { id: 'setup', to: '/setup', label: t('appShell.nav.setup'), icon: KeyRound, prefetch: 'setup' },
+    { id: 'analyze', to: '/analyze', label: t('appShell.nav.analyze'), icon: Sparkles, prefetch: 'analyze' },
+    { id: 'review', to: reviewTarget, label: t('appShell.nav.review'), icon: ScanSearch, prefetch: 'review' },
   ]
+
+  const secondaryNavItems = useMemo(() => {
+    const items: NavItem[] = [
+      { id: 'jobs', to: '/jobs', label: t('appShell.nav.jobs'), icon: Workflow, prefetch: 'jobs' },
+      { id: 'inbox', to: '/inbox', label: t('appShell.nav.inbox'), icon: Inbox, prefetch: 'inbox' },
+    ]
+
+    if (analyzeJobId) {
+      items.push(
+        { id: 'manifest', to: `/manifest/${analyzeJobId}`, label: t('appShell.nav.manifest'), icon: FileStack, prefetch: 'manifest' },
+        { id: 'conflicts', to: `/conflicts/${analyzeJobId}`, label: t('appShell.nav.conflicts'), icon: AlertTriangle, prefetch: 'conflicts' },
+      )
+    }
+
+    if (analyzeJobId || applyJobId) {
+      items.push({ id: 'apply', to: applyTarget, label: t('appShell.nav.apply'), icon: ListTodo, prefetch: 'apply' })
+    }
+
+    if (reportJobId) {
+      items.push({ id: 'report', to: `/report/${reportJobId}`, label: t('appShell.nav.report'), icon: ChartPie, prefetch: 'report' })
+    }
+
+    if (rollbackJobId) {
+      items.push({ id: 'rollback', to: `/rollback/${rollbackJobId}`, label: t('appShell.nav.rollback'), icon: RotateCcw, prefetch: 'rollback' })
+    }
+
+    return items
+  }, [analyzeJobId, applyJobId, applyTarget, reportJobId, rollbackJobId, t])
 
   useEffect(() => {
     return scheduleLikelyRoutePreload(location.pathname)
@@ -208,34 +240,74 @@ export function AppShell() {
               <p className="font-semibold">{t('appShell.brand.subtitle')}</p>
             </div>
           </div>
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
-              return (
-                <NavLink
-                  className={({ isActive }) =>
-                    cn(
-                      'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                      'motion-nav-item',
-                      isActive
-                        ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                        : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
-                    )
-                  }
-                  key={`${item.id}-${item.to}`}
-                  onFocus={prefetchHandlers.onFocus}
-                  onMouseEnter={prefetchHandlers.onMouseEnter}
-                  onPointerDown={prefetchHandlers.onPointerDown}
-                  onTouchStart={prefetchHandlers.onTouchStart}
-                  to={item.to}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>
-              )
-            })}
+          <nav className="space-y-5">
+            <div className="space-y-1">
+              <div className="px-3 pb-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.primary')}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.primaryHint')}</p>
+              </div>
+              {mainNavItems.map((item) => {
+                const Icon = item.icon
+                const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
+                return (
+                  <NavLink
+                    className={({ isActive }) =>
+                      cn(
+                        'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        'motion-nav-item',
+                        isActive
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                      )
+                    }
+                    key={`${item.id}-${item.to}`}
+                    onFocus={prefetchHandlers.onFocus}
+                    onMouseEnter={prefetchHandlers.onMouseEnter}
+                    onPointerDown={prefetchHandlers.onPointerDown}
+                    onTouchStart={prefetchHandlers.onTouchStart}
+                    to={item.to}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                )
+              })}
+            </div>
+
+            <div className="space-y-1">
+              <div className="px-3 pb-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.secondary')}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
+              </div>
+              {secondaryNavItems.map((item) => {
+                const Icon = item.icon
+                const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
+                return (
+                  <NavLink
+                    className={({ isActive }) =>
+                      cn(
+                        'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        'motion-nav-item',
+                        isActive
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                      )
+                    }
+                    key={`${item.id}-${item.to}`}
+                    onFocus={prefetchHandlers.onFocus}
+                    onMouseEnter={prefetchHandlers.onMouseEnter}
+                    onPointerDown={prefetchHandlers.onPointerDown}
+                    onTouchStart={prefetchHandlers.onTouchStart}
+                    to={item.to}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                )
+              })}
+            </div>
           </nav>
         </aside>
 
@@ -289,29 +361,64 @@ export function AppShell() {
             <SheetTitle>{t('appShell.mobile.navigation')}</SheetTitle>
             <SheetDescription>{t('appShell.mobile.description')}</SheetDescription>
           </SheetHeader>
-          <nav className="space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon
-              return (
-                <NavLink
-                  className={({ isActive }) =>
-                    cn(
-                      'group flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                      isActive
-                        ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                        : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
-                    )
-                  }
-                  key={`mobile-${item.id}-${item.to}`}
-                  onClick={() => setMobileNavOpen(false)}
-                  to={item.to}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>
-              )
-            })}
+          <nav className="space-y-5">
+            <div className="space-y-2">
+              <div className="px-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.primary')}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.primaryHint')}</p>
+              </div>
+              {mainNavItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <NavLink
+                    className={({ isActive }) =>
+                      cn(
+                        'group flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        isActive
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                      )
+                    }
+                    key={`mobile-${item.id}-${item.to}`}
+                    onClick={() => setMobileNavOpen(false)}
+                    to={item.to}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                )
+              })}
+            </div>
+
+            <div className="space-y-2">
+              <div className="px-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.secondary')}</p>
+                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
+              </div>
+              {secondaryNavItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <NavLink
+                    className={({ isActive }) =>
+                      cn(
+                        'group flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        isActive
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
+                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                      )
+                    }
+                    key={`mobile-${item.id}-${item.to}`}
+                    onClick={() => setMobileNavOpen(false)}
+                    to={item.to}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </NavLink>
+                )
+              })}
+            </div>
           </nav>
         </SheetContent>
       </Sheet>

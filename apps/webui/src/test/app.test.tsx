@@ -66,7 +66,7 @@ describe('App routes', () => {
       await screen.findByRole(
         'heading',
         {
-          name: /Review-first local organization\. Analyze, inspect, dry-run, then execute with rollback ready\./,
+          name: /Use this page like a command center: confirm readiness, take the next step, and keep the current batch in the right stage\./,
         },
         { timeout: 5000 },
       ),
@@ -75,6 +75,7 @@ describe('App routes', () => {
     expect(document.querySelector('meta[name="description"]')?.getAttribute('content')).toContain('review-first local file organizer')
     expect(document.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe('Movi | Review-first local organizer')
     expect(screen.getByRole('heading', { name: 'Agent & Builder Surfaces' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Main path' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Codex route' })).toHaveAttribute(
       'href',
       expect.stringContaining('/docs/codex_mcp.md'),
@@ -99,7 +100,7 @@ describe('App routes', () => {
     expect(screen.getByRole('button', { name: '作业中心' })).toBeInTheDocument()
     expect(
       await screen.findByRole('heading', {
-        name: /先审后动的本地整理流程。先 Analyze、再检查、先 dry-run，最后再执行并保留 rollback 余地。/,
+        name: /把这里当成当前批次的指挥台：先看是否 ready，再做下一步，并始终知道这批文件现在处在哪一站。/,
       }),
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Agent 与 Builder 接入面' })).toBeInTheDocument()

@@ -1,4 +1,4 @@
-import { ArrowRight, Binary, Bot, CircleAlert, FolderOpen, KeyRound, NotebookText, PlayCircle, PlugZap, Rocket } from 'lucide-react'
+import { ArrowRight, Bot, CheckCircle2, CircleAlert, ClipboardList, FolderOpen, KeyRound, NotebookText, PlugZap, Rocket, Workflow } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -18,6 +18,9 @@ const DASHBOARD_DOC_LINKS = {
   mcp: 'https://github.com/xiaojiou176-open/movi-organizer/blob/main/docs/mcp.md',
   developerGuide: 'https://github.com/xiaojiou176-open/movi-organizer/blob/main/docs/developer_guide.md',
 } as const
+
+type NextStepKind = 'setup' | 'analyze' | 'review' | 'apply' | 'report'
+type FlowStage = 'setup' | 'analyze' | 'review' | 'apply'
 
 export function DashboardPage() {
   const { t } = useI18n()
@@ -41,59 +44,195 @@ export function DashboardPage() {
     }
   }, [])
 
-  const pendingFiles = useMemo(() => jobs.find((job) => job.kind === 'analyze')?.summary?.total ?? 0, [jobs])
-  const analyzeJobId = jobs.find((job) => job.kind === 'analyze')?.id ?? ''
-  const dryRunWaiting = useMemo(
-    () => jobs.filter((job) => job.kind === 'apply' && job.summary?.dry_run === true && job.status !== 'succeeded').length,
-    [jobs],
-  )
-  const succeededJobs = useMemo(() => jobs.filter((job) => job.status === 'succeeded').length, [jobs])
+  const analyzeJob = jobs.find((job) => job.kind === 'analyze')
+  const applyJob = jobs.find((job) => job.kind === 'apply')
   const reportJob = jobs.find((job) => job.report_path)
-  const rollbackJobId = jobs.find((job) => job.kind === 'rollback')?.id ?? ''
+  const latestJob = jobs[0] ?? null
+  const pendingFiles = analyzeJob?.summary?.total ?? 0
+  const dryRunWaiting = jobs.filter((job) => job.kind === 'apply' && job.summary?.dry_run === true && job.status !== 'succeeded').length
+  const succeededJobs = jobs.filter((job) => job.status === 'succeeded').length
+  const analyzeJobId = analyzeJob?.id ?? ''
+  const reviewTargetJobId = analyzeJobId
+  const applyTargetJobId = applyJob?.id ?? analyzeJobId
+  const latestReportLabel = reportJob ? reportJob.id.slice(-6) : t('dashboard.snapshot.empty')
+
+  const setupPrefetch = createRouteIntentPrefetchHandlers('setup')
   const analyzePrefetch = createRouteIntentPrefetchHandlers('analyze')
   const reviewPrefetch = createRouteIntentPrefetchHandlers('review')
   const applyPrefetch = createRouteIntentPrefetchHandlers('apply')
-  const rollbackPrefetch = createRouteIntentPrefetchHandlers('rollback')
   const jobsPrefetch = createRouteIntentPrefetchHandlers('jobs')
-  const setupPrefetch = createRouteIntentPrefetchHandlers('setup')
+  const reportPrefetch = createRouteIntentPrefetchHandlers('report')
+
+  const nextStepKind: NextStepKind = useMemo(() => {
+    if (!runtimeSettings?.ready) {
+      return 'setup'
+    }
+    if (reportJob) {
+      return 'report'
+    }
+    if (applyTargetJobId && dryRunWaiting > 0) {
+      return 'apply'
+    }
+    if (reviewTargetJobId) {
+      return 'review'
+    }
+    return 'analyze'
+  }, [applyTargetJobId, dryRunWaiting, reportJob, reviewTargetJobId, runtimeSettings?.ready])
+
+  const flowStage: FlowStage = useMemo(() => {
+    if (!runtimeSettings?.ready) {
+      return 'setup'
+    }
+    if (applyTargetJobId && dryRunWaiting > 0) {
+      return 'apply'
+    }
+    if (reviewTargetJobId) {
+      return 'review'
+    }
+    return 'analyze'
+  }, [applyTargetJobId, dryRunWaiting, reviewTargetJobId, runtimeSettings?.ready])
+
+  const flowStageIndex = flowStage === 'setup' ? 0 : flowStage === 'analyze' ? 1 : flowStage === 'review' ? 2 : 3
+
+  const readinessSummary = runtimeSettings?.ready
+    ? t('dashboard.command.ready.stateReady')
+    : t('dashboard.command.ready.stateNeedsSetup', {
+        items: runtimeSettings?.missing?.join(', ') || t('dashboard.setupCard.loading'),
+      })
+
+  const nextStepMeta = {
+    setup: {
+      title: t('dashboard.command.next.setupTitle'),
+      description: t('dashboard.command.next.setupDescription'),
+      cta: t('dashboard.command.next.setupCta'),
+      to: '/setup',
+      prefetch: setupPrefetch,
+    },
+    analyze: {
+      title: t('dashboard.command.next.analyzeTitle'),
+      description: t('dashboard.command.next.analyzeDescription'),
+      cta: t('dashboard.command.next.analyzeCta'),
+      to: '/analyze',
+      prefetch: analyzePrefetch,
+    },
+    review: {
+      title: t('dashboard.command.next.reviewTitle'),
+      description: t('dashboard.command.next.reviewDescription'),
+      cta: t('dashboard.command.next.reviewCta'),
+      to: reviewTargetJobId ? `/review/${reviewTargetJobId}` : '/analyze',
+      prefetch: reviewPrefetch,
+    },
+    apply: {
+      title: t('dashboard.command.next.applyTitle'),
+      description: t('dashboard.command.next.applyDescription'),
+      cta: t('dashboard.command.next.applyCta'),
+      to: applyTargetJobId ? `/apply/${applyTargetJobId}` : '/jobs',
+      prefetch: applyPrefetch,
+    },
+    report: {
+      title: t('dashboard.command.next.reportTitle'),
+      description: t('dashboard.command.next.reportDescription'),
+      cta: t('dashboard.command.next.reportCta'),
+      to: reportJob ? `/report/${reportJob.id}` : '/jobs',
+      prefetch: reportPrefetch,
+    },
+  }[nextStepKind]
+
+  const stageMeta = {
+    setup: {
+      label: t('dashboard.command.stage.setupLabel'),
+      description: t('dashboard.command.stage.setupDescription'),
+    },
+    analyze: {
+      label: t('dashboard.command.stage.analyzeLabel'),
+      description: t('dashboard.command.stage.analyzeDescription'),
+    },
+    review: {
+      label: t('dashboard.command.stage.reviewLabel'),
+      description: t('dashboard.command.stage.reviewDescription'),
+    },
+    apply: {
+      label: t('dashboard.command.stage.applyLabel'),
+      description: reportJob ? t('dashboard.command.stage.applyReportReady') : t('dashboard.command.stage.applyDescription'),
+    },
+  }[flowStage]
+
+  const flowSteps = [
+    { key: 'setup', label: t('dashboard.flow.setup') },
+    { key: 'analyze', label: t('dashboard.flow.analyze') },
+    { key: 'review', label: t('dashboard.flow.review') },
+    { key: 'apply', label: t('dashboard.flow.apply') },
+  ]
 
   return (
     <div className="space-y-6">
       <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-[linear-gradient(135deg,hsl(var(--brand-soft))_0%,hsl(var(--card))_55%,hsl(var(--accent)/0.6)_100%)] p-6 shadow-card sm:p-8">
         <div className="pointer-events-none absolute -right-20 -top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-        <div className="max-w-3xl space-y-4">
-          <Badge variant={runtimeSettings?.ready ? 'success' : 'secondary'}>
-            {runtimeSettings?.ready ? t('dashboard.badge.ready') : t('dashboard.badge.setupRequired')}
-          </Badge>
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t('dashboard.hero.title')}</h1>
-          <p className="text-sm text-muted-foreground sm:text-base">{t('dashboard.hero.description')}</p>
-          <div className="flex flex-wrap gap-3">
-            {runtimeSettings?.ready ? (
+        <div className="space-y-6">
+          <div className="max-w-3xl space-y-4">
+            <Badge variant={runtimeSettings?.ready ? 'success' : 'secondary'}>
+              {runtimeSettings?.ready ? t('dashboard.badge.ready') : t('dashboard.badge.setupRequired')}
+            </Badge>
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t('dashboard.hero.title')}</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">{t('dashboard.hero.description')}</p>
+            <div className="flex flex-wrap gap-3">
               <Button asChild>
-                <Link {...analyzePrefetch} to="/analyze">
-                  {t('dashboard.cta.startAnalyze')}
+                <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
+                  {nextStepMeta.cta}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-            ) : (
-              <Button asChild>
-                <Link {...setupPrefetch} to="/setup">
-                  {t('dashboard.cta.completeSetup')}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            )}
-            {analyzeJobId ? (
               <Button asChild variant="outline">
-                <Link {...reviewPrefetch} to={`/review/${analyzeJobId}`}>
-                  {t('dashboard.cta.openReview')}
+                <Link {...jobsPrefetch} to="/jobs">
+                  {t('dashboard.cta.openJobs')}
                 </Link>
               </Button>
-            ) : (
-              <Button disabled variant="outline">
-                {t('dashboard.cta.openReview')}
-              </Button>
-            )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <Card className="border-border/70 bg-card/90">
+              <CardHeader className="pb-3">
+                <CardDescription>{t('dashboard.command.ready.title')}</CardDescription>
+                <CardTitle className="text-xl">{runtimeSettings?.ready ? t('dashboard.command.ready.valueReady') : t('dashboard.command.ready.valueNeedsSetup')}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p>{readinessSummary}</p>
+                <div className="flex items-center gap-2 text-foreground">
+                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                  <span>{runtimeSettings?.ready ? t('dashboard.command.ready.connected') : t('dashboard.command.ready.finish')}</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/70 bg-card/90">
+              <CardHeader className="pb-3">
+                <CardDescription>{t('dashboard.command.next.title')}</CardDescription>
+                <CardTitle className="text-xl">{nextStepMeta.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <p>{nextStepMeta.description}</p>
+                <Button asChild size="sm" variant="secondary">
+                  <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
+                    {nextStepMeta.cta}
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/70 bg-card/90">
+              <CardHeader className="pb-3">
+                <CardDescription>{t('dashboard.command.stage.title')}</CardDescription>
+                <CardTitle className="text-xl">{stageMeta.label}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p>{stageMeta.description}</p>
+                <div className="flex items-center gap-2 text-foreground">
+                  <Workflow className="h-4 w-4 text-primary" />
+                  <span>{latestJob ? t('dashboard.command.stage.latestJob', { jobId: latestJob.id.slice(-6) }) : t('dashboard.command.stage.noBatch')}</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -118,53 +257,86 @@ export function DashboardPage() {
         </Card>
       ) : null}
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.55fr_0.95fr]">
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t('dashboard.metrics.pendingFiles')}</CardDescription>
-            <CardTitle className="text-2xl">{pendingFiles}</CardTitle>
+          <CardHeader>
+            <CardTitle>{t('dashboard.flow.title')}</CardTitle>
+            <CardDescription>{t('dashboard.flow.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t('dashboard.metrics.pendingFilesHint')}</span>
-            <FolderOpen className="h-4 w-4" />
+          <CardContent className="space-y-4">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {flowSteps.map((step, index) => {
+                const state = index < flowStageIndex ? 'complete' : index === flowStageIndex ? 'current' : 'upcoming'
+                return (
+                  <div
+                    className="rounded-2xl border border-border/70 bg-muted/30 p-4"
+                    key={step.key}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-medium">{step.label}</p>
+                      <Badge variant={state === 'complete' ? 'success' : state === 'current' ? 'secondary' : 'outline'}>
+                        {state === 'complete'
+                          ? t('dashboard.flow.state.complete')
+                          : state === 'current'
+                            ? t('dashboard.flow.state.current')
+                            : t('dashboard.flow.state.upcoming')}
+                      </Badge>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Button asChild variant="secondary">
+                <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
+                  {nextStepMeta.cta}
+                </Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link {...jobsPrefetch} to="/jobs">
+                  {t('dashboard.cta.openJobs')}
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t('dashboard.metrics.pendingDryRunReview')}</CardDescription>
-            <CardTitle className="text-2xl">{dryRunWaiting}</CardTitle>
+          <CardHeader>
+            <CardTitle>{t('dashboard.snapshot.title')}</CardTitle>
+            <CardDescription>{t('dashboard.snapshot.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t('dashboard.metrics.pendingDryRunHint')}</span>
-            <CircleAlert className="h-4 w-4 text-warning-ink" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t('dashboard.metrics.successfulJobs')}</CardDescription>
-            <CardTitle className="text-2xl">{succeededJobs}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t('dashboard.metrics.successfulJobsHint')}</span>
-            <Rocket className="h-4 w-4" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-2">
-            <CardDescription>{t('dashboard.metrics.latestReport')}</CardDescription>
-            <CardTitle className="text-2xl">{reportJob ? reportJob.id.slice(-6) : 'r-113'}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center justify-between text-xs text-muted-foreground">
-            <span>{t('dashboard.metrics.latestReportHint')}</span>
-            <NotebookText className="h-4 w-4" />
+          <CardContent className="space-y-3">
+            <SnapshotRow
+              icon={FolderOpen}
+              label={t('dashboard.snapshot.pendingFiles')}
+              value={String(pendingFiles)}
+              helper={t('dashboard.snapshot.pendingFilesHint')}
+            />
+            <SnapshotRow
+              icon={CircleAlert}
+              label={t('dashboard.snapshot.dryRun')}
+              value={String(dryRunWaiting)}
+              helper={t('dashboard.snapshot.dryRunHint')}
+            />
+            <SnapshotRow
+              icon={NotebookText}
+              label={t('dashboard.snapshot.latestReport')}
+              value={latestReportLabel}
+              helper={reportJob ? t('dashboard.snapshot.latestReportHint') : t('dashboard.snapshot.noReport')}
+            />
+            <SnapshotRow
+              icon={Rocket}
+              label={t('dashboard.snapshot.successfulJobs')}
+              value={String(succeededJobs)}
+              helper={t('dashboard.snapshot.successfulJobsHint')}
+            />
           </CardContent>
         </Card>
       </section>
 
-      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.7fr_1fr]">
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.6fr_1fr]">
         <Card>
           <CardHeader>
             <CardTitle>{t('dashboard.recentJobs.title')}</CardTitle>
@@ -210,145 +382,117 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('dashboard.quickActions.title')}</CardTitle>
-              <CardDescription>{t('dashboard.quickActions.description')}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {!runtimeSettings?.ready ? (
-                <Button asChild className="w-full justify-between">
-                  <Link {...setupPrefetch} to="/setup">
-                    {t('dashboard.cta.completeSetup')}
-                    <KeyRound className="h-4 w-4" />
-                  </Link>
-                </Button>
-              ) : null}
-              <Button asChild className="w-full justify-between" variant="secondary">
-                <Link {...analyzePrefetch} to="/analyze">
-                  {t('dashboard.quickActions.guidedFlow')}
-                  <PlayCircle className="h-4 w-4" />
-                </Link>
+        <Card className="border-border/80 bg-card/95">
+          <CardHeader>
+            <CardTitle>{t('dashboard.builder.title')}</CardTitle>
+            <CardDescription>{t('dashboard.builder.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="font-medium">{t('dashboard.builder.ai.title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.ai.description')}</p>
+                </div>
+                <Bot className="h-5 w-5 text-primary" />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
+                <Badge variant="outline">{runtimeSettings?.model || 'gemini-3-flash-preview'}</Badge>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="font-medium">{t('dashboard.builder.mcp.title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.mcp.description')}</p>
+                </div>
+                <PlugZap className="h-5 w-5 text-primary" />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge variant="outline">{t('dashboard.builder.badge.localFirst')}</Badge>
+                <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="font-medium">{t('dashboard.builder.api.title')}</p>
+                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.api.description')}</p>
+                </div>
+                <ClipboardList className="h-5 w-5 text-primary" />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge variant="outline">OpenAPI</Badge>
+                <Badge variant="outline">generated client</Badge>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
+              <p className="font-medium">{t('dashboard.builder.pack.title')}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{t('dashboard.builder.pack.description')}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Badge variant="outline">{t('dashboard.builder.badge.templateOnly')}</Badge>
+                <Badge variant="outline">
+                  {runtimeSettings?.active_strategy_pack_id
+                    ? t('dashboard.builder.pack.current', { packId: runtimeSettings.active_strategy_pack_id })
+                    : t('dashboard.builder.pack.none')}
+                </Badge>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              <Button asChild size="sm" variant="outline">
+                <a href={DASHBOARD_DOC_LINKS.codex} rel="noreferrer" target="_blank">
+                  {t('dashboard.builder.link.codex')}
+                </a>
               </Button>
-              {analyzeJobId ? (
-                <Button asChild className="w-full justify-between" variant="outline">
-                  <Link {...applyPrefetch} to={`/apply/${analyzeJobId}`}>
-                    {t('dashboard.quickActions.applyDryRun')}
-                  </Link>
-                </Button>
-              ) : (
-                <Button className="w-full justify-between" disabled variant="outline">
-                  {t('dashboard.quickActions.applyDryRun')}
-                </Button>
-              )}
-              {rollbackJobId ? (
-                <Button asChild className="w-full justify-between" variant="outline">
-                  <Link {...rollbackPrefetch} to={`/rollback/${rollbackJobId}`}>
-                    {t('dashboard.quickActions.rollbackGuard')}
-                  </Link>
-                </Button>
-              ) : (
-                <Button className="w-full justify-between" disabled variant="outline">
-                  {t('dashboard.quickActions.rollbackGuard')}
-                </Button>
-              )}
-              <Button asChild className="w-full justify-between" variant="outline">
-                <Link {...jobsPrefetch} to="/jobs">
-                  {t('dashboard.quickActions.jobsHistory')}
-                </Link>
+              <Button asChild size="sm" variant="outline">
+                <a href={DASHBOARD_DOC_LINKS.claude} rel="noreferrer" target="_blank">
+                  {t('dashboard.builder.link.claude')}
+                </a>
               </Button>
-              <p className="text-xs text-muted-foreground">{t('dashboard.quickActions.lastSynced', { time: formatDate(new Date().toISOString()) })}</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/80 bg-card/95">
-            <CardHeader>
-              <CardTitle>{t('dashboard.builder.title')}</CardTitle>
-              <CardDescription>{t('dashboard.builder.description')}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="font-medium">{t('dashboard.builder.ai.title')}</p>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.builder.ai.description')}</p>
-                  </div>
-                  <Bot className="h-5 w-5 text-primary" />
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
-                  <Badge variant="outline">{runtimeSettings?.model || 'gemini-3-flash-preview'}</Badge>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="font-medium">{t('dashboard.builder.mcp.title')}</p>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.builder.mcp.description')}</p>
-                  </div>
-                  <PlugZap className="h-5 w-5 text-primary" />
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge variant="outline">{t('dashboard.builder.badge.localFirst')}</Badge>
-                  <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="font-medium">{t('dashboard.builder.api.title')}</p>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.builder.api.description')}</p>
-                  </div>
-                  <Binary className="h-5 w-5 text-primary" />
-                </div>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge variant="outline">OpenAPI</Badge>
-                  <Badge variant="outline">generated client</Badge>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-                <p className="font-medium">{t('dashboard.builder.pack.title')}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{t('dashboard.builder.pack.description')}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Badge variant="outline">{t('dashboard.builder.badge.templateOnly')}</Badge>
-                  <Badge variant="outline">
-                    {runtimeSettings?.active_strategy_pack_id
-                      ? t('dashboard.builder.pack.current', { packId: runtimeSettings.active_strategy_pack_id })
-                      : t('dashboard.builder.pack.none')}
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Button asChild size="sm" variant="outline">
-                  <a href={DASHBOARD_DOC_LINKS.codex} rel="noreferrer" target="_blank">
-                    {t('dashboard.builder.link.codex')}
-                  </a>
-                </Button>
-                <Button asChild size="sm" variant="outline">
-                  <a href={DASHBOARD_DOC_LINKS.claude} rel="noreferrer" target="_blank">
-                    {t('dashboard.builder.link.claude')}
-                  </a>
-                </Button>
-                <Button asChild size="sm" variant="outline">
-                  <a href={DASHBOARD_DOC_LINKS.mcp} rel="noreferrer" target="_blank">
-                    {t('dashboard.builder.link.mcp')}
-                  </a>
-                </Button>
-                <Button asChild size="sm" variant="outline">
-                  <a href={DASHBOARD_DOC_LINKS.developerGuide} rel="noreferrer" target="_blank">
-                    {t('dashboard.builder.link.devGuide')}
-                  </a>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Button asChild size="sm" variant="outline">
+                <a href={DASHBOARD_DOC_LINKS.mcp} rel="noreferrer" target="_blank">
+                  {t('dashboard.builder.link.mcp')}
+                </a>
+              </Button>
+              <Button asChild size="sm" variant="outline">
+                <a href={DASHBOARD_DOC_LINKS.developerGuide} rel="noreferrer" target="_blank">
+                  {t('dashboard.builder.link.devGuide')}
+                </a>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </section>
+    </div>
+  )
+}
+
+function SnapshotRow({
+  icon: Icon,
+  label,
+  value,
+  helper,
+}: {
+  icon: typeof FolderOpen
+  label: string
+  value: string
+  helper: string
+}) {
+  return (
+    <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+          <p className="text-2xl font-semibold tracking-tight">{value}</p>
+          <p className="text-xs text-muted-foreground">{helper}</p>
+        </div>
+        <Icon className="mt-1 h-4 w-4 text-primary" />
+      </div>
     </div>
   )
 }
