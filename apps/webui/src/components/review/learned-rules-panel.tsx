@@ -29,12 +29,7 @@ export function LearnedRulesPanel({
   }, [t])
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      void refresh()
-    }, 0)
-    return () => {
-      window.clearTimeout(timer)
-    }
+    void refresh()
   }, [refresh])
 
   async function handleReset() {
@@ -50,7 +45,7 @@ export function LearnedRulesPanel({
   const visibleRules = useMemo(() => rules.filter((rule) => !dismissedRuleIds.includes(rule.id)), [dismissedRuleIds, rules])
 
   return (
-    <Card>
+    <Card className="workspace-panel">
       <CardHeader>
         <CardTitle>{t('review.learned.title')}</CardTitle>
         <CardDescription>{t('review.learned.description')}</CardDescription>
@@ -66,20 +61,40 @@ export function LearnedRulesPanel({
         ) : (
           <div className="grid gap-3">
             {visibleRules.map((rule) => (
-              <div className="rounded-xl border border-border p-3" key={rule.id}>
-                <p className="font-medium">{rule.suggestion_type}: {rule.suggestion_value}</p>
-                <p className="mt-1 text-xs text-muted-foreground">
+              <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4" key={rule.id}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-medium tracking-[-0.015em] text-foreground">
+                    {rule.suggestion_type}: {rule.suggestion_value}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="inline-flex items-center rounded-full border border-transparent bg-secondary px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-secondary-foreground">
+                      {Math.round(rule.confidence * 100)}%
+                    </span>
+                    <span className="inline-flex items-center rounded-full border border-border/90 bg-transparent px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                      count {rule.count}
+                    </span>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
                   signal={rule.signal_key}:{rule.signal_value} | confidence={Math.round(rule.confidence * 100)}%
                   {rule.confidence_label ? ` (${rule.confidence_label})` : ''} | count={rule.count}
                 </p>
                 {rule.source || rule.explanation ? (
-                  <div className="mt-2 grid gap-1 text-xs text-muted-foreground">
-                    {rule.source ? <p>source={rule.source}</p> : null}
-                    {rule.explanation ? <p>explanation={rule.explanation}</p> : null}
-                    {rule.reuse_scope ? <p>reuse_scope={rule.reuse_scope}</p> : null}
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    {rule.source ? (
+                      <span className="inline-flex items-center rounded-full border border-border/90 bg-transparent px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        source={rule.source}
+                      </span>
+                    ) : null}
+                    {rule.reuse_scope ? (
+                      <span className="inline-flex items-center rounded-full border border-border/90 bg-transparent px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        reuse_scope={rule.reuse_scope}
+                      </span>
+                    ) : null}
                   </div>
                 ) : null}
                 <p className="mt-2 text-sm text-muted-foreground">{explainLearnedSuggestion(rule)}</p>
+                {rule.explanation ? <p className="mt-2 text-xs leading-5 text-muted-foreground">explanation={rule.explanation}</p> : null}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {onAccept ? (
                     <Button

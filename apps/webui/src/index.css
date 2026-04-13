@@ -3,39 +3,48 @@
 @tailwind utilities;
 
 :root {
-  --background: 210 22% 97%;
-  --foreground: 222 19% 16%;
+  --background: 42 23% 95%;
+  --foreground: 45 13% 13%;
   --card: 0 0% 100%;
-  --card-foreground: 222 19% 16%;
+  --card-foreground: 45 13% 13%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222 19% 16%;
-  --primary: 214 31% 34%;
+  --popover-foreground: 45 13% 13%;
+  --primary: 219 100% 40%;
   --primary-foreground: 0 0% 98%;
-  --secondary: 210 18% 92%;
-  --secondary-foreground: 222 16% 22%;
-  --muted: 210 18% 93%;
-  --muted-foreground: 220 11% 28%;
-  --accent: 204 53% 88%;
-  --accent-strong: 205 41% 66%;
-  --brand: 214 31% 34%;
-  --brand-soft: 205 49% 93%;
-  --destructive: 8 66% 50%;
+  --secondary: 42 18% 90%;
+  --secondary-foreground: 45 13% 13%;
+  --muted: 40 18% 92%;
+  --muted-foreground: 34 12% 37%;
+  --accent: 213 100% 97%;
+  --accent-strong: 214 78% 86%;
+  --brand: 219 100% 40%;
+  --brand-soft: 213 100% 98%;
+  --destructive: 356 76% 49%;
   --destructive-foreground: 0 0% 98%;
-  --success: 162 58% 34%;
-  --warning: 36 89% 54%;
-  --warning-ink: 32 70% 32%;
-  --border: 215 17% 86%;
-  --input: 215 17% 84%;
-  --ring: 213 34% 46%;
-  --sidebar: 210 27% 96%;
-  --sidebar-foreground: 222 16% 22%;
-  --sidebar-accent: 208 38% 91%;
-  --sidebar-accent-foreground: 214 31% 28%;
-  --radius: 0.9rem;
+  --success: 139 63% 39%;
+  --warning: 49 88% 53%;
+  --warning-ink: 42 64% 24%;
+  --border: 40 14% 84%;
+  --input: 40 12% 80%;
+  --ring: 219 100% 40%;
+  --sidebar: 45 29% 97%;
+  --sidebar-foreground: 45 13% 13%;
+  --sidebar-accent: 214 100% 96%;
+  --sidebar-accent-foreground: 218 72% 31%;
+  --gridline: 40 18% 88%;
+  --radius: 0.85rem;
   --motion-fast: 160ms;
   --motion-base: 220ms;
   --motion-slow: 320ms;
   --motion-ease: cubic-bezier(0.2, 0.72, 0.16, 1);
+  --surface-shadow:
+    0 1px 2px hsl(var(--foreground) / 0.04),
+    0 18px 42px -32px hsl(var(--primary) / 0.38),
+    inset 0 1px 0 hsl(0 0% 100% / 0.88);
+  --surface-shadow-strong:
+    0 1px 2px hsl(var(--foreground) / 0.05),
+    0 26px 60px -34px hsl(var(--primary) / 0.45),
+    inset 0 1px 0 hsl(0 0% 100% / 0.92);
 }
 
 * {
@@ -49,14 +58,70 @@ body,
 }
 
 body {
-  @apply bg-background text-foreground antialiased;
-
+  @apply text-foreground antialiased;
+  background:
+    radial-gradient(circle at top left, hsl(var(--primary) / 0.08), transparent 30%),
+    radial-gradient(circle at top right, hsl(var(--accent-strong) / 0.25), transparent 22%),
+    linear-gradient(180deg, hsl(var(--background)) 0%, hsl(42 26% 93%) 100%);
   font-family: 'IBM Plex Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-feature-settings: 'calt' 1, 'kern' 1;
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.18);
+  color: hsl(var(--foreground));
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
 }
 
 @layer utilities {
   .shadow-card {
-    box-shadow: 0 1px 2px hsl(var(--foreground) / 6%), 0 10px 30px -20px hsl(var(--brand) / 45%);
+    box-shadow: var(--surface-shadow);
+  }
+
+  .shadow-float {
+    box-shadow: var(--surface-shadow-strong);
+  }
+
+  .workspace-panel {
+    @apply rounded-[1.35rem] border border-border/80 bg-card/90 backdrop-blur-sm;
+    box-shadow: var(--surface-shadow);
+  }
+
+  .workspace-panel-soft {
+    @apply rounded-[1.35rem] border border-border/70 bg-muted/45 backdrop-blur-sm;
+    box-shadow: var(--surface-shadow);
+  }
+
+  .workspace-kicker {
+    @apply text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground;
+  }
+
+  .workspace-value {
+    @apply font-semibold tracking-[-0.04em] text-foreground;
+  }
+
+  .workspace-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+
+  .workspace-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--gridline) / 0.6) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--gridline) / 0.6) 1px, transparent 1px);
+    background-position: center;
+    background-size: 32px 32px;
   }
 
   .motion-surface {
@@ -72,6 +137,7 @@ body {
     transition:
       background-color var(--motion-fast) var(--motion-ease),
       color var(--motion-fast) var(--motion-ease),
+      border-color var(--motion-fast) var(--motion-ease),
       box-shadow var(--motion-fast) var(--motion-ease),
       transform var(--motion-fast) var(--motion-ease);
   }

@@ -42,7 +42,7 @@ function findSuggestedBatchCategory(rows: ManifestRow[]): string {
 function LoadingState() {
   const { t } = useI18n()
   return (
-    <Card>
+    <Card className="workspace-panel">
       <CardHeader>
         <CardTitle>{t('review.loading.title')}</CardTitle>
         <CardDescription>{t('review.loading.description')}</CardDescription>
@@ -279,27 +279,33 @@ export function ReviewQueuePage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="workspace-panel overflow-hidden">
         <CardHeader>
-        <CardTitle>{t('review.page.title')}</CardTitle>
-        <CardDescription>{t('review.page.description')}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-wrap gap-3">
-        <Button asChild variant="outline">
-          <Link {...manifestPrefetch} to={`/manifest/${jobId}`}>
-            {t('review.page.openManifest')}
-          </Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link {...conflictPrefetch} to={`/conflicts/${jobId}`}>
-            {t('review.page.openConflict')}
-          </Link>
-        </Button>
-        <Button asChild>
-          <Link {...applyPrefetch} to={`/apply/${jobId}`}>
-            {t('review.page.continueApply')}
-          </Link>
-        </Button>
+          <CardTitle>{t('review.page.title')}</CardTitle>
+          <CardDescription>{t('review.page.description')}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="outline">{t('review.batch.rows', { count: filteredRows.length })}</Badge>
+            {selectedCollectionTitle ? <Badge variant="outline">{t('review.focus.collection', { value: selectedCollectionTitle })}</Badge> : null}
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline">
+              <Link {...manifestPrefetch} to={`/manifest/${jobId}`}>
+                {t('review.page.openManifest')}
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link {...conflictPrefetch} to={`/conflicts/${jobId}`}>
+                {t('review.page.openConflict')}
+              </Link>
+            </Button>
+            <Button asChild>
+              <Link {...applyPrefetch} to={`/apply/${jobId}`}>
+                {t('review.page.continueApply')}
+              </Link>
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -320,7 +326,7 @@ export function ReviewQueuePage() {
       {payload ? <ReviewQueueSummary summary={payload.summary} /> : null}
 
       {payload && hasFocusFilters ? (
-        <Alert className="border-primary/20 bg-primary/5">
+        <Alert className="workspace-panel-soft border-primary/20 bg-primary/5">
           <AlertTitle>{focusSource === 'report' ? t('review.focus.fromReportTitle') : t('review.focus.scopeTitle')}</AlertTitle>
           <AlertDescription>
             {focusSource === 'report'
@@ -339,17 +345,17 @@ export function ReviewQueuePage() {
       ) : null}
 
       {payload ? (
-        <Card>
+        <Card className="workspace-panel overflow-hidden">
           <CardHeader>
             <CardTitle>{t('review.copilot.title')}</CardTitle>
             <CardDescription>{t('review.copilot.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+          <CardContent className="grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)]">
             <div className="space-y-4">
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t('review.copilot.backendSummary')}</p>
-                <p className="mt-2 text-lg font-semibold">{copilotSummary?.headline || t('review.copilot.noHeadline')}</p>
-                <p className="mt-2 text-sm text-muted-foreground">
+              <div className="rounded-[1.25rem] border border-border/70 bg-muted/20 p-5">
+                <p className="workspace-kicker">{t('review.copilot.backendSummary')}</p>
+                <p className="mt-3 text-xl font-semibold tracking-[-0.03em] text-foreground">{copilotSummary?.headline || t('review.copilot.noHeadline')}</p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {copilotSummary
                     ? t('review.copilot.withSummaryDescription')
                     : t('review.copilot.noSummaryDescription')}
@@ -368,14 +374,14 @@ export function ReviewQueuePage() {
 
               {copilotSummary ? (
                 <div className="grid gap-4 lg:grid-cols-3">
-                  <div className="rounded-2xl border border-border p-4">
+                  <div className="rounded-[1.2rem] border border-border/70 bg-card/70 p-4">
                     <p className="font-medium">{t('review.copilot.reasonsTitle')}</p>
                     <div className="mt-3 grid gap-3">
                       {copilotSummary.reasons.length === 0 ? (
                         <p className="text-sm text-muted-foreground">{t('review.copilot.noReasons')}</p>
                       ) : (
                         copilotSummary.reasons.map((reason) => (
-                          <div className="rounded-xl border border-border p-3" key={reason.key}>
+                          <div className="rounded-[1rem] border border-border/70 bg-muted/20 p-3" key={reason.key}>
                             <div className="flex items-center justify-between gap-3">
                               <p className="text-sm font-medium">{reason.title}</p>
                               <Badge variant="outline">{reason.count}</Badge>
@@ -387,14 +393,14 @@ export function ReviewQueuePage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-border p-4">
+                  <div className="rounded-[1.2rem] border border-border/70 bg-card/70 p-4">
                     <p className="font-medium">{t('review.copilot.prioritiesTitle')}</p>
                     <div className="mt-3 grid gap-3">
                       {copilotSummary.priorities.length === 0 ? (
                         <p className="text-sm text-muted-foreground">{t('review.copilot.noPriorities')}</p>
                       ) : (
                         copilotSummary.priorities.map((priority) => (
-                          <div className="rounded-xl border border-border p-3" key={priority.row_id}>
+                          <div className="rounded-[1rem] border border-border/70 bg-muted/20 p-3" key={priority.row_id}>
                             <div className="flex flex-wrap items-center gap-2">
                               <p className="text-sm font-medium">{priority.file_name}</p>
                               <Badge variant={priority.bucket === 'blocked' ? 'destructive' : priority.bucket === 'conflict' ? 'warning' : priority.bucket === 'auto_safe' ? 'success' : 'secondary'}>
@@ -410,14 +416,14 @@ export function ReviewQueuePage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-border p-4">
+                  <div className="rounded-[1.2rem] border border-border/70 bg-card/70 p-4">
                     <p className="font-medium">{t('review.copilot.ruleOpportunitiesTitle')}</p>
                     <div className="mt-3 grid gap-3">
                       {copilotSummary.rule_opportunities.length === 0 ? (
                         <p className="text-sm text-muted-foreground">{t('review.copilot.noRuleOpportunities')}</p>
                       ) : (
                         copilotSummary.rule_opportunities.map((opportunity) => (
-                          <div className="rounded-xl border border-border p-3" key={opportunity.key}>
+                          <div className="rounded-[1rem] border border-border/70 bg-muted/20 p-3" key={opportunity.key}>
                             <div className="flex items-center justify-between gap-3">
                               <p className="text-sm font-medium">{opportunity.title}</p>
                               <Badge variant="outline">{opportunity.row_ids.length} row(s)</Badge>
@@ -446,14 +452,14 @@ export function ReviewQueuePage() {
                       )}
                     </div>
                   </div>
-                  <div className="rounded-2xl border border-border p-4">
+                  <div className="rounded-[1.2rem] border border-border/70 bg-card/70 p-4 lg:col-span-3">
                     <p className="font-medium">{t('review.copilot.batchSuggestionsTitle')}</p>
                     <div className="mt-3 grid gap-3">
                       {copilotSummary.batch_triage.length === 0 ? (
                         <p className="text-sm text-muted-foreground">{t('review.copilot.noBatchSuggestions')}</p>
                       ) : (
                         copilotSummary.batch_triage.map((batch) => (
-                          <div className="rounded-xl border border-border p-3" key={batch.id}>
+                          <div className="rounded-[1rem] border border-border/70 bg-muted/20 p-3" key={batch.id}>
                             <div className="flex items-center justify-between gap-3">
                               <p className="text-sm font-medium">{batch.label}</p>
                               <Badge variant="outline">{batch.count} row(s)</Badge>
@@ -488,7 +494,7 @@ export function ReviewQueuePage() {
                 </div>
               ) : null}
 
-              <div className="rounded-2xl border border-border p-4">
+              <div className="rounded-[1.2rem] border border-border/70 bg-card/70 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <p className="font-medium">{t('review.examples.title')}</p>
@@ -497,7 +503,7 @@ export function ReviewQueuePage() {
                   <Badge variant="outline">{t('review.examples.count', { count: exampleRows.length })}</Badge>
                 </div>
                 {exampleRows.length === 0 ? (
-                  <p className="mt-3 rounded-xl border border-border p-3 text-sm text-muted-foreground">{t('review.examples.empty')}</p>
+                    <p className="mt-3 rounded-[1rem] border border-border/70 bg-muted/20 p-3 text-sm text-muted-foreground">{t('review.examples.empty')}</p>
                 ) : (
                   <div className="mt-3 space-y-3">
                     <div className="flex flex-wrap gap-2">
@@ -528,11 +534,11 @@ export function ReviewQueuePage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border p-4">
+            <div className="workspace-panel-soft xl:sticky xl:top-24 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="font-medium">{t('review.batch.title')}</p>
-                  <p className="text-sm text-muted-foreground">{t('review.batch.description')}</p>
+                  <p className="workspace-kicker">{t('review.batch.title')}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{t('review.batch.description')}</p>
                 </div>
                 <Badge variant="outline">{t('review.batch.rows', { count: triageRows.length })}</Badge>
               </div>
@@ -573,7 +579,23 @@ export function ReviewQueuePage() {
         </Card>
       ) : null}
 
-      {payload ? <CollectionPanel collections={payload.collections} onSelect={setSelectedCollectionId} rows={payload.rows} selectedCollectionId={selectedCollectionId || focusedCollectionId || ''} /> : null}
+      {payload ? (
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
+          <CollectionPanel collections={payload.collections} onSelect={setSelectedCollectionId} rows={payload.rows} selectedCollectionId={selectedCollectionId || focusedCollectionId || ''} />
+          <LearnedRulesPanel
+            onAccept={(rule) => handleAcceptLearnedRule(rule)}
+            onPromote={(rule) => {
+              handlePromoteDraft(createRuleDraftFromLearnedSuggestion(rule), 'Loaded the learned suggestion into Rule Studio.', {
+                source: 'learned-draft',
+                title: 'Learned draft loaded',
+                description:
+                  'This draft was derived from a learned suggestion and is still review-only. It was not saved or applied automatically.',
+                warnings: ['Preview the draft, then decide manually whether to save it or apply it to the overlay.'],
+              })
+            }}
+          />
+        </div>
+      ) : null}
       {payload ? (
         <RuleStudioSheet
           jobId={jobId}
@@ -585,21 +607,9 @@ export function ReviewQueuePage() {
           seedRuleToken={seedRuleToken}
         />
       ) : null}
-      <LearnedRulesPanel
-        onAccept={(rule) => handleAcceptLearnedRule(rule)}
-        onPromote={(rule) => {
-          handlePromoteDraft(createRuleDraftFromLearnedSuggestion(rule), 'Loaded the learned suggestion into Rule Studio.', {
-            source: 'learned-draft',
-            title: 'Learned draft loaded',
-            description:
-              'This draft was derived from a learned suggestion and is still review-only. It was not saved or applied automatically.',
-            warnings: ['Preview the draft, then decide manually whether to save it or apply it to the overlay.'],
-          })
-        }}
-      />
 
       {showEmptyState ? (
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('review.empty.title')}</CardTitle>
             <CardDescription>{t('review.empty.description')}</CardDescription>
@@ -613,7 +623,7 @@ export function ReviewQueuePage() {
           return null
         }
         return (
-          <Card key={bucket}>
+          <Card className="workspace-panel" key={bucket}>
             <CardHeader>
               <CardTitle className="capitalize">{bucket.replace('_', ' ')}</CardTitle>
               <CardDescription>{t('review.bucket.description', { count: rows.length })}</CardDescription>
@@ -622,9 +632,9 @@ export function ReviewQueuePage() {
               {rows.map((row) => {
                 const isExample = exampleRowIds.includes(row.id)
                 return (
-                  <div className="rounded-xl border border-border p-3" key={row.id}>
+                  <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4" key={row.id}>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-medium">{row.file_name}</p>
+                      <p className="font-medium tracking-[-0.015em] text-foreground">{row.file_name}</p>
                       <Badge variant={bucket === 'blocked' ? 'destructive' : bucket === 'conflict' ? 'warning' : bucket === 'auto_safe' ? 'success' : 'secondary'}>
                         {bucket}
                       </Badge>
@@ -643,16 +653,16 @@ export function ReviewQueuePage() {
                         {isExample ? t('review.bucket.removeExample') : t('review.bucket.useExample')}
                       </Button>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{row.title}</p>
-                    <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                      <span>{t('review.bucket.category', { value: row.category })}</span>
-                      <span>{t('review.bucket.confidence', { value: Math.round(row.confidence * 100) })}</span>
-                      {row.error_code ? <span>{t('review.bucket.error', { value: row.error_code })}</span> : null}
-                      {row.learned_suggestions?.length ? <span>{t('review.bucket.learned', { count: row.learned_suggestions.length })}</span> : null}
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">{row.title}</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Badge variant="outline">{t('review.bucket.category', { value: row.category })}</Badge>
+                      <Badge variant="outline">{t('review.bucket.confidence', { value: Math.round(row.confidence * 100) })}</Badge>
+                      {row.error_code ? <Badge variant="warning">{t('review.bucket.error', { value: row.error_code })}</Badge> : null}
+                      {row.learned_suggestions?.length ? <Badge variant="secondary">{t('review.bucket.learned', { count: row.learned_suggestions.length })}</Badge> : null}
                     </div>
                     {row.learned_suggestions?.length ? (
-                      <div className="mt-3 rounded-xl border border-dashed border-border p-3">
-                        <p className="text-sm font-medium">{t('review.bucket.whySurfacing')}</p>
+                      <div className="mt-3 rounded-[1rem] border border-dashed border-border/80 bg-card/60 p-3">
+                        <p className="workspace-kicker">{t('review.bucket.whySurfacing')}</p>
                         <div className="mt-2 grid gap-2">
                           {row.learned_suggestions.map((suggestion) => (
                             <div className="grid gap-1" key={`${row.id}:${suggestion.signal_key}:${suggestion.suggestion_value}`}>

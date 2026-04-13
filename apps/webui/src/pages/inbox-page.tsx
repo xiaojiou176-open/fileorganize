@@ -124,7 +124,7 @@ export function InboxPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-primary/20 bg-primary/5">
+      <Card className="workspace-panel overflow-hidden border-primary/20 bg-primary/5">
         <CardHeader>
           <CardTitle>{t('inbox.hero.title')}</CardTitle>
           <CardDescription>{t('inbox.hero.description')}</CardDescription>
@@ -137,7 +137,7 @@ export function InboxPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('inbox.card.title')}</CardTitle>
           <CardDescription>{t('inbox.card.description')}</CardDescription>
@@ -176,7 +176,7 @@ export function InboxPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('inbox.sources.title')}</CardTitle>
           <CardDescription>{t('inbox.sources.description')}</CardDescription>
@@ -211,7 +211,7 @@ export function InboxPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('inbox.scan.title')}</CardTitle>
           <CardDescription>{t('inbox.scan.description')}</CardDescription>

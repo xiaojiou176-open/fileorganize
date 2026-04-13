@@ -112,7 +112,7 @@ export function ApplyPage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('apply.page.title')}</CardTitle>
           <CardDescription>{t('apply.page.description')}</CardDescription>
@@ -197,7 +197,7 @@ export function ApplyPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('apply.guardrails.title')}</CardTitle>
           <CardDescription>{t('apply.guardrails.description')}</CardDescription>
@@ -215,24 +215,26 @@ export function ApplyPage() {
 
 function GuardItem({ title }: { title: string }) {
   return (
-    <div className="flex items-center gap-2 rounded-xl border border-border p-3">
-      <ShieldCheck className="h-4 w-4 text-success" />
-      <span>{title}</span>
+    <div className="rounded-[1.15rem] border border-border/70 bg-muted/20 p-3">
+      <div className="flex items-center gap-2">
+        <ShieldCheck className="h-4 w-4 text-success" />
+        <span>{title}</span>
+      </div>
     </div>
   )
 }
 
 function StatCard({ label, value, tone = 'default' }: { label: string; value: string; tone?: 'default' | 'warning' | 'success' }) {
   return (
-    <div className="rounded-xl border border-border p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
+    <div className="rounded-[1.15rem] border border-border/70 bg-muted/20 p-4">
+      <p className="workspace-kicker">{label}</p>
       <p
         className={
           tone === 'warning'
-            ? 'text-lg font-semibold text-[hsl(var(--warning-ink))]'
+            ? 'workspace-value mt-2 text-2xl text-[hsl(var(--warning-ink))]'
             : tone === 'success'
-              ? 'text-lg font-semibold text-success'
-              : 'text-lg font-semibold'
+              ? 'workspace-value mt-2 text-2xl text-success'
+              : 'workspace-value mt-2 text-2xl'
         }
       >
         {value}

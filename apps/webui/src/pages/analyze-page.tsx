@@ -202,8 +202,14 @@ export function AnalyzePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold tracking-tight">{t('analyze.page.title')}</h1>
-      <Card>
+      <section className="workspace-panel relative overflow-hidden p-6 sm:p-8">
+        <div className="workspace-grid pointer-events-none absolute inset-0 opacity-[0.12]" />
+        <div className="relative max-w-3xl space-y-4">
+          <p className="workspace-kicker">{t('analyze.page.title')}</p>
+          <h1 className="text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">{t('analyze.page.title')}</h1>
+        </div>
+      </section>
+      <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('analyze.flow.title')}</CardTitle>
             <CardDescription>{t('analyze.flow.description')}</CardDescription>
@@ -250,7 +256,7 @@ export function AnalyzePage() {
       ) : null}
 
       {step === 1 ? (
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('analyze.step1.title')}</CardTitle>
             <CardDescription>{t('analyze.step1.description')}</CardDescription>
@@ -278,7 +284,7 @@ export function AnalyzePage() {
                 ) : null}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-muted/30 p-6">
+              <div className="rounded-[1.2rem] border border-dashed border-border/80 bg-muted/25 p-6">
                 <div className="flex flex-col items-center gap-3 text-center">
                   <div className="rounded-full border border-border bg-background p-2">
                     <Upload className="h-5 w-5 text-muted-foreground" />
@@ -347,7 +353,7 @@ export function AnalyzePage() {
       ) : null}
 
       {step === 2 ? (
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>Step 2 - Configure Parameters</CardTitle>
             <CardDescription>Choose the AI and batch settings for this run. Most people only need to check the model, speed, and file limits before Movi drafts a reviewable manifest.</CardDescription>
@@ -415,7 +421,7 @@ export function AnalyzePage() {
               </div>
             </div>
             {selectedStrategyPack ? (
-              <div className="rounded-xl border border-border bg-muted/30 p-4 md:col-span-2">
+              <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4 md:col-span-2">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-medium">{selectedStrategyPack.name}</p>
                   <Badge variant="secondary">template only</Badge>
@@ -439,13 +445,13 @@ export function AnalyzePage() {
       ) : null}
 
       {step === 3 ? (
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>Step 3 - Run Analyze</CardTitle>
             <CardDescription>Use SSE streaming by default. If streaming is unavailable, the UI falls back explicitly and keeps the execution state legible.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Alert className="border-primary/20 bg-primary/5">
+            <Alert className="workspace-panel-soft border-primary/20 bg-primary/5">
               <AlertTitle>Run Strategy</AlertTitle>
               <AlertDescription>
                 Analyze runs input preflight first, then starts the job. Failures are written to manifest `error_code` instead of being swallowed.
@@ -487,24 +493,24 @@ export function AnalyzePage() {
       ) : null}
 
       {step === 4 ? (
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>Step 4 - Review Manifest</CardTitle>
             <CardDescription>Review the manifest before entering Apply. Do not skip this step.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl border border-border p-3">
-                <p className="text-xs text-muted-foreground">Rows</p>
-                <p className="text-lg font-semibold">{job?.summary?.total ?? 0}</p>
+              <div className="rounded-[1.15rem] border border-border/70 bg-muted/20 p-4">
+                <p className="workspace-kicker">Rows</p>
+                <p className="workspace-value mt-2 text-2xl">{job?.summary?.total ?? 0}</p>
               </div>
-              <div className="rounded-xl border border-border p-3">
-                <p className="text-xs text-muted-foreground">Errors</p>
-                <p className="text-lg font-semibold text-warning-ink">{job?.summary?.with_error ?? 0}</p>
+              <div className="rounded-[1.15rem] border border-border/70 bg-muted/20 p-4">
+                <p className="workspace-kicker">Errors</p>
+                <p className="workspace-value mt-2 text-2xl text-warning-ink">{job?.summary?.with_error ?? 0}</p>
               </div>
-              <div className="rounded-xl border border-border p-3">
-                <p className="text-xs text-muted-foreground">Ready to Apply</p>
-                <p className="text-lg font-semibold text-success">{Math.max((job?.summary?.total ?? 0) - (job?.summary?.with_error ?? 0), 0)}</p>
+              <div className="rounded-[1.15rem] border border-border/70 bg-muted/20 p-4">
+                <p className="workspace-kicker">Ready to Apply</p>
+                <p className="workspace-value mt-2 text-2xl text-success">{Math.max((job?.summary?.total ?? 0) - (job?.summary?.with_error ?? 0), 0)}</p>
               </div>
             </div>
             <Alert className="border-success/20 bg-success/10">

@@ -9,8 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableWra
 import { getRuntimeSettings, listJobs, type RuntimeSettings } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
 import type { Job } from '@/lib/types'
-import { createRouteIntentPrefetchHandlers } from '@/routes/lazy-routes'
 import { formatDate, progressToPercent } from '@/lib/utils'
+import { createRouteIntentPrefetchHandlers } from '@/routes/lazy-routes'
 
 const DASHBOARD_DOC_LINKS = {
   codex: 'https://github.com/xiaojiou176-open/movi-organizer/blob/main/docs/codex_mcp.md',
@@ -21,6 +21,7 @@ const DASHBOARD_DOC_LINKS = {
 
 type NextStepKind = 'setup' | 'analyze' | 'review' | 'apply' | 'report'
 type FlowStage = 'setup' | 'analyze' | 'review' | 'apply'
+type SurfaceBadgeVariant = 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'destructive'
 
 export function DashboardPage() {
   const { t } = useI18n()
@@ -57,10 +58,8 @@ export function DashboardPage() {
   const latestReportLabel = reportJob ? reportJob.id.slice(-6) : t('dashboard.snapshot.empty')
 
   const setupPrefetch = createRouteIntentPrefetchHandlers('setup')
-  const analyzePrefetch = createRouteIntentPrefetchHandlers('analyze')
-  const reviewPrefetch = createRouteIntentPrefetchHandlers('review')
-  const applyPrefetch = createRouteIntentPrefetchHandlers('apply')
   const jobsPrefetch = createRouteIntentPrefetchHandlers('jobs')
+  const reviewPrefetch = createRouteIntentPrefetchHandlers('review')
   const reportPrefetch = createRouteIntentPrefetchHandlers('report')
 
   const nextStepKind: NextStepKind = useMemo(() => {
@@ -113,7 +112,7 @@ export function DashboardPage() {
       description: t('dashboard.command.next.analyzeDescription'),
       cta: t('dashboard.command.next.analyzeCta'),
       to: '/analyze',
-      prefetch: analyzePrefetch,
+      prefetch: createRouteIntentPrefetchHandlers('analyze'),
     },
     review: {
       title: t('dashboard.command.next.reviewTitle'),
@@ -127,7 +126,7 @@ export function DashboardPage() {
       description: t('dashboard.command.next.applyDescription'),
       cta: t('dashboard.command.next.applyCta'),
       to: applyTargetJobId ? `/apply/${applyTargetJobId}` : '/jobs',
-      prefetch: applyPrefetch,
+      prefetch: createRouteIntentPrefetchHandlers('apply'),
     },
     report: {
       title: t('dashboard.command.next.reportTitle'),
@@ -164,25 +163,147 @@ export function DashboardPage() {
     { key: 'apply', label: t('dashboard.flow.apply') },
   ]
 
+  const commandDeck: Array<{
+    id: string
+    kicker: string
+    title: string
+    description: string
+    icon: typeof Workflow
+    badge: string
+    badgeVariant: SurfaceBadgeVariant
+  }> = [
+    {
+      id: 'ready',
+      kicker: t('dashboard.command.ready.title'),
+      title: runtimeSettings?.ready ? t('dashboard.command.ready.valueReady') : t('dashboard.command.ready.valueNeedsSetup'),
+      description: readinessSummary,
+      icon: runtimeSettings?.ready ? CheckCircle2 : CircleAlert,
+      badge: runtimeSettings?.ready ? t('dashboard.badge.ready') : t('dashboard.badge.setupRequired'),
+      badgeVariant: runtimeSettings?.ready ? 'success' : 'secondary',
+    },
+    {
+      id: 'next',
+      kicker: t('dashboard.command.next.title'),
+      title: nextStepMeta.title,
+      description: nextStepMeta.description,
+      icon: ArrowRight,
+      badge: nextStepMeta.cta,
+      badgeVariant: 'outline',
+    },
+    {
+      id: 'stage',
+      kicker: t('dashboard.command.stage.title'),
+      title: stageMeta.label,
+      description: stageMeta.description,
+      icon: Workflow,
+      badge: latestJob ? t('dashboard.command.stage.latestJob', { jobId: latestJob.id.slice(-6) }) : t('dashboard.command.stage.noBatch'),
+      badgeVariant: 'outline',
+    },
+  ]
+
+  const snapshotCards = [
+    {
+      id: 'pending',
+      icon: FolderOpen,
+      label: t('dashboard.snapshot.pendingFiles'),
+      value: String(pendingFiles),
+      helper: t('dashboard.snapshot.pendingFilesHint'),
+    },
+    {
+      id: 'dry-run',
+      icon: CircleAlert,
+      label: t('dashboard.snapshot.dryRun'),
+      value: String(dryRunWaiting),
+      helper: t('dashboard.snapshot.dryRunHint'),
+    },
+    {
+      id: 'report',
+      icon: NotebookText,
+      label: t('dashboard.snapshot.latestReport'),
+      value: latestReportLabel,
+      helper: reportJob ? t('dashboard.snapshot.latestReportHint') : t('dashboard.snapshot.noReport'),
+    },
+    {
+      id: 'success',
+      icon: Rocket,
+      label: t('dashboard.snapshot.successfulJobs'),
+      value: String(succeededJobs),
+      helper: t('dashboard.snapshot.successfulJobsHint'),
+    },
+  ]
+
+  const builderLanes = [
+    {
+      id: 'ai',
+      icon: Bot,
+      title: t('dashboard.builder.ai.title'),
+      description: t('dashboard.builder.ai.description'),
+      badges: [t('dashboard.builder.badge.reviewSafe'), runtimeSettings?.model || 'gemini-3-flash-preview'],
+    },
+    {
+      id: 'mcp',
+      icon: PlugZap,
+      title: t('dashboard.builder.mcp.title'),
+      description: t('dashboard.builder.mcp.description'),
+      badges: [t('dashboard.builder.badge.localFirst'), t('dashboard.builder.badge.reviewSafe')],
+    },
+    {
+      id: 'api',
+      icon: ClipboardList,
+      title: t('dashboard.builder.api.title'),
+      description: t('dashboard.builder.api.description'),
+      badges: ['OpenAPI', 'generated client'],
+    },
+    {
+      id: 'pack',
+      icon: Workflow,
+      title: t('dashboard.builder.pack.title'),
+      description: t('dashboard.builder.pack.description'),
+      badges: [
+        t('dashboard.builder.badge.templateOnly'),
+        runtimeSettings?.active_strategy_pack_id
+          ? t('dashboard.builder.pack.current', { packId: runtimeSettings.active_strategy_pack_id })
+          : t('dashboard.builder.pack.none'),
+      ],
+    },
+  ]
+
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-[linear-gradient(135deg,hsl(var(--brand-soft))_0%,hsl(var(--card))_55%,hsl(var(--accent)/0.6)_100%)] p-6 shadow-card sm:p-8">
-        <div className="pointer-events-none absolute -right-20 -top-16 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
-        <div className="space-y-6">
-          <div className="max-w-3xl space-y-4">
-            <Badge variant={runtimeSettings?.ready ? 'success' : 'secondary'}>
-              {runtimeSettings?.ready ? t('dashboard.badge.ready') : t('dashboard.badge.setupRequired')}
-            </Badge>
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t('dashboard.hero.title')}</h1>
-            <p className="text-sm text-muted-foreground sm:text-base">{t('dashboard.hero.description')}</p>
+      <section className="workspace-panel relative overflow-hidden p-6 sm:p-8">
+        <div className="workspace-grid pointer-events-none absolute inset-0 opacity-[0.16]" />
+        <div className="pointer-events-none absolute -right-16 top-0 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-70"
+          style={{
+            background: 'linear-gradient(140deg, hsl(var(--brand-soft)) 0%, transparent 40%, hsl(var(--accent) / 0.45) 100%)',
+          }}
+        />
+        <div className="relative grid gap-6 xl:grid-cols-[minmax(0,1.18fr)_360px] xl:items-start">
+          <div className="space-y-6">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant={runtimeSettings?.ready ? 'success' : 'secondary'}>
+                {runtimeSettings?.ready ? t('dashboard.badge.ready') : t('dashboard.badge.setupRequired')}
+              </Badge>
+              <Badge variant="outline">{stageMeta.label}</Badge>
+            </div>
+
+            <div className="max-w-3xl space-y-4">
+              <p className="workspace-kicker">{t('appShell.brand.subtitle')}</p>
+              <h1 className="max-w-2xl text-4xl font-light tracking-[-0.05em] text-foreground sm:text-5xl lg:text-[3.5rem]">
+                {t('dashboard.hero.title')}
+              </h1>
+              <p className="max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">{t('dashboard.hero.description')}</p>
+            </div>
+
             <div className="flex flex-wrap gap-3">
-              <Button asChild>
+              <Button asChild size="lg">
                 <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
                   {nextStepMeta.cta}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild size="lg" variant="outline">
                 <Link {...jobsPrefetch} to="/jobs">
                   {t('dashboard.cta.openJobs')}
                 </Link>
@@ -190,55 +311,24 @@ export function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <Card className="border-border/70 bg-card/90">
-              <CardHeader className="pb-3">
-                <CardDescription>{t('dashboard.command.ready.title')}</CardDescription>
-                <CardTitle className="text-xl">{runtimeSettings?.ready ? t('dashboard.command.ready.valueReady') : t('dashboard.command.ready.valueNeedsSetup')}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
-                <p>{readinessSummary}</p>
-                <div className="flex items-center gap-2 text-foreground">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
-                  <span>{runtimeSettings?.ready ? t('dashboard.command.ready.connected') : t('dashboard.command.ready.finish')}</span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/70 bg-card/90">
-              <CardHeader className="pb-3">
-                <CardDescription>{t('dashboard.command.next.title')}</CardDescription>
-                <CardTitle className="text-xl">{nextStepMeta.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm text-muted-foreground">
-                <p>{nextStepMeta.description}</p>
-                <Button asChild size="sm" variant="secondary">
-                  <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
-                    {nextStepMeta.cta}
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/70 bg-card/90">
-              <CardHeader className="pb-3">
-                <CardDescription>{t('dashboard.command.stage.title')}</CardDescription>
-                <CardTitle className="text-xl">{stageMeta.label}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
-                <p>{stageMeta.description}</p>
-                <div className="flex items-center gap-2 text-foreground">
-                  <Workflow className="h-4 w-4 text-primary" />
-                  <span>{latestJob ? t('dashboard.command.stage.latestJob', { jobId: latestJob.id.slice(-6) }) : t('dashboard.command.stage.noBatch')}</span>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid gap-3">
+            {commandDeck.map((card) => (
+              <CommandDeckCard
+                badge={card.badge}
+                badgeVariant={card.badgeVariant}
+                description={card.description}
+                icon={card.icon}
+                key={card.id}
+                kicker={card.kicker}
+                title={card.title}
+              />
+            ))}
           </div>
         </div>
       </section>
 
       {!runtimeSettings?.ready ? (
-        <Card className="border-primary/25 bg-primary/5">
+        <Card className="border-primary/20 bg-primary/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <KeyRound className="h-4 w-4" />
@@ -258,42 +348,48 @@ export function DashboardPage() {
       ) : null}
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.55fr_0.95fr]">
-        <Card>
+        <Card className="overflow-hidden">
           <CardHeader>
             <CardTitle>{t('dashboard.flow.title')}</CardTitle>
             <CardDescription>{t('dashboard.flow.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
+            <div className="rounded-[1.2rem] border border-border/80 bg-muted/40 p-4">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="workspace-kicker">{t('dashboard.command.stage.title')}</p>
+                  <p className="text-base font-semibold tracking-[-0.02em] text-foreground">{stageMeta.label}</p>
+                  <p className="text-sm leading-6 text-muted-foreground">{stageMeta.description}</p>
+                </div>
+                <Button asChild variant="secondary">
+                  <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
+                    {nextStepMeta.cta}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               {flowSteps.map((step, index) => {
                 const state = index < flowStageIndex ? 'complete' : index === flowStageIndex ? 'current' : 'upcoming'
-                return (
-                  <div
-                    className="rounded-2xl border border-border/70 bg-muted/30 p-4"
-                    key={step.key}
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="font-medium">{step.label}</p>
-                      <Badge variant={state === 'complete' ? 'success' : state === 'current' ? 'secondary' : 'outline'}>
-                        {state === 'complete'
-                          ? t('dashboard.flow.state.complete')
-                          : state === 'current'
-                            ? t('dashboard.flow.state.current')
-                            : t('dashboard.flow.state.upcoming')}
-                      </Badge>
-                    </div>
-                  </div>
-                )
+                const stateLabel =
+                  state === 'complete'
+                    ? t('dashboard.flow.state.complete')
+                    : state === 'current'
+                      ? t('dashboard.flow.state.current')
+                      : t('dashboard.flow.state.upcoming')
+
+                return <WorkflowStepCard index={index + 1} key={step.key} label={step.label} state={state} stateLabel={stateLabel} />
               })}
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <Button asChild variant="secondary">
+              <Button asChild variant="outline">
                 <Link {...nextStepMeta.prefetch} to={nextStepMeta.to}>
                   {nextStepMeta.cta}
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="ghost">
                 <Link {...jobsPrefetch} to="/jobs">
                   {t('dashboard.cta.openJobs')}
                 </Link>
@@ -307,31 +403,10 @@ export function DashboardPage() {
             <CardTitle>{t('dashboard.snapshot.title')}</CardTitle>
             <CardDescription>{t('dashboard.snapshot.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
-            <SnapshotRow
-              icon={FolderOpen}
-              label={t('dashboard.snapshot.pendingFiles')}
-              value={String(pendingFiles)}
-              helper={t('dashboard.snapshot.pendingFilesHint')}
-            />
-            <SnapshotRow
-              icon={CircleAlert}
-              label={t('dashboard.snapshot.dryRun')}
-              value={String(dryRunWaiting)}
-              helper={t('dashboard.snapshot.dryRunHint')}
-            />
-            <SnapshotRow
-              icon={NotebookText}
-              label={t('dashboard.snapshot.latestReport')}
-              value={latestReportLabel}
-              helper={reportJob ? t('dashboard.snapshot.latestReportHint') : t('dashboard.snapshot.noReport')}
-            />
-            <SnapshotRow
-              icon={Rocket}
-              label={t('dashboard.snapshot.successfulJobs')}
-              value={String(succeededJobs)}
-              helper={t('dashboard.snapshot.successfulJobsHint')}
-            />
+          <CardContent className="grid gap-3 sm:grid-cols-2">
+            {snapshotCards.map((card) => (
+              <SnapshotMetricCard helper={card.helper} icon={card.icon} key={card.id} label={card.label} value={card.value} />
+            ))}
           </CardContent>
         </Card>
       </section>
@@ -356,26 +431,34 @@ export function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {jobs.map((job) => (
-                    <TableRow key={job.id}>
-                      <TableCell className="max-w-[220px] truncate font-medium">{job.id}</TableCell>
-                      <TableCell>{job.kind}</TableCell>
-                      <TableCell>
-                        <Badge variant={job.status === 'succeeded' ? 'success' : job.status === 'failed' ? 'destructive' : 'secondary'}>
-                          {job.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{progressToPercent(job.progress)}%</TableCell>
-                      <TableCell>{formatDate(job.started_at)}</TableCell>
-                      <TableCell className="text-right">
-                        <Button asChild size="sm" variant="ghost">
-                          <Link {...reviewPrefetch} to={`/review/${job.id}`}>
-                            View
-                          </Link>
-                        </Button>
+                  {jobs.length > 0 ? (
+                    jobs.map((job) => (
+                      <TableRow key={job.id}>
+                        <TableCell className="max-w-[220px] truncate font-medium">{job.id}</TableCell>
+                        <TableCell>{job.kind}</TableCell>
+                        <TableCell>
+                          <Badge variant={job.status === 'succeeded' ? 'success' : job.status === 'failed' ? 'destructive' : 'secondary'}>
+                            {job.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{progressToPercent(job.progress)}%</TableCell>
+                        <TableCell>{formatDate(job.started_at)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button asChild size="sm" variant="ghost">
+                            <Link {...reviewPrefetch} to={`/review/${job.id}`}>
+                              View
+                            </Link>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell className="py-10 text-sm text-muted-foreground" colSpan={6}>
+                        {t('dashboard.command.stage.noBatch')}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </TableWrapper>
@@ -388,60 +471,9 @@ export function DashboardPage() {
             <CardDescription>{t('dashboard.builder.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="font-medium">{t('dashboard.builder.ai.title')}</p>
-                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.ai.description')}</p>
-                </div>
-                <Bot className="h-5 w-5 text-primary" />
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
-                <Badge variant="outline">{runtimeSettings?.model || 'gemini-3-flash-preview'}</Badge>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="font-medium">{t('dashboard.builder.mcp.title')}</p>
-                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.mcp.description')}</p>
-                </div>
-                <PlugZap className="h-5 w-5 text-primary" />
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">{t('dashboard.builder.badge.localFirst')}</Badge>
-                <Badge variant="outline">{t('dashboard.builder.badge.reviewSafe')}</Badge>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="font-medium">{t('dashboard.builder.api.title')}</p>
-                  <p className="text-sm text-muted-foreground">{t('dashboard.builder.api.description')}</p>
-                </div>
-                <ClipboardList className="h-5 w-5 text-primary" />
-              </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">OpenAPI</Badge>
-                <Badge variant="outline">generated client</Badge>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
-              <p className="font-medium">{t('dashboard.builder.pack.title')}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{t('dashboard.builder.pack.description')}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <Badge variant="outline">{t('dashboard.builder.badge.templateOnly')}</Badge>
-                <Badge variant="outline">
-                  {runtimeSettings?.active_strategy_pack_id
-                    ? t('dashboard.builder.pack.current', { packId: runtimeSettings.active_strategy_pack_id })
-                    : t('dashboard.builder.pack.none')}
-                </Badge>
-              </div>
-            </div>
+            {builderLanes.map((lane) => (
+              <BuilderLaneCard badges={lane.badges} description={lane.description} icon={lane.icon} key={lane.id} title={lane.title} />
+            ))}
 
             <div className="flex flex-wrap gap-2">
               <Button asChild size="sm" variant="outline">
@@ -472,7 +504,71 @@ export function DashboardPage() {
   )
 }
 
-function SnapshotRow({
+function CommandDeckCard({
+  kicker,
+  title,
+  description,
+  icon: Icon,
+  badge,
+  badgeVariant,
+}: {
+  kicker: string
+  title: string
+  description: string
+  icon: typeof Workflow
+  badge: string
+  badgeVariant: SurfaceBadgeVariant
+}) {
+  return (
+    <div className="rounded-[1.25rem] border border-border/80 bg-card/85 p-4 shadow-card">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-2">
+          <p className="workspace-kicker">{kicker}</p>
+          <p className="text-base font-semibold tracking-[-0.025em] text-foreground">{title}</p>
+          <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+          <Badge variant={badgeVariant}>{badge}</Badge>
+        </div>
+        <div className="grid h-10 w-10 place-items-center rounded-full border border-primary/15 bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function WorkflowStepCard({
+  index,
+  label,
+  state,
+  stateLabel,
+}: {
+  index: number
+  label: string
+  state: 'complete' | 'current' | 'upcoming'
+  stateLabel: string
+}) {
+  return (
+    <div
+      className={
+        state === 'current'
+          ? 'rounded-[1.2rem] border border-primary/15 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] p-4 shadow-card'
+          : 'rounded-[1.2rem] border border-border/70 bg-muted/30 p-4'
+      }
+    >
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="workspace-mono inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/80 bg-card/80 text-xs font-semibold text-muted-foreground">
+            {String(index).padStart(2, '0')}
+          </span>
+          <p className="font-medium tracking-[-0.015em] text-foreground">{label}</p>
+        </div>
+        <Badge variant={state === 'complete' ? 'success' : state === 'current' ? 'secondary' : 'outline'}>{stateLabel}</Badge>
+      </div>
+    </div>
+  )
+}
+
+function SnapshotMetricCard({
   icon: Icon,
   label,
   value,
@@ -484,14 +580,49 @@ function SnapshotRow({
   helper: string
 }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-muted/20 p-4">
+    <div className="rounded-[1.2rem] border border-border/70 bg-muted/25 p-4">
       <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
-          <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
-          <p className="text-2xl font-semibold tracking-tight">{value}</p>
-          <p className="text-xs text-muted-foreground">{helper}</p>
+        <div className="space-y-2">
+          <p className="workspace-kicker">{label}</p>
+          <p className="workspace-value text-3xl">{value}</p>
+          <p className="text-xs leading-5 text-muted-foreground">{helper}</p>
         </div>
-        <Icon className="mt-1 h-4 w-4 text-primary" />
+        <div className="grid h-10 w-10 place-items-center rounded-full border border-primary/15 bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BuilderLaneCard({
+  icon: Icon,
+  title,
+  description,
+  badges,
+}: {
+  icon: typeof Workflow
+  title: string
+  description: string
+  badges: string[]
+}) {
+  return (
+    <div className="rounded-[1.2rem] border border-border/70 bg-muted/30 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-2">
+          <p className="font-medium tracking-[-0.015em] text-foreground">{title}</p>
+          <p className="text-sm leading-6 text-muted-foreground">{description}</p>
+        </div>
+        <div className="grid h-10 w-10 place-items-center rounded-full border border-primary/15 bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" />
+        </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {badges.map((badge) => (
+          <Badge key={badge} variant="outline">
+            {badge}
+          </Badge>
+        ))}
       </div>
     </div>
   )

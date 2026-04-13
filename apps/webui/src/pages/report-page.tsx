@@ -124,7 +124,7 @@ export function ReportPage() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-primary/20 bg-primary/5">
+      <Card className="workspace-panel overflow-hidden border-primary/20 bg-primary/5">
         <CardHeader>
           <CardTitle>{t('report.hero.title')}</CardTitle>
           <CardDescription>{t('report.hero.description')}</CardDescription>
@@ -163,7 +163,7 @@ export function ReportPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('report.insights.title')}</CardTitle>
           <CardDescription>{t('report.insights.description', { jobId: job?.id ?? jobId })}</CardDescription>
@@ -199,7 +199,7 @@ export function ReportPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('report.filters.title')}</CardTitle>
           <CardDescription>{t('report.filters.description')}</CardDescription>
@@ -238,7 +238,7 @@ export function ReportPage() {
 
           <div className="grid grid-cols-1 gap-2">
             {filteredRows.map((row) => (
-              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border p-3" key={row.id}>
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.15rem] border border-border/70 bg-muted/20 p-3" key={row.id}>
                 <div>
                   <p className="text-sm font-medium">{row.file_name}</p>
                   <p className="text-xs text-muted-foreground">{row.title}</p>

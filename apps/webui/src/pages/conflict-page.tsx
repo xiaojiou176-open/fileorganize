@@ -372,7 +372,7 @@ export function ConflictPage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('conflicts.title')}</CardTitle>
           <CardDescription>{t('conflicts.description', { jobId: jobId || 'unknown' })}</CardDescription>
@@ -454,7 +454,7 @@ export function ConflictPage() {
           />
 
           {focusedConflict ? (
-            <div className="rounded-xl border border-border p-3 text-sm">
+            <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4 text-sm">
               <div className="mb-2 flex flex-wrap items-center gap-2">
                 <Badge variant={focusedConflict.severity === 'error' ? 'destructive' : 'warning'}>{focusedConflict.severity}</Badge>
                 <Badge variant="outline">{focusedConflict.type}</Badge>

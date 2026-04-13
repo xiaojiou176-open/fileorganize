@@ -175,7 +175,7 @@ export function RuleStudioSheet({
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('review.ruleStudio.title')}</CardTitle>
           <CardDescription>{t('review.ruleStudio.description')}</CardDescription>
@@ -278,7 +278,7 @@ export function RuleStudioSheet({
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('review.ruleStudio.savedTitle')}</CardTitle>
           <CardDescription>{t('review.ruleStudio.savedDescription')}</CardDescription>
@@ -288,7 +288,7 @@ export function RuleStudioSheet({
             <p className="rounded-xl border border-border p-4 text-sm text-muted-foreground">{t('review.ruleStudio.savedEmpty')}</p>
           ) : (
             savedRules.map((rule) => (
-              <div className="rounded-xl border border-border p-3" key={rule.id}>
+              <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4" key={rule.id}>
                 <p className="font-medium">{rule.name}</p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {rule.description || t('review.ruleStudio.noDescription')} | {t('review.ruleStudio.scopeVersion', { scope: rule.scope, version: rule.version })}

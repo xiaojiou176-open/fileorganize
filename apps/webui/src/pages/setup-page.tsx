@@ -169,7 +169,8 @@ export function SetupPage() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-[linear-gradient(135deg,hsl(var(--brand-soft))_0%,hsl(var(--card))_58%,hsl(var(--accent)/0.55)_100%)] p-6 shadow-card sm:p-8">
+      <section className="workspace-panel relative overflow-hidden p-6 sm:p-8">
+        <div className="workspace-grid pointer-events-none absolute inset-0 opacity-[0.14]" />
         <div className="pointer-events-none absolute -right-16 -top-12 h-52 w-52 rounded-full bg-primary/10 blur-3xl" />
         <div className="max-w-3xl space-y-4">
           <Badge variant={stage === 'ready' ? 'success' : 'secondary'}>
@@ -219,7 +220,7 @@ export function SetupPage() {
       ) : null}
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('setup.card.connect.title')}</CardTitle>
             <CardDescription>{t('setup.card.connect.description')}</CardDescription>
@@ -279,7 +280,7 @@ export function SetupPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card>
+          <Card className="workspace-panel">
             <CardHeader>
               <CardTitle>{t('setup.card.checklist.title')}</CardTitle>
               <CardDescription>{t('setup.card.checklist.description', { ready: String(readyCount), total: String(checklistItems.length) })}</CardDescription>
@@ -320,7 +321,7 @@ export function SetupPage() {
             value={settings?.output_root_exists ? t('setup.status.outputFolder.ready') : t('setup.status.outputFolder.pending')}
           />
 
-          <Card>
+          <Card className="workspace-panel-soft">
             <CardHeader>
               <CardTitle>{t('setup.next.title')}</CardTitle>
               <CardDescription>{t('setup.next.description')}</CardDescription>
@@ -340,7 +341,7 @@ export function SetupPage() {
       </section>
 
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('setup.card.defaults.title')}</CardTitle>
             <CardDescription>{t('setup.card.defaults.description')}</CardDescription>
@@ -374,7 +375,7 @@ export function SetupPage() {
               </Select>
               <p className="text-xs text-muted-foreground">{t('setup.field.strategyPackHint')}</p>
               {selectedPack ? (
-                <div className="rounded-xl border border-border bg-muted/30 p-4">
+                <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4">
                   <div className="flex flex-wrap items-center gap-2">
                     <p className="font-medium">{selectedPack.name}</p>
                     <Badge variant="secondary">{t('setup.card.defaults.templateOnly')}</Badge>
@@ -423,7 +424,7 @@ export function SetupPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="workspace-panel">
           <CardHeader>
             <CardTitle>{t('setup.card.advanced.title')}</CardTitle>
             <CardDescription>{t('setup.card.advanced.description')}</CardDescription>
@@ -454,7 +455,7 @@ export function SetupPage() {
               <Input id="setup-max-file-mb" onChange={(event) => setForm((prev) => ({ ...prev, maxFileMb: event.target.value }))} value={form.maxFileMb} />
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-muted/20 p-4 text-sm text-muted-foreground">
+            <div className="rounded-[1.2rem] border border-border/70 bg-muted/20 p-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2 font-medium text-foreground">
                 <ShieldCheck className="h-4 w-4 text-primary" />
                 {t('setup.card.advanced.guardrailsTitle')}
@@ -478,14 +479,14 @@ function StatusCard({
   value: string
 }) {
   return (
-    <Card>
+    <Card className="workspace-panel-soft">
       <CardContent className="flex items-center gap-3 pt-6">
         <div className="grid h-11 w-11 place-items-center rounded-2xl border border-border bg-muted/50">
           <Icon className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <p className="text-xs text-muted-foreground">{label}</p>
-          <p className="font-medium">{value}</p>
+          <p className="workspace-kicker">{label}</p>
+          <p className="mt-1 font-medium tracking-[-0.015em] text-foreground">{value}</p>
         </div>
       </CardContent>
     </Card>

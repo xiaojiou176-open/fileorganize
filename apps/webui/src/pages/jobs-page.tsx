@@ -352,7 +352,7 @@ export function JobsPage() {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="workspace-panel">
         <CardHeader>
           <CardTitle>{t('jobs.page.title')}</CardTitle>
           <CardDescription>{t('jobs.page.description')}</CardDescription>
@@ -429,7 +429,7 @@ export function JobsPage() {
         </CardContent>
       </Card>
 
-      <Card data-testid="current-job-card">
+      <Card className="workspace-panel" data-testid="current-job-card">
         <CardHeader>
           <CardTitle>{t('jobs.current.title')}</CardTitle>
           <CardDescription>{t('jobs.current.description')}</CardDescription>

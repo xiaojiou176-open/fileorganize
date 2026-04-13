@@ -44,7 +44,7 @@ export function CollectionPanel({
 }) {
   const { t } = useI18n()
   return (
-    <Card>
+    <Card className="workspace-panel">
       <CardHeader>
         <CardTitle>{t('review.collections.title')}</CardTitle>
         <CardDescription>{t('review.collections.description')}</CardDescription>
@@ -56,14 +56,26 @@ export function CollectionPanel({
           const summary = summarizeCollection(collectionRows, t)
           return (
             <Button
-              className={`h-auto justify-start rounded-xl border p-3 text-left transition-colors ${selected ? 'border-primary bg-primary/5' : 'border-border bg-card'}`}
+              className={`h-auto justify-start rounded-[1.2rem] border p-4 text-left transition-all ${
+                selected
+                  ? 'border-primary/15 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] shadow-card'
+                  : 'border-border/70 bg-card/85 hover:border-primary/10 hover:bg-muted/25'
+              }`}
               key={collection.id}
               onClick={() => onSelect?.(collection.id)}
               type="button"
               variant="ghost"
             >
-              <p className="font-medium">{collection.title}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{collection.reason}</p>
+              <div className="flex w-full items-start justify-between gap-3">
+                <div className="space-y-2">
+                  <p className="font-medium tracking-[-0.015em] text-foreground">{collection.title}</p>
+                  <p className="text-xs leading-5 text-muted-foreground">{collection.reason}</p>
+                </div>
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <Badge variant={selected ? 'secondary' : 'outline'}>{t('review.collections.rows', { count: collection.row_ids.length })}</Badge>
+                  <Badge variant="outline">{t('review.collections.confidence', { value: Math.round(collection.confidence * 100) })}</Badge>
+                </div>
+              </div>
               <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
                 {collection.kind ? <Badge variant="outline">{t('review.collections.kind', { value: collection.kind })}</Badge> : null}
                 {collection.batch_hint ? <Badge variant="outline">{t('review.collections.hint', { value: collection.batch_hint })}</Badge> : null}
@@ -80,10 +92,6 @@ export function CollectionPanel({
                 {summary.bucketCounts.needs_review > 0 ? <Badge variant="secondary">{t('review.collections.needsReview', { count: summary.bucketCounts.needs_review })}</Badge> : null}
                 {summary.bucketCounts.auto_safe > 0 ? <Badge variant="success">{t('review.collections.autoSafe', { count: summary.bucketCounts.auto_safe })}</Badge> : null}
                 {summary.learnedRows > 0 ? <Badge variant="outline">{t('review.collections.learningCues', { count: summary.learnedRows })}</Badge> : null}
-              </div>
-              <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                <span>{t('review.collections.rows', { count: collection.row_ids.length })}</span>
-                <span>{t('review.collections.confidence', { value: Math.round(collection.confidence * 100) })}</span>
               </div>
             </Button>
           )

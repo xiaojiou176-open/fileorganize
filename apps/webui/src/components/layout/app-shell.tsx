@@ -2,16 +2,16 @@ import { AlertTriangle, BriefcaseBusiness, ChartPie, FileStack, House, Inbox, Ke
 import { useEffect, useMemo, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 
+import { JobCenterSheet } from '@/components/layout/job-center-sheet'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import { Button } from '@/components/ui/button'
+import { NativeSelect } from '@/components/ui/native-select'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { useLiveJobs } from '@/hooks/use-live-jobs'
-import { cn, toTitleCase } from '@/lib/utils'
-import { JobCenterSheet } from '@/components/layout/job-center-sheet'
-import { createRouteIntentPrefetchHandlers, preloadRouteSet, scheduleLikelyRoutePreload } from '@/routes/lazy-routes'
 import { getRuntimeSettings, type RuntimeSettings } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
-import { NativeSelect } from '@/components/ui/native-select'
+import { cn, toTitleCase } from '@/lib/utils'
+import { createRouteIntentPrefetchHandlers, preloadRouteSet, scheduleLikelyRoutePreload } from '@/routes/lazy-routes'
 
 type NavItem = {
   id: string
@@ -228,99 +228,153 @@ export function AppShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,hsl(var(--accent)/0.25),transparent_40%),radial-gradient(circle_at_80%_10%,hsl(var(--brand)/0.18),transparent_45%)]" />
-      <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 gap-0 lg:grid-cols-[270px_1fr]">
-        <aside className="motion-surface hidden border-b border-border/70 bg-sidebar/95 px-4 py-4 backdrop-blur-sm lg:block lg:min-h-screen lg:border-b-0 lg:border-r lg:px-5 lg:py-7">
-          <div className="mb-6 flex items-center gap-2 px-2">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
-              <BriefcaseBusiness className="h-5 w-5" />
+      <div
+        className="pointer-events-none fixed inset-0 -z-10"
+        style={{
+          background:
+            'radial-gradient(circle at 18% 6%, hsl(var(--primary) / 0.08), transparent 28%), radial-gradient(circle at 88% 12%, hsl(var(--accent-strong) / 0.25), transparent 22%)',
+        }}
+      />
+      <div className="mx-auto grid w-full max-w-[1720px] grid-cols-1 gap-0 lg:grid-cols-[296px_1fr] lg:px-4">
+        <aside className="motion-surface hidden lg:block lg:py-4">
+          <div className="sticky top-4 space-y-4">
+            <div className="workspace-panel p-4">
+              <div className="flex items-center gap-3">
+                <div className="shadow-float grid h-11 w-11 place-items-center rounded-[1rem] bg-primary text-primary-foreground">
+                  <BriefcaseBusiness className="h-5 w-5" />
+                </div>
+                <div className="space-y-1">
+                  <p className="workspace-kicker">Movi</p>
+                  <p className="text-sm font-semibold tracking-[-0.02em] text-foreground">{t('appShell.brand.subtitle')}</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Movi</p>
-              <p className="font-semibold">{t('appShell.brand.subtitle')}</p>
+
+            <div className="workspace-panel-soft p-3">
+              <nav className="space-y-5">
+                <div className="space-y-1">
+                  <div className="px-3 pb-2">
+                    <p className="workspace-kicker">{t('appShell.section.primary')}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{t('appShell.section.primaryHint')}</p>
+                  </div>
+                  {mainNavItems.map((item) => {
+                    const Icon = item.icon
+                    const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
+                    return (
+                      <NavLink
+                        className={({ isActive }) =>
+                          cn(
+                            'group flex items-center gap-3 rounded-[1rem] px-3 py-2.5 text-sm transition-all',
+                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                            'motion-nav-item',
+                            isActive
+                              ? 'border border-primary/10 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] text-foreground shadow-float'
+                              : 'text-muted-foreground hover:bg-card/85 hover:text-foreground',
+                          )
+                        }
+                        key={`${item.id}-${item.to}`}
+                        onFocus={prefetchHandlers.onFocus}
+                        onMouseEnter={prefetchHandlers.onMouseEnter}
+                        onPointerDown={prefetchHandlers.onPointerDown}
+                        onTouchStart={prefetchHandlers.onTouchStart}
+                        to={item.to}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {item.label}
+                      </NavLink>
+                    )
+                  })}
+                </div>
+
+                <div className="space-y-1">
+                  <div className="px-3 pb-2">
+                    <p className="workspace-kicker">{t('appShell.section.secondary')}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
+                  </div>
+                  {secondaryNavItems.map((item) => {
+                    const Icon = item.icon
+                    const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
+                    return (
+                      <NavLink
+                        className={({ isActive }) =>
+                          cn(
+                            'group flex items-center gap-3 rounded-[1rem] px-3 py-2.5 text-sm transition-all',
+                            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                            'motion-nav-item',
+                            isActive
+                              ? 'border border-primary/10 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] text-foreground shadow-float'
+                              : 'text-muted-foreground hover:bg-card/85 hover:text-foreground',
+                          )
+                        }
+                        key={`${item.id}-${item.to}`}
+                        onFocus={prefetchHandlers.onFocus}
+                        onMouseEnter={prefetchHandlers.onMouseEnter}
+                        onPointerDown={prefetchHandlers.onPointerDown}
+                        onTouchStart={prefetchHandlers.onTouchStart}
+                        to={item.to}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {item.label}
+                      </NavLink>
+                    )
+                  })}
+                </div>
+              </nav>
+            </div>
+
+            <div className="workspace-panel p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="workspace-kicker">{t('appShell.header.jobCenter')}</p>
+                  <p className="text-sm font-medium tracking-[-0.02em] text-foreground">
+                    {runtimeSettings?.ready ? t('appShell.header.settingsReady') : t('appShell.header.completeSetup')}
+                  </p>
+                </div>
+                <span
+                  className={cn(
+                    'rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em]',
+                    runtimeSettings?.ready ? 'border-transparent bg-success/16 text-success' : 'border-transparent bg-secondary text-secondary-foreground',
+                  )}
+                >
+                  {runtimeSettings?.ready ? t('appShell.header.settingsReady') : t('appShell.header.completeSetup')}
+                </span>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full border border-border/90 bg-transparent px-2.5 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-foreground">
+                  {state === 'open' ? t('appShell.header.sseOnline') : t('appShell.header.sseFallback')}
+                </span>
+                {runtimeSettings?.model ? (
+                  <span className="rounded-full border border-border/90 bg-transparent px-2.5 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-foreground">
+                    {runtimeSettings.model}
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button asChild size="sm" variant={runtimeSettings?.ready ? 'outline' : 'default'}>
+                  <Link {...createRouteIntentPrefetchHandlers('setup')} to="/setup">
+                    <KeyRound className="mr-2 h-4 w-4" />
+                    {runtimeSettings?.ready ? t('appShell.header.settingsReady') : t('appShell.header.completeSetup')}
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
-          <nav className="space-y-5">
-            <div className="space-y-1">
-              <div className="px-3 pb-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.primary')}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.primaryHint')}</p>
-              </div>
-              {mainNavItems.map((item) => {
-                const Icon = item.icon
-                const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
-                return (
-                  <NavLink
-                    className={({ isActive }) =>
-                      cn(
-                        'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                        'motion-nav-item',
-                        isActive
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
-                      )
-                    }
-                    key={`${item.id}-${item.to}`}
-                    onFocus={prefetchHandlers.onFocus}
-                    onMouseEnter={prefetchHandlers.onMouseEnter}
-                    onPointerDown={prefetchHandlers.onPointerDown}
-                    onTouchStart={prefetchHandlers.onTouchStart}
-                    to={item.to}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </NavLink>
-                )
-              })}
-            </div>
-
-            <div className="space-y-1">
-              <div className="px-3 pb-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.secondary')}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
-              </div>
-              {secondaryNavItems.map((item) => {
-                const Icon = item.icon
-                const prefetchHandlers = createRouteIntentPrefetchHandlers(item.prefetch)
-                return (
-                  <NavLink
-                    className={({ isActive }) =>
-                      cn(
-                        'group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-                        'motion-nav-item',
-                        isActive
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
-                      )
-                    }
-                    key={`${item.id}-${item.to}`}
-                    onFocus={prefetchHandlers.onFocus}
-                    onMouseEnter={prefetchHandlers.onMouseEnter}
-                    onPointerDown={prefetchHandlers.onPointerDown}
-                    onTouchStart={prefetchHandlers.onTouchStart}
-                    to={item.to}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {item.label}
-                  </NavLink>
-                )
-              })}
-            </div>
-          </nav>
         </aside>
 
-        <div className="min-h-screen px-4 pb-8 pt-4 sm:px-6 lg:px-9">
-          <header className="motion-surface motion-surface-delay mb-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border/80 bg-card/90 px-4 py-3 shadow-card backdrop-blur sm:px-5">
-            <Breadcrumb items={crumbs} />
-            <div className="flex items-center gap-2">
+        <div className="min-h-screen px-4 pb-8 pt-4 sm:px-6 lg:px-10">
+          <header className="motion-surface motion-surface-delay workspace-panel sticky top-4 z-20 mb-6 flex flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-5">
+            <div className="min-w-0 flex-1">
+              <Breadcrumb items={crumbs} />
+            </div>
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <label className="sr-only" htmlFor="app-locale">
                 {t('appShell.language.label')}
               </label>
               <NativeSelect
                 aria-label={t('appShell.language.label')}
-                className="h-9 w-[168px] text-xs"
+                className="h-9 w-[172px] text-xs"
                 id="app-locale"
                 onChange={(event) => setLocale(event.target.value === 'zh-CN' ? 'zh-CN' : 'en')}
                 value={locale}
@@ -332,16 +386,16 @@ export function AppShell() {
                 <Menu className="h-4 w-4" />
                 {t('appShell.header.navigationButton')}
               </Button>
-              <span className={cn('rounded-full border border-border bg-muted/50 px-2 py-1 text-xs text-foreground')}>
+              <span className="rounded-full border border-border/90 bg-card/70 px-2.5 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-foreground">
                 {state === 'open' ? t('appShell.header.sseOnline') : t('appShell.header.sseFallback')}
               </span>
-              <Button asChild variant={runtimeSettings?.ready ? 'outline' : 'default'}>
+              <Button asChild size="sm" variant={runtimeSettings?.ready ? 'outline' : 'default'}>
                 <Link {...createRouteIntentPrefetchHandlers('setup')} to="/setup">
                   <KeyRound className="mr-2 h-4 w-4" />
                   {runtimeSettings?.ready ? t('appShell.header.settingsReady') : t('appShell.header.completeSetup')}
                 </Link>
               </Button>
-              <Button onClick={() => setJobCenterOpen(true)} variant="secondary">
+              <Button onClick={() => setJobCenterOpen(true)} size="sm" variant="secondary">
                 {t('appShell.header.jobCenter')}
               </Button>
             </div>
@@ -364,8 +418,8 @@ export function AppShell() {
           <nav className="space-y-5">
             <div className="space-y-2">
               <div className="px-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.primary')}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.primaryHint')}</p>
+                <p className="workspace-kicker">{t('appShell.section.primary')}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{t('appShell.section.primaryHint')}</p>
               </div>
               {mainNavItems.map((item) => {
                 const Icon = item.icon
@@ -373,11 +427,11 @@ export function AppShell() {
                   <NavLink
                     className={({ isActive }) =>
                       cn(
-                        'group flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        'group flex items-center gap-3 rounded-[1rem] px-3 py-3 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                         isActive
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                          ? 'border border-primary/10 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] text-foreground shadow-float'
+                          : 'text-muted-foreground hover:bg-card/85 hover:text-foreground',
                       )
                     }
                     key={`mobile-${item.id}-${item.to}`}
@@ -393,8 +447,8 @@ export function AppShell() {
 
             <div className="space-y-2">
               <div className="px-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{t('appShell.section.secondary')}</p>
-                <p className="mt-1 text-xs text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
+                <p className="workspace-kicker">{t('appShell.section.secondary')}</p>
+                <p className="mt-1 text-xs leading-5 text-muted-foreground">{t('appShell.section.secondaryHint')}</p>
               </div>
               {secondaryNavItems.map((item) => {
                 const Icon = item.icon
@@ -402,11 +456,11 @@ export function AppShell() {
                   <NavLink
                     className={({ isActive }) =>
                       cn(
-                        'group flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                        'group flex items-center gap-3 rounded-[1rem] px-3 py-3 text-sm transition-all',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                         isActive
-                          ? 'bg-sidebar-accent text-sidebar-accent-foreground shadow-sm'
-                          : 'text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground',
+                          ? 'border border-primary/10 bg-[linear-gradient(135deg,hsl(var(--accent))_0%,hsl(var(--card))_100%)] text-foreground shadow-float'
+                          : 'text-muted-foreground hover:bg-card/85 hover:text-foreground',
                       )
                     }
                     key={`mobile-${item.id}-${item.to}`}

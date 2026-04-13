@@ -13,16 +13,16 @@ export function ReviewQueueSummary({ summary }: { summary: ReviewQueueSummaryTyp
   ] as const
 
   return (
-    <Card>
+    <Card className="workspace-panel overflow-hidden">
       <CardHeader>
         <CardTitle>{t('review.summary.title')}</CardTitle>
         <CardDescription>{t('review.summary.description')}</CardDescription>
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-3 sm:grid-cols-4">
         {cards.map((card) => (
-          <div className="rounded-xl border border-border p-3" key={card.label}>
-            <p className="text-xs text-muted-foreground">{card.label}</p>
-            <p className="text-2xl font-semibold">{card.value}</p>
+          <div className="rounded-[1.15rem] border border-border/70 bg-muted/25 p-4" key={card.label}>
+            <p className="workspace-kicker">{card.label}</p>
+            <p className="workspace-value mt-2 text-3xl">{card.value}</p>
             <div className="mt-2">
               <Badge variant={card.tone === 'success' ? 'success' : card.tone === 'warning' ? 'warning' : card.tone === 'destructive' ? 'destructive' : 'secondary'}>
                 {t('review.summary.ofTotal', { count: summary.total })}

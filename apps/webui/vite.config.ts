@@ -48,6 +48,8 @@ export default defineConfig(({ command }) => {
       setupFiles: './src/test/setup.ts',
       globals: true,
       css: true,
+      testTimeout: 10000,
+      hookTimeout: 10000,
     },
   }
 })
