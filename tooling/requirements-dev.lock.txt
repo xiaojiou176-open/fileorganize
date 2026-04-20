@@ -483,9 +483,9 @@ filelock==3.25.2 \
 glob2==0.7 \
     --hash=sha256:85c3dbd07c8aa26d63d7aacee34fa86e9a91a3873bc30bf62ec46e531f92ab8c
     # via mutmut
-google-auth[requests]==2.49.1 \
-    --hash=sha256:16d40da1c3c5a0533f57d268fe72e0ebb0ae1cc3b567024122651c045d879b64 \
-    --hash=sha256:195ebe3dca18eddd1b3db5edc5189b76c13e96f29e73043b923ebcf3f1a860f7
+google-auth[requests]==2.49.2 \
+    --hash=sha256:c1ae38500e73065dcae57355adb6278cf8b5c8e391994ae9cbadbcb9631ab409 \
+    --hash=sha256:c2720924dfc82dedb962c9f52cabb2ab16714fd0a6a707e40561d217574ed6d5
     # via google-genai
 google-genai==1.70.0 \
     --hash=sha256:36b67b0fc6f319e08d1f1efd808b790107b1809c8743a05d55dfcf9d9fad7719 \
