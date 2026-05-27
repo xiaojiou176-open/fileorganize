@@ -1,0 +1,118 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fileyard"
+version = "4.0.5"
+description = "Review-first AI file organizer and workbench with deterministic apply/rollback and local MCP v1"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Utilities",
+]
+dependencies = [
+  "fastapi==0.121.3",
+  "exceptiongroup==1.3.1; python_version < \"3.11\"",
+  "google-genai==1.70.0",
+  "mcp==1.26.0",
+  "pillow==12.1.1",
+  "python-multipart==0.0.22",
+  "starlette==0.49.1",
+  "pyyaml==6.0.3",
+  "tomli==2.4.1",
+  "uvicorn==0.37.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "bandit==1.9.4",
+  "detect-secrets==1.5.0",
+  "mutmut==2.5.1",
+  "mypy==1.20.0",
+  "pip-audit==2.10.0",
+  "pip-tools==7.5.3",
+  "playwright==1.58.0",
+  "pre-commit==4.5.1",
+  "pytest==8.4.2",
+  "pytest-cov==5.0.0",
+  "ruff==0.15.8",
+  "tomli==2.4.1",
+]
+
+[project.scripts]
+fileyard = "apps.cli.fileyard:main"
+fileyard-web-api = "apps.api.server:main"
+fileyard-mcp = "apps.mcp.server:main"
+
+[tool.fileyard.package_smoke]
+required_entrypoints = ["fileyard", "fileyard-web-api", "fileyard-mcp"]
+
+[tool.setuptools]
+include-package-data = true
+package-dir = {"" = "."}
+license-files = ["LICENSE", "NOTICE"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["apps*", "packages*"]
+
+[tool.ruff]
+line-length = 140
+target-version = "py310"
+cache-dir = ".runtime-cache/build/tooling/ruff"
+extend-exclude = [
+  "data",
+  "artifacts",
+  "artifacts/e2e",
+  "tests/fixtures",
+  ".venv",
+  ".runtime-cache",
+  "**/__pycache__",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+cache_dir = ".runtime-cache/build/tooling/mypy"
+exclude = "(data|artifacts|artifacts/e2e|tests/fixtures|\\.venv|\\.runtime-cache|__pycache__)"
+
+[tool.bandit]
+exclude_dirs = [
+  "data",
+  "artifacts",
+  "artifacts/e2e",
+  "tests/fixtures",
+  ".venv",
+  "__pycache__",
+]
+skips = ["B110", "B112", "B404", "B603"]
+
+[tool.coverage.run]
+data_file = ".runtime-cache/test/coverage/.coverage"
+omit = [
+  "*/repo/packages/application/sample.py",
+]
+
+[tool.coverage.report]
+omit = [
+  "*/repo/packages/application/sample.py",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+cache_dir = ".runtime-cache/test/pytest"
+addopts = "--cov=packages/domain --cov=packages/application --cov=packages/infrastructure --cov=packages/observability --cov=apps/api --cov=apps/cli --cov-branch --cov-report=xml:.runtime-cache/test/coverage/coverage.xml"
+markers = [
+  "live_llm: real LLM integration tests that require valid API credentials",
+  "live_browser: real browser tests that access external websites",
+]
