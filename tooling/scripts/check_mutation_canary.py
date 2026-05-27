@@ -44,9 +44,9 @@ def run(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
 
 def _python_candidates() -> list[Path]:
     candidates: list[Path] = []
-    if os.environ.get("MOVI_IN_CONTAINER", "").strip() == "1":
-        candidates.append(Path("/opt/movi-ci-venv/bin/python"))
-    env_venv = os.environ.get("MOVI_VENV_DIR", "").strip()
+    if os.environ.get("FILEYARD_IN_CONTAINER", "").strip() == "1":
+        candidates.append(Path("/opt/fileyard-ci-venv/bin/python"))
+    env_venv = os.environ.get("FILEYARD_VENV_DIR", "").strip()
     if env_venv:
         candidates.append(Path(env_venv).expanduser() / "bin" / "python")
     candidates.append(Path.home() / ".cache" / "fileyard" / "venv" / "default" / "bin" / "python")
@@ -165,8 +165,8 @@ def _build_cases() -> tuple[MutationCanaryCase, ...]:
             module="cli_app",
             operator="boolean_composition_guard",
             target="apps/cli/cli_app.py",
-            needle='return os.environ.get("MOVI_ENABLE_TEST_HOOKS", "") == "1" or bool(os.environ.get("PYTEST_CURRENT_TEST", ""))',
-            mutated='return os.environ.get("MOVI_ENABLE_TEST_HOOKS", "") == "1" and bool(os.environ.get("PYTEST_CURRENT_TEST", ""))',
+            needle='return os.environ.get("FILEYARD_ENABLE_TEST_HOOKS", "") == "1" or bool(os.environ.get("PYTEST_CURRENT_TEST", ""))',
+            mutated='return os.environ.get("FILEYARD_ENABLE_TEST_HOOKS", "") == "1" and bool(os.environ.get("PYTEST_CURRENT_TEST", ""))',
             tests=("tests/unit/test_cli_app.py",),
         ),
         MutationCanaryCase(

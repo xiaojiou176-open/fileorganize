@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping improve Movi.
+Thank you for helping improve Fileyard.
 
 Think of this file like the sign next to a workshop door: it tells you
 what kind of help is useful, what to check before walking in, and what is

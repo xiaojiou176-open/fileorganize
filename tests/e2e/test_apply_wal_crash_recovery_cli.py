@@ -49,11 +49,11 @@ def _run_apply(
         "none",
     ]
     env = os.environ.copy()
-    env["MOVI_ENABLE_TEST_HOOKS"] = "1"
+    env["FILEYARD_ENABLE_TEST_HOOKS"] = "1"
     if crash_point:
-        env["MOVI_APPLY_CRASH_AT"] = crash_point
+        env["FILEYARD_APPLY_CRASH_AT"] = crash_point
     else:
-        env.pop("MOVI_APPLY_CRASH_AT", None)
+        env.pop("FILEYARD_APPLY_CRASH_AT", None)
     return subprocess.run(cmd, cwd=str(repo_root), text=True, capture_output=True, env=env)
 
 

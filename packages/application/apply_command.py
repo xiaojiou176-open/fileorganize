@@ -79,7 +79,7 @@ _verify_rollback_record = _rollback_integrity._verify_rollback_record
 
 
 def _is_test_hooks_enabled() -> bool:
-    return os.environ.get("MOVI_ENABLE_TEST_HOOKS", "") == "1" or bool(os.environ.get("PYTEST_CURRENT_TEST", ""))
+    return os.environ.get("FILEYARD_ENABLE_TEST_HOOKS", "") == "1" or bool(os.environ.get("PYTEST_CURRENT_TEST", ""))
 
 
 def _resolve_apply_crash_inject(args) -> str:

@@ -47,11 +47,11 @@ dev = [
 
 [project.scripts]
 fileyard = "apps.cli.fileyard:main"
-movi-web-api = "apps.api.server:main"
-movi-mcp = "apps.mcp.server:main"
+fileyard-web-api = "apps.api.server:main"
+fileyard-mcp = "apps.mcp.server:main"
 
 [tool.fileyard.package_smoke]
-required_entrypoints = ["fileyard", "movi-web-api", "movi-mcp"]
+required_entrypoints = ["fileyard", "fileyard-web-api", "fileyard-mcp"]
 
 [tool.setuptools]
 include-package-data = true

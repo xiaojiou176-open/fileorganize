@@ -1,6 +1,6 @@
-# Movi WebUI
+# Fileyard WebUI
 
-Web front-end for Movi, built with React + TypeScript + Vite.
+Web front-end for Fileyard, built with React + TypeScript + Vite.
 
 ## Product Flow
 

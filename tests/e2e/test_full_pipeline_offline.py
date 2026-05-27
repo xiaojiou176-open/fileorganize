@@ -54,7 +54,7 @@ def test_full_pipeline_offline(tmp_path: Path):
         "none",
     ]
     env = os.environ.copy()
-    env["MOVI_ROLLBACK_HMAC_KEY"] = "e2e-test-rollback-key"
+    env["FILEYARD_ROLLBACK_HMAC_KEY"] = "e2e-test-rollback-key"
     subprocess.run(apply_cmd, check=True, cwd=str(repo_root), env=env)
 
     rows = [json.loads(line) for line in manifest.read_text(encoding="utf-8").splitlines() if line.strip()]

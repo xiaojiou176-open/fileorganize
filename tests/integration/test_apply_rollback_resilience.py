@@ -103,9 +103,9 @@ def test_rollback_strict_integrity_requires_hmac_key(monkeypatch: pytest.MonkeyP
     moved_path = Path(rows[0]["new_path"])
     assert moved_path.exists()
     assert rollback_manifest.exists()
-    monkeypatch.delenv("MOVI_ROLLBACK_HMAC_KEY", raising=False)
+    monkeypatch.delenv("FILEYARD_ROLLBACK_HMAC_KEY", raising=False)
 
-    with pytest.raises(SystemExit, match="strict_integrity=true requires MOVI_ROLLBACK_HMAC_KEY"):
+    with pytest.raises(SystemExit, match="strict_integrity=true requires FILEYARD_ROLLBACK_HMAC_KEY"):
         _run_cli(
             monkeypatch,
             [
@@ -128,8 +128,8 @@ def test_apply_crash_then_resume_recovers_rollback_manifest(monkeypatch: pytest.
     wal_path = Path(str(manifest_path) + ".apply.wal.json")
     rollback_manifest = Path(str(manifest_path) + ".rollback.jsonl")
 
-    monkeypatch.setenv("MOVI_ENABLE_TEST_HOOKS", "1")
-    monkeypatch.setenv("MOVI_APPLY_CRASH_AT", "after_manifest_before_rollback_commit")
+    monkeypatch.setenv("FILEYARD_ENABLE_TEST_HOOKS", "1")
+    monkeypatch.setenv("FILEYARD_APPLY_CRASH_AT", "after_manifest_before_rollback_commit")
     with pytest.raises(RuntimeError, match="Crash injected at after_manifest_before_rollback_commit"):
         _run_cli(
             monkeypatch,
@@ -148,7 +148,7 @@ def test_apply_crash_then_resume_recovers_rollback_manifest(monkeypatch: pytest.
         )
 
     assert wal_path.exists()
-    monkeypatch.delenv("MOVI_APPLY_CRASH_AT", raising=False)
+    monkeypatch.delenv("FILEYARD_APPLY_CRASH_AT", raising=False)
 
     _run_cli(
         monkeypatch,

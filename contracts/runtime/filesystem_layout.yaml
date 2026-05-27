@@ -72,11 +72,11 @@ repo_runtime:
     - "**/.ruff_cache"
 workspace_runtime:
   workspace_root: ~/.fileyard/workspaces/default
-  movi_root: ~/.fileyard/workspaces/default/.movi
-  manifest_root: ~/.fileyard/workspaces/default/.movi/manifests
-  artifact_root: ~/.fileyard/workspaces/default/.movi/artifacts
-  run_bundle_root: ~/.fileyard/workspaces/default/.movi/runs
-  env_root: ~/.fileyard/workspaces/default/.movi/env
+  movi_root: ~/.fileyard/workspaces/default/.fileyard
+  manifest_root: ~/.fileyard/workspaces/default/.fileyard/manifests
+  artifact_root: ~/.fileyard/workspaces/default/.fileyard/artifacts
+  run_bundle_root: ~/.fileyard/workspaces/default/.fileyard/runs
+  env_root: ~/.fileyard/workspaces/default/.fileyard/env
 machine_cache:
   root: ~/.cache/fileyard
   required_paths:
@@ -87,13 +87,13 @@ machine_cache:
     - ~/.cache/fileyard/playwright
     - ~/.cache/fileyard/pycache
 docker_runtime:
-  compose_project: movi-web-stack
-  canonical_image: movi-ci:local
+  compose_project: fileyard-web-stack
+  canonical_image: fileyard-ci:local
   protected_volumes:
-    - movi-web-stack_movi_playwright
-    - movi-web-stack_movi_venv
+    - fileyard-web-stack_movi_playwright
+    - fileyard-web-stack_movi_venv
   optional_volumes:
-    - movi-web-stack_movi_webui_node_modules
+    - fileyard-web-stack_movi_webui_node_modules
   shared_related_surface:
     - docker build cache
   cleanup_modes:

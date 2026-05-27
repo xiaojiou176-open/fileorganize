@@ -71,15 +71,15 @@ RUN set -eux; \
     echo "${GITLEAKS_SHA256}  /tmp/gitleaks.tar.gz" | sha256sum -c -; \
     tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks; \
     install -m 0755 /tmp/gitleaks /usr/local/bin/gitleaks; \
-    python -m venv /opt/movi-ci-venv; \
-    /opt/movi-ci-venv/bin/python -m pip install --disable-pip-version-check --require-hashes -r /tmp/organizer-build/requirements-pip.lock.txt; \
-    /opt/movi-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/requirements.lock.txt; \
+    python -m venv /opt/fileyard-ci-venv; \
+    /opt/fileyard-ci-venv/bin/python -m pip install --disable-pip-version-check --require-hashes -r /tmp/organizer-build/requirements-pip.lock.txt; \
+    /opt/fileyard-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/requirements.lock.txt; \
     awk 'BEGIN {emit=0} /^setuptools==/ {emit=1} emit {print} emit && /^    # via/ {exit}' \
       /tmp/organizer-build/requirements-dev.lock.txt > /tmp/organizer-build/setuptools-bootstrap.txt; \
     test -s /tmp/organizer-build/setuptools-bootstrap.txt; \
-    /opt/movi-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/setuptools-bootstrap.txt; \
-    /opt/movi-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/requirements-dev.lock.txt; \
-    cat /tmp/organizer-build/requirements.lock.txt /tmp/organizer-build/requirements-dev.lock.txt | sha256sum | awk '{print $1}' > /opt/movi-ci-venv/.movi_req_hash; \
+    /opt/fileyard-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/setuptools-bootstrap.txt; \
+    /opt/fileyard-ci-venv/bin/python -m pip install --require-hashes -r /tmp/organizer-build/requirements-dev.lock.txt; \
+    cat /tmp/organizer-build/requirements.lock.txt /tmp/organizer-build/requirements-dev.lock.txt | sha256sum | awk '{print $1}' > /opt/fileyard-ci-venv/.movi_req_hash; \
     node -v; \
     npm -v; \
     gitleaks version; \

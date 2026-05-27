@@ -98,7 +98,7 @@ if [ "${1:-}" = "--prepare-upgrade-pack" ]; then
   exit 0
 fi
 
-if [ "${MOVI_IN_CONTAINER:-0}" != "1" ] && [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
+if [ "${FILEYARD_IN_CONTAINER:-0}" != "1" ] && [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
   exec bash "$ROOT/scripts/container_exec.sh" --label value-proof -- bash tooling/runtime/run_value_proof.sh "$@"
 fi
 

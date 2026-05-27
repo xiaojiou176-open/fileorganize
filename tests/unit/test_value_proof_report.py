@@ -19,7 +19,7 @@ def _run_generator(tmp_path: Path, *extra_args: str) -> subprocess.CompletedProc
     repo_root = _repo_root()
     output = tmp_path / "value-proof.json"
     env = os.environ.copy()
-    env["MOVI_ALLOW_HOST_EXECUTION"] = "1"
+    env["FILEYARD_ALLOW_HOST_EXECUTION"] = "1"
 
     return subprocess.run(
         [
@@ -190,12 +190,12 @@ def test_value_proof_runtime_sets_run_bundle_root_for_subprocess(monkeypatch, tm
     generate_value_proof_report._run_with_bundle_root(
         _repo_root(),
         ["python3", "-c", "print('ok')"],
-        run_bundle_root=tmp_path / ".movi" / "runs",
+        run_bundle_root=tmp_path / ".fileyard" / "runs",
     )
 
     env = captured["env"]
     assert isinstance(env, dict)
-    assert env["MOVI_RUN_BUNDLE_ROOT"] == str((tmp_path / ".movi" / "runs").resolve())
+    assert env["FILEYARD_RUN_BUNDLE_ROOT"] == str((tmp_path / ".fileyard" / "runs").resolve())
 
 
 def test_value_proof_report_uses_isolated_run_bundle_root(tmp_path: Path) -> None:
@@ -203,8 +203,8 @@ def test_value_proof_report_uses_isolated_run_bundle_root(tmp_path: Path) -> Non
     output = tmp_path / "value-proof.json"
     poisoned_root = _poison_run_bundle_root(tmp_path / "poisoned-runs", "value_proof_analyze")
     env = os.environ.copy()
-    env["MOVI_ALLOW_HOST_EXECUTION"] = "1"
-    env["MOVI_RUN_BUNDLE_ROOT"] = str(poisoned_root)
+    env["FILEYARD_ALLOW_HOST_EXECUTION"] = "1"
+    env["FILEYARD_RUN_BUNDLE_ROOT"] = str(poisoned_root)
 
     proc = subprocess.run(
         [

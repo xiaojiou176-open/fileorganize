@@ -154,7 +154,7 @@ sensitive_keys = {
     "ANTHROPIC_API_KEY",
     "AZURE_OPENAI_API_KEY",
     "GOOGLE_API_KEY",
-    "MOVI_ROLLBACK_HMAC_KEY",
+    "FILEYARD_ROLLBACK_HMAC_KEY",
 }
 placeholder_tokens = {
     "",

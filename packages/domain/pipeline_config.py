@@ -95,7 +95,7 @@ DEFAULT_WORKERS = 1
 DEFAULT_LOG_LEVEL = "INFO"
 DEFAULT_LOG_JSON = False
 
-DEFAULT_WORKSPACE_ROOT = Path(os.environ.get("MOVI_WORKSPACE_ROOT", "~/.fileyard/workspaces/default")).expanduser()
+DEFAULT_WORKSPACE_ROOT = Path(os.environ.get("FILEYARD_WORKSPACE_ROOT", "~/.fileyard/workspaces/default")).expanduser()
 DEFAULT_INPUT_DIR = DEFAULT_WORKSPACE_ROOT / "data" / "raw"
 DEFAULT_OUTPUT_PARENT = DEFAULT_WORKSPACE_ROOT / "data" / "organized"
 

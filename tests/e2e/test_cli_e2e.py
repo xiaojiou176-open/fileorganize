@@ -54,7 +54,7 @@ def test_cli_apply_rollback(tmp_path: Path):
         "--verify-sha1",
     ]
     env = os.environ.copy()
-    env["MOVI_ROLLBACK_HMAC_KEY"] = "e2e-test-rollback-key"
+    env["FILEYARD_ROLLBACK_HMAC_KEY"] = "e2e-test-rollback-key"
     subprocess.run(apply_cmd, check=True, cwd=str(repo_root), env=env)
 
     assert not src.exists()

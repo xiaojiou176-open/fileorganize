@@ -1,6 +1,6 @@
 services:
-  movi-ci:
-    image: ${MOVI_CI_IMAGE:-movi-ci:local}
+  fileyard-ci:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
     working_dir: /workspace
     volumes:
       - ../..:/workspace
@@ -11,21 +11,21 @@ services:
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
-      MOVI_IN_CONTAINER: "1"
-      MOVI_ALLOW_HOST_EXECUTION: "0"
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-}
-      MOVI_LIVE_TEST_URL: ${MOVI_LIVE_TEST_URL:-}
-      MOVI_ROLLBACK_HMAC_KEY: ${MOVI_ROLLBACK_HMAC_KEY:-}
-      MOVI_TRACE_ID: ${MOVI_TRACE_ID:-}
-      MOVI_SESSION_ID: ${MOVI_SESSION_ID:-}
-      MOVI_REQUEST_ID: ${MOVI_REQUEST_ID:-}
-      MOVI_USER_ID: ${MOVI_USER_ID:-}
+      FILEYARD_LIVE_TEST_URL: ${FILEYARD_LIVE_TEST_URL:-}
+      FILEYARD_ROLLBACK_HMAC_KEY: ${FILEYARD_ROLLBACK_HMAC_KEY:-}
+      FILEYARD_TRACE_ID: ${FILEYARD_TRACE_ID:-}
+      FILEYARD_SESSION_ID: ${FILEYARD_SESSION_ID:-}
+      FILEYARD_REQUEST_ID: ${FILEYARD_REQUEST_ID:-}
+      FILEYARD_USER_ID: ${FILEYARD_USER_ID:-}
       TZ: "America/Los_Angeles"
     tty: true
 
-  movi-web-api:
-    image: ${MOVI_CI_IMAGE:-movi-ci:local}
+  fileyard-web-api:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
     working_dir: /workspace
     volumes:
       - ../..:/workspace
@@ -35,38 +35,38 @@ services:
       PIP_DISABLE_PIP_VERSION_CHECK: "1"
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONUNBUFFERED: "1"
-      MOVI_IN_CONTAINER: "1"
-      MOVI_ALLOW_HOST_EXECUTION: "0"
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-}
-      MOVI_ROLLBACK_HMAC_KEY: ${MOVI_ROLLBACK_HMAC_KEY:-}
-      MOVI_WEB_API_HOST: ${MOVI_WEB_API_HOST:-0.0.0.0}
-      MOVI_WEB_API_PORT: ${MOVI_WEB_API_PORT:-18080}
-      MOVI_WEBUI_HOST: ${MOVI_WEBUI_HOST:-0.0.0.0}
-      MOVI_WEBUI_PORT: ${MOVI_WEBUI_PORT:-5173}
+      FILEYARD_ROLLBACK_HMAC_KEY: ${FILEYARD_ROLLBACK_HMAC_KEY:-}
+      FILEYARD_WEB_API_HOST: ${FILEYARD_WEB_API_HOST:-0.0.0.0}
+      FILEYARD_WEB_API_PORT: ${FILEYARD_WEB_API_PORT:-18080}
+      FILEYARD_WEBUI_HOST: ${FILEYARD_WEBUI_HOST:-0.0.0.0}
+      FILEYARD_WEBUI_PORT: ${FILEYARD_WEBUI_PORT:-5173}
       TZ: "America/Los_Angeles"
     command: ["bash", "tooling/runtime/run_web_api.sh", "--host", "0.0.0.0", "--port", "18080"]
     ports:
-      - "${MOVI_WEB_API_PORT:-18080}:18080"
-      - "${MOVI_WEBUI_PORT:-5173}:5173"
+      - "${FILEYARD_WEB_API_PORT:-18080}:18080"
+      - "${FILEYARD_WEBUI_PORT:-5173}:5173"
     tty: true
 
-  movi-webui:
-    image: ${MOVI_CI_IMAGE:-movi-ci:local}
+  fileyard-webui:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
     working_dir: /workspace
     volumes:
       - ../..:/workspace
       - movi_webui_node_modules:/workspace/apps/webui/node_modules
     environment:
-      MOVI_IN_CONTAINER: "1"
-      MOVI_ALLOW_HOST_EXECUTION: "0"
-      MOVI_WEBUI_HOST: ${MOVI_WEBUI_HOST:-0.0.0.0}
-      MOVI_WEBUI_PORT: ${MOVI_WEBUI_PORT:-5173}
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
+      FILEYARD_WEBUI_HOST: ${FILEYARD_WEBUI_HOST:-0.0.0.0}
+      FILEYARD_WEBUI_PORT: ${FILEYARD_WEBUI_PORT:-5173}
       TZ: "America/Los_Angeles"
     command: ["bash", "tooling/runtime/run_webui.sh", "--host", "0.0.0.0", "--port", "5173"]
     depends_on:
-      - movi-web-api
-    network_mode: "service:movi-web-api"
+      - fileyard-web-api
+    network_mode: "service:fileyard-web-api"
     tty: true
 
 volumes:

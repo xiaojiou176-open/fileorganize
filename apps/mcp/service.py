@@ -241,8 +241,8 @@ class MoviMcpApiFacade:
 
     def get_safety_boundary_text(self) -> str:
         return (
-            "# Movi MCP safety boundary\n\n"
-            "- Movi MCP is local-first and review-first.\n"
+            "# Fileyard MCP safety boundary\n\n"
+            "- Fileyard MCP is local-first and review-first.\n"
             "- Tools may inspect jobs, review queues, manifests, reports, strategy packs, and watch sources.\n"
             "- Safe write tools only patch the overlay or create draft/dry-run jobs.\n"
             "- MCP v1 does not expose `apply.execute`, direct file mutation shortcuts, or rollback creation.\n"
@@ -251,7 +251,7 @@ class MoviMcpApiFacade:
 
     def get_tool_matrix(self) -> dict[str, Any]:
         return {
-            "server": "Movi MCP",
+            "server": "Fileyard MCP",
             "mode": "local-first stdio",
             "v1_scope": "safe thin facade",
             "tools": [

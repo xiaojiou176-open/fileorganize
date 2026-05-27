@@ -1,6 +1,6 @@
 version: 1
 assets:
-  - path: apps/webui/public/movi-mark.svg
+  - path: apps/webui/public/fileyard-mark.svg
     kind: public-brand-asset
     status: repository-authored
     license: MIT

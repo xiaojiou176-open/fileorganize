@@ -32,7 +32,7 @@ def test_generate_report_script(tmp_path: Path):
     manifest.write_text("\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n", encoding="utf-8")
 
     env = os.environ.copy()
-    env["MOVI_ALLOW_EXTERNAL"] = "1"
+    env["FILEYARD_ALLOW_EXTERNAL"] = "1"
     subprocess.run(
         [
             str(script),

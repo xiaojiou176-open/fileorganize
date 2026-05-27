@@ -404,7 +404,7 @@ def _toml_data(path: Path) -> dict[str, Any]:
 def _sanitize_public_runtime_value(value: str) -> str:
     sanitized = str(value)
     replacements = [
-        ("~/.fileyard/workspaces/default/.movi", "<workspace-root>/.movi"),
+        ("~/.fileyard/workspaces/default/.fileyard", "<workspace-root>/.fileyard"),
         ("~/.fileyard/workspaces/default/data/raw", "<workspace-root>/data/raw"),
         ("~/.fileyard/workspaces/default/data/organized", "<workspace-root>/data/organized"),
         ("~/.fileyard/workspaces/default/data", "<workspace-root>/data"),
@@ -454,12 +454,12 @@ def runtime_topology_snapshot(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
         key: env_defaults[key]
         for key in (
             "GEMINI_MODEL",
-            "MOVI_WEB_API_HOST",
-            "MOVI_WEB_API_PORT",
-            "MOVI_WEBUI_HOST",
-            "MOVI_WEBUI_PORT",
-            "MOVI_COMPOSE_SERVICE",
-            "MOVI_CI_IMAGE",
+            "FILEYARD_WEB_API_HOST",
+            "FILEYARD_WEB_API_PORT",
+            "FILEYARD_WEBUI_HOST",
+            "FILEYARD_WEBUI_PORT",
+            "FILEYARD_COMPOSE_SERVICE",
+            "FILEYARD_CI_IMAGE",
         )
         if key in env_defaults
     }
@@ -499,7 +499,7 @@ def runtime_topology_snapshot(repo_root: Path = REPO_ROOT) -> dict[str, Any]:
             {
                 "name": "destructive workspace reset",
                 "commands": ["bash tooling/runtime/runtime_reset.sh --confirm-workspace-reset"],
-                "note": "Clears workspace .movi state; not a routine cache cleanup command.",
+                "note": "Clears workspace .fileyard state; not a routine cache cleanup command.",
             },
         ],
         "docker_runtime": docker_runtime,
@@ -563,7 +563,7 @@ def render_runtime_topology_reference(repo_root: Path = REPO_ROOT) -> str:
                 "",
                 "### Container-First Defaults",
                 "",
-                f"- Canonical Docker image: `{docker_runtime.get('canonical_image', 'movi-ci:local')}`",
+                f"- Canonical Docker image: `{docker_runtime.get('canonical_image', 'fileyard-ci:local')}`",
                 f"- Protected Docker volumes: {protected or 'None'}",
                 f"- Optional Docker volumes: {optional or 'None'}",
                 (
@@ -654,8 +654,8 @@ def _workflow_link_for(target_path: str, workflow_name: str) -> str:
 def render_runtime_topology_summary_block(output_path: str, repo_root: Path = REPO_ROOT) -> str:
     snapshot = runtime_topology_snapshot(repo_root)
     services = ", ".join(f"`{service['name']}`" for service in snapshot["services"])
-    api_port = snapshot["env_defaults"].get("MOVI_WEB_API_PORT", "18080")
-    webui_port = snapshot["env_defaults"].get("MOVI_WEBUI_PORT", "5173")
+    api_port = snapshot["env_defaults"].get("FILEYARD_WEB_API_PORT", "18080")
+    webui_port = snapshot["env_defaults"].get("FILEYARD_WEBUI_PORT", "5173")
     lines = [
         "> Auto-generated: runtime services, default ports, runtime paths, and entrypoint facts live in "
         f"[generated runtime topology]({_runtime_reference_link_for(output_path)}).",

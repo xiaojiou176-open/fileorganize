@@ -13,7 +13,7 @@ apply_runtime_env_defaults "$REPO_ROOT"
 VENV="$(governance_runtime_venv_path "$REPO_ROOT")"
 CLI_ENTRYPOINT="$REPO_ROOT/apps/cli/fileyard.py"
 
-if [ "${MOVI_IN_CONTAINER:-0}" != "1" ] && [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
+if [ "${FILEYARD_IN_CONTAINER:-0}" != "1" ] && [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
   exec bash "$ROOT/scripts/container_exec.sh" --label run-analyze -- bash tooling/runtime/run_analyze.sh "$@"
 fi
 

@@ -4,7 +4,7 @@ Local policy for `apps/webui/`.
 
 ## Goal
 
-Maintain the Movi WebUI as a thin control surface for job orchestration, conflict review, and reporting.
+Maintain the Fileyard WebUI as a thin control surface for job orchestration, conflict review, and reporting.
 
 ## Stack
 

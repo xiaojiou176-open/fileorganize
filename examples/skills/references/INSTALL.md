@@ -1,6 +1,6 @@
-# Install And Attach Movi MCP
+# Install And Attach Fileyard MCP
 
-Use this when the host runtime does not already have Movi connected.
+Use this when the host runtime does not already have Fileyard connected.
 
 ## Local repo setup
 

@@ -63,7 +63,7 @@ def install_apply_changes_test_compat() -> None:
             return False
 
     def _resolve_apply_crash_inject(args):
-        raw = str(getattr(args, "crash_inject", "") or os.environ.get("MOVI_APPLY_CRASH_AT", "")).strip()
+        raw = str(getattr(args, "crash_inject", "") or os.environ.get("FILEYARD_APPLY_CRASH_AT", "")).strip()
         crash = raw.lower().replace("-", "_")
         if not crash:
             return ""

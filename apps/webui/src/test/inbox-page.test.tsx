@@ -100,7 +100,7 @@ describe('InboxPage', () => {
         </I18nProvider>
       </MemoryRouter>,
     )
-    expect(await screen.findByRole('heading', { name: 'Movi Inbox' })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Fileyard Inbox' })).toBeInTheDocument()
     expect(screen.getByText(/Inbox is only the intake desk/i)).toBeInTheDocument()
 
     fireEvent.change(screen.getByPlaceholderText('Source name'), { target: { value: 'Inbox' } })
@@ -116,7 +116,7 @@ describe('InboxPage', () => {
     expect(analyzeSourceLink).toHaveAttribute('href', expect.stringContaining('source=inbox'))
     expect(analyzeSourceLink).toHaveAttribute('href', expect.stringContaining('strategyPack=travel'))
 
-    fireEvent.click(screen.getByRole('button', { name: 'Scan Movi Inbox' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Scan Fileyard Inbox' }))
     expect(await screen.findByText('Inbox')).toBeInTheDocument()
     expect(screen.getByText(/naming template preview/i)).toBeInTheDocument()
     const analyzeBatchLink = screen.getByRole('link', { name: 'Open Analyze Checklist' })
@@ -134,7 +134,7 @@ describe('InboxPage', () => {
   })
 
   it('renders localized inbox copy when the locale is switched to zh-CN', async () => {
-    window.localStorage.setItem('movi.locale', 'zh-CN')
+    window.localStorage.setItem('fileyard.locale', 'zh-CN')
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -147,10 +147,10 @@ describe('InboxPage', () => {
       </MemoryRouter>,
     )
 
-    expect(await screen.findByRole('heading', { name: 'Movi Inbox' })).toBeInTheDocument()
-    expect(screen.getByText(/你可以把 Movi Inbox 理解成收件台/)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Fileyard Inbox' })).toBeInTheDocument()
+    expect(screen.getByText(/你可以把 Fileyard Inbox 理解成收件台/)).toBeInTheDocument()
     expect(screen.getByPlaceholderText('来源名称')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '保存来源' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: '扫描 Movi Inbox' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '扫描 Fileyard Inbox' })).toBeInTheDocument()
   })
 })

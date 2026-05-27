@@ -1,6 +1,6 @@
 version: 1
 id: fileyard
-technical_name: Movi
+technical_name: Fileyard
 status: listed_live
 canonical_repo: xiaojiou176-open/fileyard
 homepage: https://xiaojiou176-open.github.io/fileyard/
@@ -31,7 +31,7 @@ external_review_lanes:
     submission_thread: heilcheng/awesome-agent-skills#181
   - surface: awesome-opencode
     status: not_submitted
-    blocker: Movi is still a review-first local MCP workflow rather than an Opencode-centered project/resource fit
+    blocker: Fileyard is still a review-first local MCP workflow rather than an Opencode-centered project/resource fit
   - surface: official-mcp-registry
     status: not_submitted
   - surface: ghcr
@@ -53,7 +53,7 @@ claims_not_made:
   - no live OpenHands acceptance is claimed
   - no accepted Goose marketplace listing is claimed beyond PR #25
   - no accepted agent-skill directory entry is claimed beyond PR #181
-  - no awesome-opencode project/resource listing is claimed for the current Movi product shape
+  - no awesome-opencode project/resource listing is claimed for the current Fileyard product shape
   - no live official MCP registry publication is claimed
   - no browser extension marketplace listing is claimed
   - no public GHCR package or container publication is claimed

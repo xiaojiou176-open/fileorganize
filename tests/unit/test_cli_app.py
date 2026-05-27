@@ -254,19 +254,19 @@ def test_parse_categories_default_and_tuple():
 
 
 def test_is_test_hooks_enabled_by_env(monkeypatch):
-    monkeypatch.delenv("MOVI_ENABLE_TEST_HOOKS", raising=False)
+    monkeypatch.delenv("FILEYARD_ENABLE_TEST_HOOKS", raising=False)
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
     assert cli_app._is_test_hooks_enabled() is False
 
-    monkeypatch.setenv("MOVI_ENABLE_TEST_HOOKS", "1")
+    monkeypatch.setenv("FILEYARD_ENABLE_TEST_HOOKS", "1")
     assert cli_app._is_test_hooks_enabled() is True
 
 
 def test_read_runtime_env_value_and_resolve_env(tmp_path, monkeypatch):
     workspace_root = tmp_path / "workspace"
-    runtime_env = workspace_root / ".movi" / "env" / "runtime.env"
+    runtime_env = workspace_root / ".fileyard" / "env" / "runtime.env"
     runtime_env.parent.mkdir(parents=True)
-    monkeypatch.setenv("MOVI_WORKSPACE_ROOT", str(workspace_root))
+    monkeypatch.setenv("FILEYARD_WORKSPACE_ROOT", str(workspace_root))
     assert cli_app._read_runtime_env_value("GEMINI_API_KEY") == ""
 
     runtime_env.write_text(
@@ -310,8 +310,8 @@ def test_type_helper_predicates():
 
 def test_default_report_out_fallback_when_script_dir_missing(tmp_path, monkeypatch):
     monkeypatch.setattr(cli_app, "REPO_ROOT", tmp_path)
-    monkeypatch.setenv("MOVI_WORKSPACE_ROOT", str(tmp_path / "workspace"))
-    assert cli_app._default_report_out() == str(tmp_path / "workspace" / ".movi" / "artifacts" / "report" / "report_summary.json")
+    monkeypatch.setenv("FILEYARD_WORKSPACE_ROOT", str(tmp_path / "workspace"))
+    assert cli_app._default_report_out() == str(tmp_path / "workspace" / ".fileyard" / "artifacts" / "report" / "report_summary.json")
 
 
 def test_validate_output_path_conflicts_rejects_duplicates(tmp_path):

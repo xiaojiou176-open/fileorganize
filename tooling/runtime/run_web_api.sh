@@ -13,8 +13,8 @@ apply_runtime_env_defaults "$REPO_ROOT"
 
 VENV="$(governance_runtime_venv_path "$REPO_ROOT")"
 
-HOST="${MOVI_WEB_API_HOST:-127.0.0.1}"
-PORT="${MOVI_WEB_API_PORT:-18080}"
+HOST="${FILEYARD_WEB_API_HOST:-127.0.0.1}"
+PORT="${FILEYARD_WEB_API_PORT:-18080}"
 
 usage() {
   echo "Usage: bash tooling/runtime/run_web_api.sh [--host <ip>] [--port <port>]" >&2

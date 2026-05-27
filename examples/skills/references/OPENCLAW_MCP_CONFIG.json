@@ -1,7 +1,7 @@
 {
   "mcp": {
     "servers": {
-      "movi": {
+      "fileyard": {
         "command": "bash",
         "args": [
           "/absolute/path/to/fileyard/tooling/runtime/run_mcp_stdio.sh"

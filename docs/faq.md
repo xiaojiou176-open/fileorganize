@@ -1,9 +1,9 @@
 ---
-title: Movi FAQ
-description: Common questions about Movi, offline mode, local-first workflow, and support routes.
+title: Fileyard FAQ
+description: Common questions about Fileyard, offline mode, local-first workflow, and support routes.
 ---
 
-## Does Movi call Gemini every time
+## Does Fileyard call Gemini every time
 
 No. `analyze` may call Gemini when you are not in offline mode. `apply` and `rollback` do not call Gemini.
 
@@ -11,9 +11,9 @@ No. `analyze` may call Gemini when you are not in offline mode. `apply` and `rol
 
 Yes. The public quickstart uses the fixture files under `tests/fixtures/golden_input` and keeps `apply` in `--dry-run` mode.
 
-## Is Movi a hosted product
+## Is Fileyard a hosted product
 
-No. Movi is a limited-maintenance open-source repository with a local-first workflow.
+No. Fileyard is a limited-maintenance open-source repository with a local-first workflow.
 
 ## Where should I ask questions
 

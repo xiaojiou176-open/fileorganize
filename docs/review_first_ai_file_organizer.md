@@ -1,6 +1,6 @@
 ---
-title: Review-First AI File Organizer | Movi
-description: Why Movi is a review-first AI file organizer for people who want AI-assisted planning without zero-review file mutation.
+title: Review-First AI File Organizer | Fileyard
+description: Why Fileyard is a review-first AI file organizer for people who want AI-assisted planning without zero-review file mutation.
 ---
 
 ## Review-First AI File Organizer
@@ -10,11 +10,11 @@ If you are searching for a review-first AI file organizer, you are probably tryi
 - the tool is so manual that you still spend all your time dragging files around
 - the AI is so autonomous that it starts renaming and moving files before you can inspect the plan
 
-Movi is built for the middle ground between those two extremes.
+Fileyard is built for the middle ground between those two extremes.
 
-## What Makes Movi Different
+## What Makes Fileyard Different
 
-Movi lets AI help with the planning step first:
+Fileyard lets AI help with the planning step first:
 
 - it drafts a manifest
 - it groups work into reviewable slices
@@ -32,7 +32,7 @@ Think of it like packing for a trip. AI can help build the packing list and grou
 
 ## Good Fit
 
-Movi is a good fit when you want help organizing:
+Fileyard is a good fit when you want help organizing:
 
 - photos
 - screenshots
@@ -49,7 +49,7 @@ It is especially useful if you want:
 
 ## Not A Fit
 
-Movi is not the right product if you want:
+Fileyard is not the right product if you want:
 
 - one-click automatic file mutation with no review
 - a hosted SaaS with team dashboards
@@ -60,5 +60,5 @@ Movi is not the right product if you want:
 
 - Want the fastest safe first look: [Quickstart](./quickstart.md)
 - Want the full operator route: [Operator Guide](./usage.md)
-- Want the agent/developer surface: [Movi MCP v1](./mcp.md)
+- Want the agent/developer surface: [Fileyard MCP v1](./mcp.md)
 - Want the product overview: [README.md](../README.md)

@@ -83,9 +83,9 @@ resolve_allow_external_with_source() {
   local default_value="${1:-0}"
   local raw source normalized
 
-  if [ -n "${MOVI_ALLOW_EXTERNAL:-}" ]; then
-    raw="${MOVI_ALLOW_EXTERNAL}"
-    source="env(MOVI_ALLOW_EXTERNAL)"
+  if [ -n "${FILEYARD_ALLOW_EXTERNAL:-}" ]; then
+    raw="${FILEYARD_ALLOW_EXTERNAL}"
+    source="env(FILEYARD_ALLOW_EXTERNAL)"
   else
     raw="$default_value"
     source="config"
@@ -175,48 +175,48 @@ governance_runtime_ci_contract_path() {
 
 governance_runtime_venv_path() {
   local repo_root="$1"
-  local venv_rel="${MOVI_VENV_DIR:-$GOVERNANCE_RUNTIME_VENV_DIR}"
+  local venv_rel="${FILEYARD_VENV_DIR:-$GOVERNANCE_RUNTIME_VENV_DIR}"
   resolve_repo_path "$repo_root" "$venv_rel"
 }
 
 governance_workspace_root_path() {
   local repo_root="$1"
-  local workspace_rel="${MOVI_WORKSPACE_ROOT:-$GOVERNANCE_WORKSPACE_ROOT}"
+  local workspace_rel="${FILEYARD_WORKSPACE_ROOT:-$GOVERNANCE_WORKSPACE_ROOT}"
   resolve_repo_path "$repo_root" "$workspace_rel"
 }
 
 governance_workspace_input_root_path() {
   local repo_root="$1"
-  local input_rel="${MOVI_INPUT_ROOT:-$GOVERNANCE_WORKSPACE_INPUT_DIR}"
+  local input_rel="${FILEYARD_INPUT_ROOT:-$GOVERNANCE_WORKSPACE_INPUT_DIR}"
   resolve_repo_path "$repo_root" "$input_rel"
 }
 
 governance_workspace_output_root_path() {
   local repo_root="$1"
-  local output_rel="${MOVI_OUTPUT_ROOT:-$GOVERNANCE_WORKSPACE_OUTPUT_DIR}"
+  local output_rel="${FILEYARD_OUTPUT_ROOT:-$GOVERNANCE_WORKSPACE_OUTPUT_DIR}"
   resolve_repo_path "$repo_root" "$output_rel"
 }
 
 governance_manifest_root_path() {
   local repo_root="$1"
-  local manifest_rel="${MOVI_MANIFEST_ROOT:-$GOVERNANCE_MANIFEST_ROOT}"
+  local manifest_rel="${FILEYARD_MANIFEST_ROOT:-$GOVERNANCE_MANIFEST_ROOT}"
   resolve_repo_path "$repo_root" "$manifest_rel"
 }
 
 governance_artifact_root_path() {
   local repo_root="$1"
-  local artifact_rel="${MOVI_ARTIFACT_ROOT:-$GOVERNANCE_PERSISTENT_ARTIFACTS_DIR}"
+  local artifact_rel="${FILEYARD_ARTIFACT_ROOT:-$GOVERNANCE_PERSISTENT_ARTIFACTS_DIR}"
   resolve_repo_path "$repo_root" "$artifact_rel"
 }
 
 governance_evidence_bundle_path() {
   local repo_root="$1"
-  resolve_repo_path "$repo_root" "${MOVI_EVIDENCE_BUNDLE_PATH:-$GOVERNANCE_EVIDENCE_BUNDLE_PATH}"
+  resolve_repo_path "$repo_root" "${FILEYARD_EVIDENCE_BUNDLE_PATH:-$GOVERNANCE_EVIDENCE_BUNDLE_PATH}"
 }
 
 governance_run_bundle_root_path() {
   local repo_root="$1"
-  resolve_repo_path "$repo_root" "${MOVI_RUN_BUNDLE_ROOT:-$GOVERNANCE_RUN_BUNDLE_ROOT}"
+  resolve_repo_path "$repo_root" "${FILEYARD_RUN_BUNDLE_ROOT:-$GOVERNANCE_RUN_BUNDLE_ROOT}"
 }
 
 governance_run_bundle_dir() {
@@ -298,13 +298,13 @@ apply_runtime_env_defaults() {
   export TMPDIR="${TMPDIR:-$(governance_runtime_temp_path "$repo_root")}"
   export TMP="${TMP:-$TMPDIR}"
   export TEMP="${TEMP:-$TMPDIR}"
-  export MOVI_WORKSPACE_ROOT="${MOVI_WORKSPACE_ROOT:-$(governance_workspace_root_path "$repo_root")}"
-  export MOVI_INPUT_ROOT="${MOVI_INPUT_ROOT:-$(governance_workspace_input_root_path "$repo_root")}"
-  export MOVI_OUTPUT_ROOT="${MOVI_OUTPUT_ROOT:-$(governance_workspace_output_root_path "$repo_root")}"
-  export MOVI_MANIFEST_ROOT="${MOVI_MANIFEST_ROOT:-$(governance_manifest_root_path "$repo_root")}"
-  export MOVI_ARTIFACT_ROOT="${MOVI_ARTIFACT_ROOT:-$(governance_artifact_root_path "$repo_root")}"
-  export MOVI_EVIDENCE_BUNDLE_PATH="${MOVI_EVIDENCE_BUNDLE_PATH:-$(governance_evidence_bundle_path "$repo_root")}"
-  export MOVI_RUN_BUNDLE_ROOT="${MOVI_RUN_BUNDLE_ROOT:-$(governance_run_bundle_root_path "$repo_root")}"
+  export FILEYARD_WORKSPACE_ROOT="${FILEYARD_WORKSPACE_ROOT:-$(governance_workspace_root_path "$repo_root")}"
+  export FILEYARD_INPUT_ROOT="${FILEYARD_INPUT_ROOT:-$(governance_workspace_input_root_path "$repo_root")}"
+  export FILEYARD_OUTPUT_ROOT="${FILEYARD_OUTPUT_ROOT:-$(governance_workspace_output_root_path "$repo_root")}"
+  export FILEYARD_MANIFEST_ROOT="${FILEYARD_MANIFEST_ROOT:-$(governance_manifest_root_path "$repo_root")}"
+  export FILEYARD_ARTIFACT_ROOT="${FILEYARD_ARTIFACT_ROOT:-$(governance_artifact_root_path "$repo_root")}"
+  export FILEYARD_EVIDENCE_BUNDLE_PATH="${FILEYARD_EVIDENCE_BUNDLE_PATH:-$(governance_evidence_bundle_path "$repo_root")}"
+  export FILEYARD_RUN_BUNDLE_ROOT="${FILEYARD_RUN_BUNDLE_ROOT:-$(governance_run_bundle_root_path "$repo_root")}"
 
   mkdir -p \
     "$XDG_CACHE_HOME" \
@@ -314,13 +314,13 @@ apply_runtime_env_defaults() {
     "$PYTHONPYCACHEPREFIX" \
     "$MYPY_CACHE_DIR" \
     "$TMPDIR" \
-    "$MOVI_WORKSPACE_ROOT" \
-    "$MOVI_INPUT_ROOT" \
-    "$MOVI_OUTPUT_ROOT" \
-    "$MOVI_MANIFEST_ROOT" \
-    "$MOVI_ARTIFACT_ROOT" \
-    "$MOVI_RUN_BUNDLE_ROOT" \
-    "$(dirname "$MOVI_EVIDENCE_BUNDLE_PATH")"
+    "$FILEYARD_WORKSPACE_ROOT" \
+    "$FILEYARD_INPUT_ROOT" \
+    "$FILEYARD_OUTPUT_ROOT" \
+    "$FILEYARD_MANIFEST_ROOT" \
+    "$FILEYARD_ARTIFACT_ROOT" \
+    "$FILEYARD_RUN_BUNDLE_ROOT" \
+    "$(dirname "$FILEYARD_EVIDENCE_BUNDLE_PATH")"
 }
 
 governance_python() {

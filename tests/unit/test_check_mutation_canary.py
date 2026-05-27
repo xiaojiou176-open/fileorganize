@@ -69,12 +69,12 @@ def test_mutation_canary_summary_fields_are_stable() -> None:
 
 def test_mutation_canary_prefers_container_python_before_host_cache(monkeypatch) -> None:
     mod, _ = _load_module()
-    monkeypatch.setenv("MOVI_IN_CONTAINER", "1")
-    monkeypatch.setenv("MOVI_VENV_DIR", "/tmp/host-mounted-venv")
+    monkeypatch.setenv("FILEYARD_IN_CONTAINER", "1")
+    monkeypatch.setenv("FILEYARD_VENV_DIR", "/tmp/host-mounted-venv")
 
     candidates = mod._python_candidates()
 
-    assert candidates[0] == Path("/opt/movi-ci-venv/bin/python")
+    assert candidates[0] == Path("/opt/fileyard-ci-venv/bin/python")
     assert candidates[1] == Path("/tmp/host-mounted-venv/bin/python")
 
 

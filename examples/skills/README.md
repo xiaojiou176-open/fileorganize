@@ -1,8 +1,8 @@
-# Movi Review-First Bundle Public Skill
+# Fileyard Review-First Bundle Public Skill
 
 Status: `ClawHub listed_live (current page still shows suspicious.vt_suspicious); OpenHands/extensions#161 review pending; block/Agent-Skills#25 open; awesome-agent-skills#181 open`
 
-This folder is the current public, self-contained skill packet for Movi.
+This folder is the current public, self-contained skill packet for Fileyard.
 
 The canonical public root for the product still lives at the repo root:
 `../../README.md` plus `../../manifest.yaml`.
@@ -17,8 +17,8 @@ forcing the reviewer to reopen the whole repo first.
 Use it when you want one portable skill folder that teaches five things inside
 the packet itself:
 
-- what Movi helps an agent do
-- how to install and attach the local Movi MCP server
+- what Fileyard helps an agent do
+- how to install and attach the local Fileyard MCP server
 - which tools are safe first for review-first batch work
 - what one good first-success path looks like
 - what the packet must not claim
@@ -38,7 +38,7 @@ the packet itself:
 - `references/OPENCLAW_MCP_CONFIG.json`
   - host config snippet for OpenClaw-style `mcp.servers`
 - `references/CAPABILITIES.md`
-  - exact Movi tool surface and safe-first order
+  - exact Fileyard tool surface and safe-first order
 - `references/DEMO.md`
   - first-success prompt plus expected tool sequence
 - `references/TROUBLESHOOTING.md`
@@ -60,7 +60,7 @@ the packet itself:
   visible blocker is upstream security review after validation passed
 - the agent-skill index lane is real through
   `heilcheng/awesome-agent-skills#181`, and the current visible blocker is
-  upstream preview authorization rather than a missing Movi packet
+  upstream preview authorization rather than a missing Fileyard packet
 - the Official MCP Registry lane remains `not_submitted`
 - the packet does not claim a live OpenHands acceptance or an official OpenClaw catalog approval
 
@@ -72,7 +72,7 @@ the packet itself:
 - no accepted agent-skill directory entry beyond PR `#181`
 - no official MCP Registry submission
 - no browser-extension marketplace listing
-- no hosted Movi SaaS or hidden execute shortcut
+- no hosted Fileyard SaaS or hidden execute shortcut
 
 ## Existing repo-owned helper files
 

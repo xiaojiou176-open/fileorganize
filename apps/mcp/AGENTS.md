@@ -4,7 +4,7 @@ Local policy for `apps/mcp/`.
 
 ## Goal
 
-Expose Movi to MCP clients through a thin, local-first facade that keeps the existing review-first safety model intact.
+Expose Fileyard to MCP clients through a thin, local-first facade that keeps the existing review-first safety model intact.
 
 ## Rules
 

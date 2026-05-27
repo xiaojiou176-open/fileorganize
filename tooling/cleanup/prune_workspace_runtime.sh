@@ -18,12 +18,12 @@ Usage:
   bash tooling/cleanup/prune_workspace_runtime.sh [--dry-run]
 
 Applies workspace retention to:
-  - MOVI_RUN_BUNDLE_ROOT
-  - managed artifact roots under MOVI_ARTIFACT_ROOT
+  - FILEYARD_RUN_BUNDLE_ROOT
+  - managed artifact roots under FILEYARD_ARTIFACT_ROOT
 
 Never deletes:
-  - MOVI_MANIFEST_ROOT
-  - the workspace .movi root itself
+  - FILEYARD_MANIFEST_ROOT
+  - the workspace .fileyard root itself
   - web_api/preferences
 EOF
 }

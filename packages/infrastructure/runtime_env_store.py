@@ -6,11 +6,11 @@ from collections.abc import Mapping
 from pathlib import Path
 
 DEFAULT_WORKSPACE_ROOT = "~/.fileyard/workspaces/default"
-RUNTIME_ENV_RELATIVE_PATH = Path(".movi") / "env" / "runtime.env"
+RUNTIME_ENV_RELATIVE_PATH = Path(".fileyard") / "env" / "runtime.env"
 
 
 def runtime_env_file(workspace_root: str | Path | None = None) -> Path:
-    resolved_workspace = Path(workspace_root or os.environ.get("MOVI_WORKSPACE_ROOT", DEFAULT_WORKSPACE_ROOT)).expanduser()
+    resolved_workspace = Path(workspace_root or os.environ.get("FILEYARD_WORKSPACE_ROOT", DEFAULT_WORKSPACE_ROOT)).expanduser()
     return resolved_workspace / RUNTIME_ENV_RELATIVE_PATH
 
 

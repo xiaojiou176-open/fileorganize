@@ -1,13 +1,13 @@
 ---
-title: Receipt Organizer With Manifest Review And Rollback-Ready Recovery | Movi
+title: Receipt Organizer With Manifest Review And Rollback-Ready Recovery | Fileyard
 description: Organize receipts locally with manifest review, dry-run apply, and rollback-ready recovery instead of zero-review automation.
 ---
 
 ## Receipt Organizer With Manifest Review And Rollback-Ready Recovery
 
-Receipts are repetitive enough that AI help is valuable, but important enough that mistakes are expensive. That is exactly the kind of workflow Movi is built for.
+Receipts are repetitive enough that AI help is valuable, but important enough that mistakes are expensive. That is exactly the kind of workflow Fileyard is built for.
 
-## Why Movi Fits Receipt Batches
+## Why Fileyard Fits Receipt Batches
 
 - AI can draft categories and target paths before anything moves
 - Strategy Packs can preload receipt-friendly analyze defaults
@@ -29,5 +29,5 @@ Receipts are repetitive enough that AI help is valuable, but important enough th
 ## Best Next Steps
 
 - [README.md](../README.md)
-- [Movi Inbox](../README.md#browser-surface)
-- [Movi MCP v1](./mcp.md)
+- [Fileyard Inbox](../README.md#browser-surface)
+- [Fileyard MCP v1](./mcp.md)

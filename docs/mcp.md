@@ -1,11 +1,11 @@
 ---
-title: Movi MCP v1
-description: Local-first stdio MCP surface for Movi with review-safe tools, read-only resources, and no execute shortcut.
+title: Fileyard MCP v1
+description: Local-first stdio MCP surface for Fileyard with review-safe tools, read-only resources, and no execute shortcut.
 ---
 
-## Movi MCP v1
+## Fileyard MCP v1
 
-`Movi MCP v1` is the local-first stdio extension surface for Movi.
+`Fileyard MCP v1` is the local-first stdio extension surface for Fileyard.
 
 The canonical public root still lives at the repo root (`README.md` +
 `manifest.yaml`), the canonical machine-readable descriptor now lives at
@@ -18,7 +18,7 @@ In plain language: it gives an agent or automation client a supervised control w
 ## What V1 Is
 
 - a **stdio-first** MCP server for local clients
-- a **thin facade** over the current Movi workflow
+- a **thin facade** over the current Fileyard workflow
 - a **review-safe** tool and resource surface
 - a **developer and agent integration point** that still respects `overlay-only`, `dry-run before execute`, and `rollback-ready`
 
@@ -56,7 +56,7 @@ npm run mcp:resources
 Installed Python entrypoint, if you install the package or add the managed venv bin directory to your PATH:
 
 ```bash
-movi-mcp
+fileyard-mcp
 ```
 
 Both entrypoints are local-first and stdio-first. They are meant to be launched by an MCP-capable client from your machine, not published as a remote hosted endpoint.
@@ -72,17 +72,17 @@ If you want the shortest ecosystem answer:
 
 Client-specific entry pages:
 
-- [Movi MCP For Codex](./codex_mcp.md)
-- [Movi MCP For Claude Code](./claude_code_mcp.md)
+- [Fileyard MCP For Codex](./codex_mcp.md)
+- [Fileyard MCP For Claude Code](./claude_code_mcp.md)
 
 ## Quick Verification
 
 Use these commands when you want to prove the MCP surface exists before wiring a client:
 
 ```bash
-~/.cache/fileyard/venv/default/bin/movi-mcp --help
-~/.cache/fileyard/venv/default/bin/movi-mcp --print-tools
-~/.cache/fileyard/venv/default/bin/movi-mcp --print-resources
+~/.cache/fileyard/venv/default/bin/fileyard-mcp --help
+~/.cache/fileyard/venv/default/bin/fileyard-mcp --print-tools
+~/.cache/fileyard/venv/default/bin/fileyard-mcp --print-resources
 ```
 
 ## Current V1 Tool Families
@@ -105,9 +105,9 @@ The exact tool names live in the server and client config, but the current v1 su
 
 ## Current V1 Resources
 
-`Movi MCP v1` currently ships **tools + resources**. It does not claim a broader hosted control plane, and it does not need remote transports or a prompt catalog in v1 to be useful.
+`Fileyard MCP v1` currently ships **tools + resources**. It does not claim a broader hosted control plane, and it does not need remote transports or a prompt catalog in v1 to be useful.
 
-`Movi MCP v1` also exposes read-only resources so an agent can load the rules of the road before it starts acting:
+`Fileyard MCP v1` also exposes read-only resources so an agent can load the rules of the road before it starts acting:
 
 | Resource family | Purpose |
 | :-- | :-- |
@@ -122,26 +122,26 @@ Most MCP-capable clients want a stdio command plus arguments. The exact config f
 
 ```json
 {
-  "name": "movi",
+  "name": "fileyard",
   "command": "bash",
   "args": ["/absolute/path/to/fileyard/tooling/runtime/run_mcp_stdio.sh"]
 }
 ```
 
-If your client supports a working directory field, point it at the repository root. If it prefers installed entrypoints and you have the package-installed console script available, use `movi-mcp` instead.
+If your client supports a working directory field, point it at the repository root. If it prefers installed entrypoints and you have the package-installed console script available, use `fileyard-mcp` instead.
 
 If you want a client-specific landing page instead of a generic MCP snippet:
 
-- Codex users should start with [Movi MCP For Codex](./codex_mcp.md)
-- Claude Code users should start with [Movi MCP For Claude Code](./claude_code_mcp.md)
+- Codex users should start with [Fileyard MCP For Codex](./codex_mcp.md)
+- Claude Code users should start with [Fileyard MCP For Claude Code](./claude_code_mcp.md)
 
 ## Safety Notes For Agent Authors
 
 - Prefer `review_queue.get`, `manifest.get`, `report.get`, and the read-only resources before taking any overlay action.
 - Treat `manifest.patch_*` and `review_rule.apply` as **review-layer edits**, not as execution.
 - Use `apply.preview` before any human decides whether a real apply should happen.
-- `apply.execute` is intentionally absent from Movi MCP v1.
-- Do not describe `Movi MCP v1` as a tool that “organizes files automatically.” That would be false and would erase the core product boundary.
+- `apply.execute` is intentionally absent from Fileyard MCP v1.
+- Do not describe `Fileyard MCP v1` as a tool that “organizes files automatically.” That would be false and would erase the core product boundary.
 
 ## Where To Go Next
 

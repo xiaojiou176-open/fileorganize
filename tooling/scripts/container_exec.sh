@@ -6,9 +6,9 @@ ROOT="$(dirname "$DIR")"
 REPO_ROOT="$(dirname "$ROOT")"
 CONFIG_LIB="$ROOT/scripts/lib_config.sh"
 RESTORE_TREE_HELPER="$ROOT/scripts/restore_prebuilt_tree.py"
-COMPOSE_FILE="${MOVI_COMPOSE_FILE:-ops/compose/docker-compose.yml}"
-COMPOSE_SERVICE="${MOVI_COMPOSE_SERVICE:-movi-ci}"
-IMAGE_REF="${MOVI_CI_IMAGE:-}"
+COMPOSE_FILE="${FILEYARD_COMPOSE_FILE:-ops/compose/docker-compose.yml}"
+COMPOSE_SERVICE="${FILEYARD_COMPOSE_SERVICE:-fileyard-ci}"
+IMAGE_REF="${FILEYARD_CI_IMAGE:-}"
 LOCAL_FALLBACK_IMAGE="${CONTAINER_EXEC_LOCAL_IMAGE:-}"
 LOCAL_FALLBACK_DOCKERFILE="${CONTAINER_EXEC_DOCKERFILE:-$REPO_ROOT/.devcontainer/Dockerfile}"
 LABEL="container-exec"
@@ -65,12 +65,12 @@ is_inside_container() {
 }
 
 if is_inside_container; then
-  exec env MOVI_IN_CONTAINER=1 MOVI_ALLOW_HOST_EXECUTION=0 "$@"
+  exec env FILEYARD_IN_CONTAINER=1 FILEYARD_ALLOW_HOST_EXECUTION=0 "$@"
 fi
 
-if [ "${MOVI_IN_CONTAINER:-0}" = "1" ]; then
-  echo "❌ ${LABEL}: MOVI_IN_CONTAINER=1 is set, but runtime is not inside a container" >&2
-  echo "Do not set MOVI_IN_CONTAINER manually on host; use container_exec.sh directly." >&2
+if [ "${FILEYARD_IN_CONTAINER:-0}" = "1" ]; then
+  echo "❌ ${LABEL}: FILEYARD_IN_CONTAINER=1 is set, but runtime is not inside a container" >&2
+  echo "Do not set FILEYARD_IN_CONTAINER manually on host; use container_exec.sh directly." >&2
   exit 1
 fi
 
@@ -325,7 +325,7 @@ emit_local_image_build_failure_diagnostic() {
     *"Temporary failure resolving"*|*"Could not resolve"*|*"could not resolve"*|*"no such host"*|*"lookup "*|*"deb.debian.org"*|*"failed to fetch"*|*"Could not connect to"*|*"Network is unreachable"*)
       echo "Likely cause: DNS/network failure while building the local CI image." >&2
       echo "This gate can only run offline if ${LOCAL_FALLBACK_IMAGE} already exists locally." >&2
-      echo "Next: retry on a healthy network, or prebuild/pull ${LOCAL_FALLBACK_IMAGE} (or set MOVI_CI_IMAGE to a reachable prebuilt image) before rerunning." >&2
+      echo "Next: retry on a healthy network, or prebuild/pull ${LOCAL_FALLBACK_IMAGE} (or set FILEYARD_CI_IMAGE to a reachable prebuilt image) before rerunning." >&2
       ;;
     *)
       echo "Next: inspect the docker build output below, fix the local image build blocker, then rerun." >&2
@@ -346,22 +346,22 @@ runtime_volume_name() {
   else
     suffix="$(printf '%s' "$seed" | cksum | awk '{print $1}')"
   fi
-  printf 'movi-%s-%s' "$kind" "$suffix"
+  printf 'fileyard-%s-%s' "$kind" "$suffix"
 }
 
-if is_ci_context && [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
-  echo "❌ ${LABEL}: MOVI_ALLOW_HOST_EXECUTION=1 is forbidden in CI" >&2
+if is_ci_context && [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
+  echo "❌ ${LABEL}: FILEYARD_ALLOW_HOST_EXECUTION=1 is forbidden in CI" >&2
   exit 1
 fi
 
 if ! command -v docker >/dev/null 2>&1; then
-  echo "❌ ${LABEL}: docker is required when MOVI_ALLOW_HOST_EXECUTION!=1" >&2
-  echo "Set MOVI_ALLOW_HOST_EXECUTION=1 only for emergency host execution." >&2
+  echo "❌ ${LABEL}: docker is required when FILEYARD_ALLOW_HOST_EXECUTION!=1" >&2
+  echo "Set FILEYARD_ALLOW_HOST_EXECUTION=1 only for emergency host execution." >&2
   exit 1
 fi
 
-if [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
-  echo "⚠️ ${LABEL}: emergency host execution enabled (MOVI_ALLOW_HOST_EXECUTION=1)"
+if [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
+  echo "⚠️ ${LABEL}: emergency host execution enabled (FILEYARD_ALLOW_HOST_EXECUTION=1)"
   exec "$@"
 fi
 
@@ -401,8 +401,8 @@ cd /workspace
 if command -v git >/dev/null 2>&1; then
   git config --global --add safe.directory /workspace >/dev/null 2>&1 || true
 fi
-venv_dir="${MOVI_VENV_DIR:-'"$CONTAINER_VENV_DIR"'}"
-prebuilt_venv_dir="${MOVI_PREBUILT_VENV_DIR:-/opt/movi-ci-venv}"
+venv_dir="${FILEYARD_VENV_DIR:-'"$CONTAINER_VENV_DIR"'}"
+prebuilt_venv_dir="${FILEYARD_PREBUILT_VENV_DIR:-/opt/fileyard-ci-venv}"
 RESTORE_TREE_HELPER="${RESTORE_TREE_HELPER:-/workspace/tooling/scripts/restore_prebuilt_tree.py}"
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-'"$CONTAINER_XDG_CACHE_HOME"'}"
 export PIP_CACHE_DIR="${PIP_CACHE_DIR:-'"$CONTAINER_PIP_CACHE_DIR"'}"
@@ -504,19 +504,19 @@ if [ -n "$IMAGE_REF" ]; then
     "${runtime_volume_args[@]}" \
     -w /workspace \
     "${ci_passthrough_args[@]}" \
-    -e MOVI_IN_CONTAINER=1 \
-    -e MOVI_ALLOW_HOST_EXECUTION=0 \
-    -e MOVI_VENV_DIR="$CONTAINER_VENV_DIR" \
+    -e FILEYARD_IN_CONTAINER=1 \
+    -e FILEYARD_ALLOW_HOST_EXECUTION=0 \
+    -e FILEYARD_VENV_DIR="$CONTAINER_VENV_DIR" \
     -e GEMINI_API_KEY \
     -e GEMINI_MODEL \
-    -e MOVI_LIVE_TEST_URL \
-    -e MOVI_ROLLBACK_HMAC_KEY \
-    -e MOVI_TRACE_ID \
-    -e MOVI_SESSION_ID \
-    -e MOVI_REQUEST_ID \
-    -e MOVI_USER_ID \
-    -e MOVI_RUN_LIVE_TESTS \
-    -e MOVI_ALLOW_EXTERNAL \
+    -e FILEYARD_LIVE_TEST_URL \
+    -e FILEYARD_ROLLBACK_HMAC_KEY \
+    -e FILEYARD_TRACE_ID \
+    -e FILEYARD_SESSION_ID \
+    -e FILEYARD_REQUEST_ID \
+    -e FILEYARD_USER_ID \
+    -e FILEYARD_RUN_LIVE_TESTS \
+    -e FILEYARD_ALLOW_EXTERNAL \
     -e LIVE_HEARTBEAT_INTERVAL_SECONDS \
     -e LIVE_MAX_DURATION_SECONDS \
     -e LIVE_MAX_RETRIES \
@@ -582,19 +582,19 @@ trap 'cleanup_compose_run_process; cleanup_compose_run_container' EXIT
 set +e
 env COMPOSE_PROJECT_NAME="$COMPOSE_PROJECT_NAME_FALLBACK" docker compose "${COMPOSE_ARGS[@]}" run --name "$COMPOSE_RUN_CONTAINER_NAME" --rm -T \
   "${ci_passthrough_args[@]}" \
-  -e MOVI_IN_CONTAINER=1 \
-  -e MOVI_ALLOW_HOST_EXECUTION=0 \
-  -e MOVI_VENV_DIR \
+  -e FILEYARD_IN_CONTAINER=1 \
+  -e FILEYARD_ALLOW_HOST_EXECUTION=0 \
+  -e FILEYARD_VENV_DIR \
   -e GEMINI_API_KEY \
   -e GEMINI_MODEL \
-  -e MOVI_LIVE_TEST_URL \
-  -e MOVI_ROLLBACK_HMAC_KEY \
-  -e MOVI_TRACE_ID \
-  -e MOVI_SESSION_ID \
-  -e MOVI_REQUEST_ID \
-  -e MOVI_USER_ID \
-  -e MOVI_RUN_LIVE_TESTS \
-  -e MOVI_ALLOW_EXTERNAL \
+  -e FILEYARD_LIVE_TEST_URL \
+  -e FILEYARD_ROLLBACK_HMAC_KEY \
+  -e FILEYARD_TRACE_ID \
+  -e FILEYARD_SESSION_ID \
+  -e FILEYARD_REQUEST_ID \
+  -e FILEYARD_USER_ID \
+  -e FILEYARD_RUN_LIVE_TESTS \
+  -e FILEYARD_ALLOW_EXTERNAL \
   -e LIVE_HEARTBEAT_INTERVAL_SECONDS \
   -e LIVE_MAX_DURATION_SECONDS \
   -e LIVE_MAX_RETRIES \

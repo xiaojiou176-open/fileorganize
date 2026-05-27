@@ -104,7 +104,7 @@ function applyTemplatePattern(template: NamingTemplate, row: ManifestRow): strin
     .replaceAll('{category}', row.category)
     .replaceAll('{title}', row.title)
     .replaceAll('{hash8}', hash8)
-    .replaceAll('{project}', 'movi')
+    .replaceAll('{project}', 'fileyard')
 }
 
 function FeatureCardFallback({ title }: { title: string }) {

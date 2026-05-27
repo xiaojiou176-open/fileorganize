@@ -1,6 +1,6 @@
-# Movi MCP Capabilities
+# Fileyard MCP Capabilities
 
-These are the current repo-owned Movi MCP tools exposed by `npm run mcp:tools`.
+These are the current repo-owned Fileyard MCP tools exposed by `npm run mcp:tools`.
 
 ## Best first tools
 

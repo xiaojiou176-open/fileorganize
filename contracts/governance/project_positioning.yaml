@@ -29,5 +29,5 @@ claim_surfaces:
       - does not get a secret “move files now” shortcut
   - path: docs/developer_guide.md
     required_snippets:
-      - Movi MCP v1
+      - Fileyard MCP v1
       - no direct file-move shortcut for agents

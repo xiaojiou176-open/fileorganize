@@ -12,9 +12,9 @@ def main() -> int:
     parser.add_argument("--workspace-root", default="~/.fileyard/workspaces/default")
     args = parser.parse_args()
 
-    path = Path(args.workspace_root).expanduser() / ".movi" / "preferences" / "watch_sources.json"
+    path = Path(args.workspace_root).expanduser() / ".fileyard" / "preferences" / "watch_sources.json"
     issues: list[str] = []
-    if ".movi/preferences/" not in path.as_posix():
+    if ".fileyard/preferences/" not in path.as_posix():
         issues.append(f"watch source path escaped preference root: {path}")
     if path.name != "watch_sources.json":
         issues.append(f"unexpected watch source filename: {path.name}")

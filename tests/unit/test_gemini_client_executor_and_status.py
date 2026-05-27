@@ -404,12 +404,12 @@ def test_normalization_more_edges(tmp_path: Path):
 
 
 def test_cli_helpers_cover_edges(monkeypatch, tmp_path: Path):
-    monkeypatch.setenv("MOVI_ENABLE_TEST_HOOKS", "1")
+    monkeypatch.setenv("FILEYARD_ENABLE_TEST_HOOKS", "1")
     assert cli_app._is_test_hooks_enabled() is True
 
     workspace_root = tmp_path / "workspace"
-    monkeypatch.setenv("MOVI_WORKSPACE_ROOT", str(workspace_root))
-    assert cli_app._default_report_out() == str(workspace_root / ".movi" / "artifacts" / "report" / "report_summary.json")
+    monkeypatch.setenv("FILEYARD_WORKSPACE_ROOT", str(workspace_root))
+    assert cli_app._default_report_out() == str(workspace_root / ".fileyard" / "artifacts" / "report" / "report_summary.json")
 
     assert "其他" in cli_app._parse_categories(("工作", "旅行"))
 

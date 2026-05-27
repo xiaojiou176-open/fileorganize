@@ -12,7 +12,7 @@ load_governance_defaults "$REPO_ROOT"
 apply_runtime_env_defaults "$REPO_ROOT"
 VENV="$(governance_runtime_venv_path "$REPO_ROOT")"
 
-if [ "${MOVI_IN_CONTAINER:-0}" != "1" ] && [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
+if [ "${FILEYARD_IN_CONTAINER:-0}" != "1" ] && [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" != "1" ]; then
   exec bash "$ROOT/scripts/container_exec.sh" --label rollback-rto -- bash tooling/gates/check_rollback_rto.sh "$@"
 fi
 
@@ -21,7 +21,7 @@ if [ ! -x "$VENV/bin/python" ]; then
   exit 1
 fi
 
-BUDGET_MS="${MOVI_ROLLBACK_RTO_BUDGET_MS:-3000}"
+BUDGET_MS="${FILEYARD_ROLLBACK_RTO_BUDGET_MS:-3000}"
 SUMMARY_PATH="$(governance_runtime_logs_path "$REPO_ROOT")/rollback-rto-baseline.json"
 
 while [ "$#" -gt 0 ]; do
@@ -79,15 +79,15 @@ with tempfile.TemporaryDirectory(prefix="rollback-rto-", dir=str(runtime_temp_ro
         "media_type": "image",
         "run_id": run_id,
     }
-    old_key = os.environ.get("MOVI_ROLLBACK_HMAC_KEY")
-    os.environ["MOVI_ROLLBACK_HMAC_KEY"] = hmac_key
+    old_key = os.environ.get("FILEYARD_ROLLBACK_HMAC_KEY")
+    os.environ["FILEYARD_ROLLBACK_HMAC_KEY"] = hmac_key
     try:
         row["rollback_sig"] = _sign_rollback_record(row, run_id)
     finally:
         if old_key is None:
-            os.environ.pop("MOVI_ROLLBACK_HMAC_KEY", None)
+            os.environ.pop("FILEYARD_ROLLBACK_HMAC_KEY", None)
         else:
-            os.environ["MOVI_ROLLBACK_HMAC_KEY"] = old_key
+            os.environ["FILEYARD_ROLLBACK_HMAC_KEY"] = old_key
 
     manifest = root / "manifest.jsonl"
     manifest.write_text(json.dumps(row, ensure_ascii=False) + "\n", encoding="utf-8")
@@ -105,7 +105,7 @@ with tempfile.TemporaryDirectory(prefix="rollback-rto-", dir=str(runtime_temp_ro
         "--overwrite",
     ]
     env = os.environ.copy()
-    env["MOVI_ROLLBACK_HMAC_KEY"] = hmac_key
+    env["FILEYARD_ROLLBACK_HMAC_KEY"] = hmac_key
     started = time.monotonic()
     proc = subprocess.run(cmd, cwd=str(repo_root), env=env, capture_output=True, text=True)
     elapsed_ms = int((time.monotonic() - started) * 1000)

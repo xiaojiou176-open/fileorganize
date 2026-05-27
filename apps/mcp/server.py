@@ -19,10 +19,10 @@ if str(REPO_ROOT) not in sys.path:
 
 from apps.mcp.service import MoviMcpApiFacade  # noqa: E402
 
-MCP_NAME = "Movi MCP"
+MCP_NAME = "Fileyard MCP"
 MCP_VERSION = "1.0.0"
 MCP_INSTRUCTIONS = (
-    "Movi MCP is a local-first, review-first facade over the Movi workbench. "
+    "Fileyard MCP is a local-first, review-first facade over the Fileyard workbench. "
     "Use it to inspect jobs, review queues, manifests, reports, strategy packs, "
     "watch sources, and to apply safe overlay-only edits or dry-run apply previews. "
     "Do not expect direct file-mutation shortcuts or bypasses around review."
@@ -43,12 +43,12 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         MCP_NAME,
         instructions=MCP_INSTRUCTIONS,
         json_response=True,
-        log_level=os.environ.get("MOVI_MCP_LOG_LEVEL", "INFO"),
+        log_level=os.environ.get("FILEYARD_MCP_LOG_LEVEL", "INFO"),
     )
 
     @mcp.tool(
         name="jobs.list",
-        description="List current Movi jobs from the local workspace job store.",
+        description="List current Fileyard jobs from the local workspace job store.",
         annotations=_read_only_annotations("List jobs"),
     )
     def list_jobs() -> dict[str, Any]:
@@ -58,7 +58,7 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
 
     @mcp.tool(
         name="jobs.get",
-        description="Get one Movi job by id.",
+        description="Get one Fileyard job by id.",
         annotations=_read_only_annotations("Get job"),
     )
     def get_job(job_id: str) -> dict[str, Any]:
@@ -262,9 +262,9 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         )
 
     @mcp.resource(
-        "movi://workflow/safety-boundary",
+        "fileyard://workflow/safety-boundary",
         name="workflow-safety-boundary",
-        title="Movi safety boundary",
+        title="Fileyard safety boundary",
         description="Human-readable summary of the review-first and dry-run guardrails.",
         mime_type="text/markdown",
     )
@@ -272,9 +272,9 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         return facade.get_safety_boundary_text()
 
     @mcp.resource(
-        "movi://workflow/tool-matrix",
+        "fileyard://workflow/tool-matrix",
         name="workflow-tool-matrix",
-        title="Movi MCP tool matrix",
+        title="Fileyard MCP tool matrix",
         description="Machine-readable list of MCP v1 tools and their underlying safety class.",
         mime_type="application/json",
     )
@@ -282,7 +282,7 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         return json.dumps(facade.get_tool_matrix(), ensure_ascii=False, indent=2)
 
     @mcp.resource(
-        "movi://jobs/{job_id}/review-queue",
+        "fileyard://jobs/{job_id}/review-queue",
         name="job-review-queue",
         title="Review queue resource",
         description="Read-only review queue snapshot for one job.",
@@ -292,7 +292,7 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         return facade.get_review_queue_resource(job_id)
 
     @mcp.resource(
-        "movi://jobs/{job_id}/manifest-view",
+        "fileyard://jobs/{job_id}/manifest-view",
         name="job-manifest-view",
         title="Manifest view resource",
         description="Read-only manifest view snapshot for one job.",
@@ -302,7 +302,7 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         return facade.get_manifest_resource(job_id)
 
     @mcp.resource(
-        "movi://jobs/{job_id}/report",
+        "fileyard://jobs/{job_id}/report",
         name="job-report",
         title="Report resource",
         description="Read-only report snapshot for one job.",
@@ -312,10 +312,10 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
         return facade.get_report_resource(job_id)
 
     @mcp.resource(
-        "movi://docs/{doc_id}",
-        name="movi-docs",
-        title="Movi docs resource",
-        description="Read an allowlisted public Movi document for agent/developer context.",
+        "fileyard://docs/{doc_id}",
+        name="fileyard-docs",
+        title="Fileyard docs resource",
+        description="Read an allowlisted public Fileyard document for agent/developer context.",
         mime_type="text/markdown",
     )
     def docs_resource(doc_id: str) -> str:
@@ -336,11 +336,11 @@ def create_mcp_server(api: MoviMcpApiFacade | None = None) -> FastMCP:
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the Movi MCP stdio server.")
+    parser = argparse.ArgumentParser(description="Run the Fileyard MCP stdio server.")
     parser.add_argument(
         "--transport",
         choices=("stdio",),
-        default=os.environ.get("MOVI_MCP_TRANSPORT", "stdio"),
+        default=os.environ.get("FILEYARD_MCP_TRANSPORT", "stdio"),
         help="Transport to use. v1 stays stdio-only for local-first clients.",
     )
     parser.add_argument(
@@ -355,7 +355,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--log-level",
-        default=os.environ.get("MOVI_MCP_LOG_LEVEL", "INFO"),
+        default=os.environ.get("FILEYARD_MCP_LOG_LEVEL", "INFO"),
         help="Logging level. Logs stay on stderr so stdout remains reserved for the MCP protocol.",
     )
     return parser.parse_args(list(argv) if argv is not None else None)
@@ -374,12 +374,12 @@ def main(argv: Sequence[str] | None = None) -> None:
 
         if args.print_resources:
             for uri in (
-                "movi://workflow/safety-boundary",
-                "movi://workflow/tool-matrix",
-                "movi://jobs/{job_id}/review-queue",
-                "movi://jobs/{job_id}/manifest-view",
-                "movi://jobs/{job_id}/report",
-                "movi://docs/{doc_id}",
+                "fileyard://workflow/safety-boundary",
+                "fileyard://workflow/tool-matrix",
+                "fileyard://jobs/{job_id}/review-queue",
+                "fileyard://jobs/{job_id}/manifest-view",
+                "fileyard://jobs/{job_id}/report",
+                "fileyard://docs/{doc_id}",
             ):
                 print(uri)
             return

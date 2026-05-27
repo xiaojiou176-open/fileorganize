@@ -1,16 +1,16 @@
-# Movi Public Proof
+# Fileyard Public Proof
 
-This page is the outsider-facing proof map for Movi.
+This page is the outsider-facing proof map for Fileyard.
 
-In plain language: it tells a first-time visitor what Movi already proves in public, where to click for live evidence, and what Movi still does **not** claim yet.
+In plain language: it tells a first-time visitor what Fileyard already proves in public, where to click for live evidence, and what Fileyard still does **not** claim yet.
 
-## What Movi Publicly Proves Today
+## What Fileyard Publicly Proves Today
 
-- **The core story is real**: Movi ships a review-first local file organizer and workbench, not just a future concept.
+- **The core story is real**: Fileyard ships a review-first local file organizer and workbench, not just a future concept.
 - **The safe path is real**: the repo contains a fixture-backed first-look route that goes `analyze -> manifest -> dry-run apply` without touching real folders by default.
-- **The public release surface is real**: Movi publishes a live source repo and release trail on GitHub.
+- **The public release surface is real**: Fileyard publishes a live source repo and release trail on GitHub.
 - **The browser surface is real**: the GitHub Pages front door is already live.
-- **The agent surface is real, but secondary**: `Movi MCP v1` exists as a local-first stdio extension surface, but it is not the main product claim.
+- **The agent surface is real, but secondary**: `Fileyard MCP v1` exists as a local-first stdio extension surface, but it is not the main product claim.
 
 ## Live Proof Routes
 
@@ -24,11 +24,11 @@ Use these routes when you want current public evidence instead of marketing pros
 | Current docs landing page | [docs/index.md](./index.md) |
 | Safe first-look workflow | [Quickstart](./quickstart.md) |
 | Review-first operator contract | [README.md](../README.md) and [Operator Guide](./usage.md) |
-| Agent/developer extension surface | [Movi MCP v1](./mcp.md) |
+| Agent/developer extension surface | [Fileyard MCP v1](./mcp.md) |
 
-## What Movi Does Not Claim Yet
+## What Fileyard Does Not Claim Yet
 
-Movi is intentionally explicit about the boundaries it has **not** crossed yet:
+Fileyard is intentionally explicit about the boundaries it has **not** crossed yet:
 
 - not a hosted SaaS
 - not a zero-review automatic organizer
@@ -49,7 +49,7 @@ The current proof posture is best understood in three layers:
 
 ## Why This Page Exists
 
-Movi already had a lot of serious engineering proof, but too much of it was hidden in operator docs and workflow files.
+Fileyard already had a lot of serious engineering proof, but too much of it was hidden in operator docs and workflow files.
 
 This page exists so the front door can answer three normal outsider questions faster:
 

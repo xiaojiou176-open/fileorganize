@@ -23,9 +23,9 @@ type NavItem = {
 
 function getDocumentMetadata(pathname: string): { title: string; description: string } {
   const fallback = {
-    title: 'Movi | Review-first local organizer',
+    title: 'Fileyard | Review-first local organizer',
     description:
-      'Movi is a review-first local file organizer and workbench with AI-assisted planning, dry-run-first execution, and rollback-ready recovery.',
+      'Fileyard is a review-first local file organizer and workbench with AI-assisted planning, dry-run-first execution, and rollback-ready recovery.',
   }
 
   if (pathname === '/') {
@@ -33,62 +33,62 @@ function getDocumentMetadata(pathname: string): { title: string; description: st
   }
   if (pathname.startsWith('/setup')) {
     return {
-      title: 'Setup | Movi',
+      title: 'Setup | Fileyard',
       description: 'Configure workspace roots, runtime defaults, and review-safe settings before you start organizing batches.',
     }
   }
   if (pathname.startsWith('/jobs')) {
     return {
-      title: 'Jobs | Movi',
+      title: 'Jobs | Fileyard',
       description: 'Inspect current analyze, apply, and rollback jobs inside the same review-first local workspace.',
     }
   }
   if (pathname.startsWith('/analyze')) {
     return {
-      title: 'Analyze | Movi',
+      title: 'Analyze | Fileyard',
       description: 'Draft a manifest from a local batch, optionally with Strategy Pack defaults, before anything reaches Apply.',
     }
   }
   if (pathname.startsWith('/review')) {
     return {
-      title: 'Movi Review | Movi',
+      title: 'Fileyard Review | Fileyard',
       description: 'Review queue, collections, learned suggestions, and rule drafts all stay inside the approval layer before execution.',
     }
   }
   if (pathname.startsWith('/manifest')) {
     return {
-      title: 'Manifest Workbench | Movi',
+      title: 'Manifest Workbench | Fileyard',
       description: 'Inspect and edit manifest rows in the local review workbench before dry-run or real apply.',
     }
   }
   if (pathname.startsWith('/conflicts')) {
     return {
-      title: 'Conflicts | Movi',
+      title: 'Conflicts | Fileyard',
       description: 'Resolve duplicate targets and review conflicts without bypassing overlay-only and dry-run-first guardrails.',
     }
   }
   if (pathname.startsWith('/apply')) {
     return {
-      title: 'Apply | Movi',
+      title: 'Apply | Fileyard',
       description: 'Queue and inspect deterministic apply jobs that start in dry-run mode and stay rollback-ready.',
     }
   }
   if (pathname.startsWith('/report')) {
     return {
-      title: 'Report | Movi',
+      title: 'Report | Fileyard',
       description: 'Use the after-action board to inspect results and route back into the right Review focus instead of guessing what to fix next.',
     }
   }
   if (pathname.startsWith('/rollback')) {
     return {
-      title: 'Rollback | Movi',
+      title: 'Rollback | Fileyard',
       description: 'Rollback stays bounded, deterministic, and auditable inside the same local-first workflow.',
     }
   }
   if (pathname.startsWith('/inbox')) {
     return {
-      title: 'Movi Inbox | Movi',
-      description: 'Scan intake batches, pick a Strategy Pack, and hand the batch into Analyze without turning Movi into an autonomous organizer.',
+      title: 'Fileyard Inbox | Fileyard',
+      description: 'Scan intake batches, pick a Strategy Pack, and hand the batch into Analyze without turning Fileyard into an autonomous organizer.',
     }
   }
   return fallback
@@ -236,7 +236,7 @@ export function AppShell() {
               <BriefcaseBusiness className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Movi</p>
+              <p className="text-sm text-muted-foreground">Fileyard</p>
               <p className="font-semibold">{t('appShell.brand.subtitle')}</p>
             </div>
           </div>
@@ -348,7 +348,7 @@ export function AppShell() {
           </header>
 
           <main>
-            <h1 className="sr-only">Movi Review-First Workspace</h1>
+            <h1 className="sr-only">Fileyard Review-First Workspace</h1>
             <Outlet />
           </main>
         </div>

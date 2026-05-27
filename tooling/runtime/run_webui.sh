@@ -6,8 +6,8 @@ ROOT="$(dirname "$DIR")"
 REPO_ROOT="$(dirname "$ROOT")"
 CONFIG_LIB="$ROOT/scripts/lib_config.sh"
 
-HOST="${MOVI_WEBUI_HOST:-127.0.0.1}"
-PORT="${MOVI_WEBUI_PORT:-5173}"
+HOST="${FILEYARD_WEBUI_HOST:-127.0.0.1}"
+PORT="${FILEYARD_WEBUI_PORT:-5173}"
 SKIP_INSTALL=0
 
 # shellcheck source=tooling/scripts/lib_config.sh
@@ -15,13 +15,13 @@ SKIP_INSTALL=0
 load_governance_defaults "$REPO_ROOT"
 apply_runtime_env_defaults "$REPO_ROOT"
 
-if [ "${MOVI_IN_CONTAINER:-0}" != "1" ]; then
-  if [ "${MOVI_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
+if [ "${FILEYARD_IN_CONTAINER:-0}" != "1" ]; then
+  if [ "${FILEYARD_ALLOW_HOST_EXECUTION:-0}" = "1" ]; then
     echo "❌ run_webui: host execution is forbidden by the final-form runtime policy" >&2
     echo "Use the default containerized path; do not install WebUI dependencies into the repo tree." >&2
     exit 1
   fi
-  env MOVI_COMPOSE_SERVICE=movi-webui bash "$ROOT/scripts/container_exec.sh" --label run-webui -- bash tooling/runtime/run_webui.sh "$@"
+  env FILEYARD_COMPOSE_SERVICE=fileyard-webui bash "$ROOT/scripts/container_exec.sh" --label run-webui -- bash tooling/runtime/run_webui.sh "$@"
   run_rc=$?
   if [ -d "$REPO_ROOT/apps/webui/node_modules" ] && [ -z "$(ls -A "$REPO_ROOT/apps/webui/node_modules" 2>/dev/null || true)" ]; then
     rmdir "$REPO_ROOT/apps/webui/node_modules" 2>/dev/null || true

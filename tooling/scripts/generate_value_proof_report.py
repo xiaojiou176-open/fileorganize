@@ -62,7 +62,7 @@ def _external_tmp_root() -> Path:
 
 
 def _durable_artifact_root(repo_root: Path) -> Path:
-    raw = os.environ.get("MOVI_ARTIFACT_ROOT", "").strip()
+    raw = os.environ.get("FILEYARD_ARTIFACT_ROOT", "").strip()
     if raw:
         return Path(raw).expanduser().resolve() / "value-proof"
     return (repo_root / ".runtime-cache" / "logs" / "value-proof" / "artifacts").resolve()
@@ -86,16 +86,16 @@ def _run(repo_root: Path, cmd: list[str]) -> float:
 
 def _run_with_bundle_root(repo_root: Path, cmd: list[str], *, run_bundle_root: Path | None) -> float:
     env = os.environ.copy()
-    env["MOVI_ALLOW_HOST_EXECUTION"] = "1"
+    env["FILEYARD_ALLOW_HOST_EXECUTION"] = "1"
     external_tmp = _external_tmp_root()
     env["TMPDIR"] = str(external_tmp)
     env["TMP"] = str(external_tmp)
     env["TEMP"] = str(external_tmp)
     if run_bundle_root is not None:
         run_bundle_root.mkdir(parents=True, exist_ok=True)
-        env["MOVI_RUN_BUNDLE_ROOT"] = str(run_bundle_root)
-    if not str(env.get("MOVI_ROLLBACK_HMAC_KEY", "")).strip():
-        env["MOVI_ROLLBACK_HMAC_KEY"] = "value-proof-benchmark-hmac-key"
+        env["FILEYARD_RUN_BUNDLE_ROOT"] = str(run_bundle_root)
+    if not str(env.get("FILEYARD_ROLLBACK_HMAC_KEY", "")).strip():
+        env["FILEYARD_ROLLBACK_HMAC_KEY"] = "value-proof-benchmark-hmac-key"
     started = time.perf_counter()
     proc = subprocess.run(cmd, cwd=repo_root, env=env, text=True, capture_output=True, check=False)
     duration_ms = round((time.perf_counter() - started) * 1000, 2)
@@ -352,7 +352,7 @@ def main() -> int:
     input_root = workspace_root / "input"
     output_root = workspace_root / "organized"
     artifacts_root = workspace_root / "artifacts"
-    run_bundle_root = workspace_root / ".movi" / "runs"
+    run_bundle_root = workspace_root / ".fileyard" / "runs"
     manifest_path = artifacts_root / "manifest.jsonl"
     analyze_report = artifacts_root / "analyze-report.json"
     applied_manifest = artifacts_root / "applied-manifest.jsonl"

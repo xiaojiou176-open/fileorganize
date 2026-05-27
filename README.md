@@ -1,12 +1,12 @@
-# Movi
+# Fileyard
 
-Movi is a review-first local file organizer and workbench for messy photos, screenshots, documents, and audio. It lets AI assist with the manifest first, then lets you inspect, label, and approve the plan before deterministic `apply` or `rollback` touches your files.
+Fileyard is a review-first local file organizer and workbench for messy photos, screenshots, documents, and audio. It lets AI assist with the manifest first, then lets you inspect, label, and approve the plan before deterministic `apply` or `rollback` touches your files.
 
-[Safe First Look](#safe-first-look) · [10-Second Tour](#10-second-tour) · [Good Fit / Not A Fit](#good-fit--not-a-fit) · [Public Proof](docs/public_proof.md) · [Docs](docs/index.md) · [Distribution](DISTRIBUTION.md) · [Integrations](INTEGRATIONS.md) · [Submission Manifest](manifest.yaml) · [MCP Descriptor](server.json) · [Review-First Skill Packet](examples/skills/README.md) · [OpenClaw Bundle](examples/openclaw/README.md) · [Browser Surface](#browser-surface) · [Releases](https://github.com/xiaojiou176-open/fileyard/releases) · [Discussions](https://github.com/xiaojiou176-open/fileyard/discussions) · [Security](SECURITY.md) · [Movi MCP v1](docs/mcp.md) · [Codex Integration](docs/codex_mcp.md) · [Claude Code Integration](docs/claude_code_mcp.md) · [Developer Guide](docs/developer_guide.md)
+[Safe First Look](#safe-first-look) · [10-Second Tour](#10-second-tour) · [Good Fit / Not A Fit](#good-fit--not-a-fit) · [Public Proof](docs/public_proof.md) · [Docs](docs/index.md) · [Distribution](DISTRIBUTION.md) · [Integrations](INTEGRATIONS.md) · [Submission Manifest](manifest.yaml) · [MCP Descriptor](server.json) · [Review-First Skill Packet](examples/skills/README.md) · [OpenClaw Bundle](examples/openclaw/README.md) · [Browser Surface](#browser-surface) · [Releases](https://github.com/xiaojiou176-open/fileyard/releases) · [Discussions](https://github.com/xiaojiou176-open/fileyard/discussions) · [Security](SECURITY.md) · [Fileyard MCP v1](docs/mcp.md) · [Codex Integration](docs/codex_mcp.md) · [Claude Code Integration](docs/claude_code_mcp.md) · [Developer Guide](docs/developer_guide.md)
 
-![Movi overview showing mixed files flowing into manifest review and organized output](docs/assets/storefront/hero-movi-overview.svg)
+![Fileyard overview showing mixed files flowing into manifest review and organized output](docs/assets/storefront/hero-fileyard-overview.svg)
 
-Movi is a **review-first local AI file organizer**. It turns a chaotic intake folder into a review queue, then into a reviewed manifest, and only then into safer file moves you can dry-run, audit, and roll back. The current shipped surface stays intentionally narrow: `Movi Review`, `Movi Rules`, `Movi Inbox`, `Movi Copilot v1`, and `Movi MCP v1` all describe real current surfaces, but they still stay inside one safety story instead of pretending Movi is an autonomous organizer.
+Fileyard is a **review-first local AI file organizer**. It turns a chaotic intake folder into a review queue, then into a reviewed manifest, and only then into safer file moves you can dry-run, audit, and roll back. The current shipped surface stays intentionally narrow: `Fileyard Review`, `Fileyard Rules`, `Fileyard Inbox`, `Fileyard Copilot v1`, and `Fileyard MCP v1` all describe real current surfaces, but they still stay inside one safety story instead of pretending Fileyard is an autonomous organizer.
 
 Public maintenance posture: limited-maintenance open source.
 
@@ -14,7 +14,7 @@ Current proof posture: reproducible smoke-tier evidence with a live release trai
 
 ## Canonical Public Roots
 
-Read Movi like a workshop with one front desk and several labeled shelves:
+Read Fileyard like a workshop with one front desk and several labeled shelves:
 
 - **Canonical public root:** this root [`README.md`](./README.md) plus the root [`manifest.yaml`](./manifest.yaml)
 - **Canonical pure-MCP registry descriptor:** [`server.json`](./server.json)
@@ -23,11 +23,11 @@ Read Movi like a workshop with one front desk and several labeled shelves:
 - **Pure-MCP support surface:** [`docs/mcp.md`](./docs/mcp.md)
 - **Pure-MCP runtime implementation guide:** [`apps/mcp/README.md`](./apps/mcp/README.md)
 
-## Why Movi Exists
+## Why Fileyard Exists
 
 Cleaning up a mixed folder usually fails for one of two reasons: either the tool is too manual, or the AI is allowed to move files before you can inspect the plan.
 
-Movi splits those jobs on purpose:
+Fileyard splits those jobs on purpose:
 
 - `analyze` is where AI helps understand the files
 - `apply` is where deterministic rules execute the approved manifest
@@ -38,8 +38,8 @@ Think of it like moving house: AI makes the packing list, but the moving crew st
 ## What You Get
 
 - **Review-first workflow**: AI drafts the manifest, but file changes only happen after you inspect the plan.
-- **AI-assisted, not AI-autonomous**: Movi helps draft and suggest, but deterministic execution still waits for your approval.
-- **Dry-run by default**: you can see what Movi wants to do before a real rename or move happens.
+- **AI-assisted, not AI-autonomous**: Fileyard helps draft and suggest, but deterministic execution still waits for your approval.
+- **Dry-run by default**: you can see what Fileyard wants to do before a real rename or move happens.
 - **Rollback-ready workflow**: the same manifest chain supports recovery when a batch needs to be undone.
 - **Local-first runtime**: your folders, manifests, and reports stay under your chosen workspace root.
 - **Operator-grade guardrails**: quality gates, structured logs, and release runbooks exist for people who need deeper operational truth.
@@ -51,13 +51,13 @@ If you are asking, "is this a real product surface or just a careful README," th
 - **Public source repo + GitHub Releases**: the release trail is public on [GitHub Releases](https://github.com/xiaojiou176-open/fileyard/releases).
 - **Live Pages front door**: the current public landing route is [xiaojiou176-open.github.io/fileyard](https://xiaojiou176-open.github.io/fileyard/).
 - **Review-first proof, not autonomy theater**: the repo ships a fixture-backed safe first look, dry-run apply, rollback boundaries, and a real MCP surface that still stays behind review-safe semantics.
-- **Honest boundary language**: Movi does not claim hosted SaaS, zero-review file mutation, or public benchmark-grade proof that the repo has not actually earned yet.
+- **Honest boundary language**: Fileyard does not claim hosted SaaS, zero-review file mutation, or public benchmark-grade proof that the repo has not actually earned yet.
 
 If you want the full outsider-facing proof map, open [Public Proof](docs/public_proof.md). If you want the shortest hands-on route, stay on this page and run [Safe First Look](#safe-first-look).
 
 ## Public Language Contract
 
-For external readers, Movi keeps one simple language rule:
+For external readers, Fileyard keeps one simple language rule:
 
 - **English-first public truth surfaces**: this root `README.md`, [`DISTRIBUTION.md`](./DISTRIBUTION.md), [`INTEGRATIONS.md`](./INTEGRATIONS.md), [`manifest.yaml`](./manifest.yaml), and any later root truth surface only after it is explicitly synced to the same wording standard.
 - **Bilingual or locale-switchable product surfaces**: the WebUI keeps English as the default locale and can switch to `zh-CN` for operator comfort, walkthroughs, and day-to-day use.
@@ -66,18 +66,18 @@ For external readers, Movi keeps one simple language rule:
 
 ## Product Surface Baseline
 
-- **Movi**: the main product brand.
+- **Fileyard**: the main product brand.
 - **`fileyard`**: the repository name and CLI/runtime identity.
-- **Movi Review**: the review queue and manifest-approval layer you use before execution.
-- **Movi Rules**: the rule authoring surface for reusable review logic and rule drafts.
-- **Movi Inbox**: the intake and scan surface for watch sources and incoming batches. It can hand a batch into Analyze, but it is not an autonomous organizer.
-- **Movi Copilot**: the current review-only guidance layer. It summarizes queue risk, highlights rule opportunities, and helps draft edits without touching `apply`.
-- **Movi MCP v1**: a local-first stdio MCP surface for agents and developers. It exposes review-safe tools and resources for analyze, review, manifest editing, and dry-run preview, but it does not bypass `overlay -> resolved snapshot -> dry-run -> execute`.
+- **Fileyard Review**: the review queue and manifest-approval layer you use before execution.
+- **Fileyard Rules**: the rule authoring surface for reusable review logic and rule drafts.
+- **Fileyard Inbox**: the intake and scan surface for watch sources and incoming batches. It can hand a batch into Analyze, but it is not an autonomous organizer.
+- **Fileyard Copilot**: the current review-only guidance layer. It summarizes queue risk, highlights rule opportunities, and helps draft edits without touching `apply`.
+- **Fileyard MCP v1**: a local-first stdio MCP surface for agents and developers. It exposes review-safe tools and resources for analyze, review, manifest editing, and dry-run preview, but it does not bypass `overlay -> resolved snapshot -> dry-run -> execute`.
 - **Strategy Packs**: reusable analyze templates that prefill model, category hints, and worker defaults for recurring batch types. They stay template-only rather than becoming a second platform.
 
 ## AI And Agent Fit
 
-Movi belongs to a very specific lane:
+Fileyard belongs to a very specific lane:
 
 - **Category**: review-first local AI file organizer and workbench
 - **Hotness hook**: stdio-first MCP for Codex, Claude Code, and other local MCP-capable clients
@@ -85,7 +85,7 @@ Movi belongs to a very specific lane:
 
 Current honest ecosystem fit:
 
-- **Primary fit**: Codex and Claude Code, because `Movi MCP v1` already ships as a local-first stdio surface with review-safe tools
+- **Primary fit**: Codex and Claude Code, because `Fileyard MCP v1` already ships as a local-first stdio surface with review-safe tools
 - **Secondary ecosystem fit**: Cursor and other local MCP-capable clients, because the transport and tool surface already match their integration model
 - **Comparison-only fit**: OpenHands and OpenCode, because the repo has a real MCP and API substrate they can consume, but no dedicated first-party setup surface or branded workflow yet
 
@@ -94,15 +94,15 @@ Current honest ecosystem fit:
 - **ClawHub**: listed live, but the current page still shows `Moderation verdict: suspicious` and `Detected: suspicious.vt_suspicious`.
 - **OpenHands**: submitted through `OpenHands/extensions#161`; current GitHub state is `OPEN / REVIEW_REQUIRED / BLOCKED`.
 - **Goose Skills Marketplace**: submitted through `block/Agent-Skills#25`; validation passed, and the current visible blocker is upstream security review / CODEOWNERS handling.
-- **agent-skill.co source repo**: submitted through `heilcheng/awesome-agent-skills#181`; the current visible blocker is upstream preview authorization rather than a missing Movi packet.
+- **agent-skill.co source repo**: submitted through `heilcheng/awesome-agent-skills#181`; the current visible blocker is upstream preview authorization rather than a missing Fileyard packet.
 - **Official MCP Registry**: `not_submitted`.
-- **awesome-opencode**: `not_submitted`, because Movi is still a review-first local MCP workflow rather than an Opencode-centered project/resource fit.
+- **awesome-opencode**: `not_submitted`, because Fileyard is still a review-first local MCP workflow rather than an Opencode-centered project/resource fit.
 - **GHCR**: `not_published`.
 - **Package and Docker later lanes**: no verified public receipt today.
 
 ## 10-Second Tour
 
-![Movi 10-second tour showing intake, manifest review, and dry-run apply](docs/assets/storefront/ten-second-tour-movi.svg)
+![Fileyard 10-second tour showing intake, manifest review, and dry-run apply](docs/assets/storefront/ten-second-tour-fileyard.svg)
 
 1. Drop a messy intake batch into one folder.
 2. Let `analyze` draft a manifest and a review queue you can triage before touching the file system.
@@ -110,9 +110,9 @@ Current honest ecosystem fit:
 
 ## Before / After
 
-![Before and after comparison showing a mixed intake folder and reviewed organized output](docs/assets/storefront/before-after-movi.svg)
+![Before and after comparison showing a mixed intake folder and reviewed organized output](docs/assets/storefront/before-after-fileyard.svg)
 
-Movi is built for the frustrating middle ground between "do everything by hand" and "let AI rename files without supervision." The before/after difference comes from review-first planning, not hidden mutation.
+Fileyard is built for the frustrating middle ground between "do everything by hand" and "let AI rename files without supervision." The before/after difference comes from review-first planning, not hidden mutation.
 
 ## Good Fit / Not A Fit
 
@@ -136,7 +136,7 @@ bash tooling/runtime/bootstrap_env.sh
 
 ```bash
 mkdir -p .runtime-cache/storefront-demo
-MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
+FILEYARD_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
   --offline \
   --config ./contracts/runtime/config.example.toml \
   --input ./tests/fixtures/golden_input \
@@ -148,7 +148,7 @@ MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
 
 ```bash
 cp ./.runtime-cache/storefront-demo/manifest.jsonl ./.runtime-cache/storefront-demo/manifest.apply.jsonl
-MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_apply.sh \
+FILEYARD_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_apply.sh \
   --config ./contracts/runtime/config.example.toml \
   --manifest ./.runtime-cache/storefront-demo/manifest.apply.jsonl \
   --input-root ./tests/fixtures/golden_input \
@@ -185,7 +185,7 @@ If you want to explore the workflow as an app instead of a shell session:
 npm run dev:stack
 ```
 
-That route starts the Web API and WebUI so you can walk through setup, analyze, `Movi Review`, `Movi Rules`, apply, report, rollback, and `Movi Inbox` from the browser.
+That route starts the Web API and WebUI so you can walk through setup, analyze, `Fileyard Review`, `Fileyard Rules`, apply, report, rollback, and `Fileyard Inbox` from the browser.
 Inside the current browser flow, Inbox can hand a batch into Analyze, Analyze can hand the drafted manifest into Review, Collection Intelligence v2 helps you judge one batch slice at a time, and Report can send you back into a focused Review pass for conflicts, human-check rows, or learning suggestions.
 
 ## Release Trail
@@ -203,7 +203,7 @@ If you want the public release storyline instead of the repo history, start with
 
 - Brand positioning and naming baseline: [docs/brand_positioning.md](docs/brand_positioning.md)
 - SEO intent map and future landing plan: [docs/seo_landing_map.md](docs/seo_landing_map.md)
-- Movi MCP v1 surface and safety boundary: [docs/mcp.md](docs/mcp.md)
+- Fileyard MCP v1 surface and safety boundary: [docs/mcp.md](docs/mcp.md)
 - Developer and agent entry guide: [docs/developer_guide.md](docs/developer_guide.md)
 - High-intent landing page for review-first search traffic: [docs/review_first_ai_file_organizer.md](docs/review_first_ai_file_organizer.md)
 - Agent integration pages: [Codex Integration](docs/codex_mcp.md), [Claude Code Integration](docs/claude_code_mcp.md)
@@ -211,11 +211,11 @@ If you want the public release storyline instead of the repo history, start with
 
 ## Agent And Developer Surface
 
-If you are wiring Movi into another tool or an agent workflow, use the surface that matches the job:
+If you are wiring Fileyard into another tool or an agent workflow, use the surface that matches the job:
 
 - **CLI** for full operator runs and reproducible shell workflows.
 - **Web API** for local app integration and debugging.
-- **Movi MCP v1** for agent-facing, stdio-first access to the same review-safe workflow.
+- **Fileyard MCP v1** for agent-facing, stdio-first access to the same review-safe workflow.
 
 If you want the shortest client-specific route instead of the generic MCP page:
 
@@ -223,11 +223,11 @@ If you want the shortest client-specific route instead of the generic MCP page:
 - **Claude Code**: start with [docs/claude_code_mcp.md](docs/claude_code_mcp.md)
 - **Builder / substrate view**: start with [docs/developer_guide.md](docs/developer_guide.md)
 
-Think of it like a workshop with three doors: the CLI is the loading dock, the Web API is the control room, and Movi MCP is the supervised service window for agents. None of those doors secretly lead around review.
+Think of it like a workshop with three doors: the CLI is the loading dock, the Web API is the control room, and Fileyard MCP is the supervised service window for agents. None of those doors secretly lead around review.
 
 ## FAQ
 
-### Does Movi call Gemini every time
+### Does Fileyard call Gemini every time
 
 No. `analyze` may call Gemini when you are not in offline mode. `apply` and `rollback` do not call Gemini.
 
@@ -237,20 +237,20 @@ Yes. The quickstart above uses fixture files and keeps `apply` in `--dry-run` mo
 
 ### Is this a hosted product
 
-No. Movi is a limited-maintenance open-source repository with a local-first workflow. Bring your own environment and review the manifest before real changes.
+No. Fileyard is a limited-maintenance open-source repository with a local-first workflow. Bring your own environment and review the manifest before real changes.
 
 ## Runtime Cleanup Boundaries
 
-Movi now keeps runtime cleanup on four separate rails so a small cache cleanup never turns into a destructive workspace reset or an accidental Docker-wide prune.
+Fileyard now keeps runtime cleanup on four separate rails so a small cache cleanup never turns into a destructive workspace reset or an accidental Docker-wide prune.
 
 - **Repo-local residue**: use `bash tooling/cleanup/prune_repo_runtime.sh` when you only want to trim repo-side runtime noise such as `.runtime-cache` and forbidden residue under the checkout.
 - **Machine cache**: use `bash tooling/cleanup/prune_machine_cache.sh --safe` for the lowest-risk cleanup, `--rebuildable` for governed host caches, or `--aggressive-host` when you intentionally want to reclaim the host-side fallback venv under `~/.cache/fileyard`.
 - **Docker runtime**: use `bash tooling/cleanup/prune_docker_runtime.sh --dry-run` to audit the container-first runtime surface, `--rebuildable` to prune repo-related build cache, and `--aggressive` only when you explicitly mean to consider current image or named volumes.
-- **Destructive workspace reset**: `bash tooling/runtime/runtime_reset.sh --confirm-workspace-reset` is intentionally separate because it also clears workspace `.movi` state. Treat it like resetting a workbench, not like emptying a cache folder.
+- **Destructive workspace reset**: `bash tooling/runtime/runtime_reset.sh --confirm-workspace-reset` is intentionally separate because it also clears workspace `.fileyard` state. Treat it like resetting a workbench, not like emptying a cache folder.
 
 Container-first default:
 
-- The canonical runtime lane is Docker-backed (`movi-ci:local` plus `movi-web-stack_*` volumes).
+- The canonical runtime lane is Docker-backed (`fileyard-ci:local` plus `fileyard-web-stack_*` volumes).
 - The host-side governed venv under `~/.cache/fileyard/venv/default` is treated as a rebuildable fallback surface, not the long-term primary runtime asset.
 
 ## Contributing, Support, And Security
@@ -261,7 +261,7 @@ Container-first default:
 - Questions and ideas: [GitHub Discussions](https://github.com/xiaojiou176-open/fileyard/discussions)
 - License: [LICENSE](LICENSE)
 
-If review-first cleanup is the workflow you keep wishing existed, star the repo so you can find Movi again when the next messy folder lands.
+If review-first cleanup is the workflow you keep wishing existed, star the repo so you can find Fileyard again when the next messy folder lands.
 
 ## Proof And Truth Routes
 
@@ -302,7 +302,7 @@ Public readiness gates:
 <!-- BEGIN GENERATED: root-runtime-topology -->
 > Auto-generated: runtime services, default ports, runtime paths, and entrypoint facts live in [generated runtime topology](docs/reference/runtime_topology.generated.md).
 
-- **Compose services**: `movi-ci`, `movi-web-api`, `movi-webui`
+- **Compose services**: `fileyard-ci`, `fileyard-web-api`, `fileyard-webui`
 - **Web API bind**: `loopback:18080`
 - **WebUI bind**: `loopback:5173`
 - **Persistent workspace docs alias**: `<workspace-root>`

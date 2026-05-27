@@ -129,11 +129,11 @@ Required cleanup/audit context fields:
 - SLI (must stay observable):
   - `cli.report.duration_ms`
   - `cli.rollback.dry_run.duration_ms`
-  - `movi.error_rate` aggregated by `event + status=fail`
+  - `fileyard.error_rate` aggregated by `event + status=fail`
 - SLO (release baseline):
   - `cli.report.duration_ms <= 1500ms`
   - `cli.rollback.dry_run.duration_ms <= 3000ms`
-  - `movi.error_rate <= 1%` over a 7-day window
+  - `fileyard.error_rate <= 1%` over a 7-day window
 - Error budget:
   - 1% per rolling 7-day window; budget exhaustion triggers release downgrade (`AUDIT_ONLY`) or a hard stop
 - Tracing:

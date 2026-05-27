@@ -1,6 +1,6 @@
 ---
-title: Movi Quickstart
-description: The shortest safe first-look route for Movi using offline fixture files and dry-run apply.
+title: Fileyard Quickstart
+description: The shortest safe first-look route for Fileyard using offline fixture files and dry-run apply.
 ---
 
 This page is the shortest safe first-look route.
@@ -17,7 +17,7 @@ bash tooling/runtime/bootstrap_env.sh
 
 ```bash
 mkdir -p .runtime-cache/storefront-demo
-MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
+FILEYARD_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
   --offline \
   --config ./contracts/runtime/config.example.toml \
   --input ./tests/fixtures/golden_input \
@@ -28,7 +28,7 @@ MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_analyze.sh \
 ## 3. Preview the file moves without changing anything
 
 ```bash
-MOVI_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_apply.sh \
+FILEYARD_ALLOW_HOST_EXECUTION=1 bash tooling/runtime/run_apply.sh \
   --config ./contracts/runtime/config.example.toml \
   --manifest ./.runtime-cache/storefront-demo/manifest.jsonl \
   --input-root ./tests/fixtures/golden_input \

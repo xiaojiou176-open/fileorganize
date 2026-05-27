@@ -15,7 +15,7 @@ workspace_runtime:
   workspace_root: ~/.fileyard/workspaces/default
   input_dir: ~/.fileyard/workspaces/default/data/raw
   output_dir: ~/.fileyard/workspaces/default/data/organized
-  manifest_root: ~/.fileyard/workspaces/default/.movi/manifests
-  artifact_root: ~/.fileyard/workspaces/default/.movi/artifacts
-  evidence_bundle_path: ~/.fileyard/workspaces/default/.movi/artifacts/evidence-bundle.json
-  run_bundle_root: ~/.fileyard/workspaces/default/.movi/runs
+  manifest_root: ~/.fileyard/workspaces/default/.fileyard/manifests
+  artifact_root: ~/.fileyard/workspaces/default/.fileyard/artifacts
+  evidence_bundle_path: ~/.fileyard/workspaces/default/.fileyard/artifacts/evidence-bundle.json
+  run_bundle_root: ~/.fileyard/workspaces/default/.fileyard/runs

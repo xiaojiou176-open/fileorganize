@@ -80,7 +80,7 @@ def setup_logger(level: str, json_mode: bool) -> logging.Logger:
         handler.setFormatter(logging.Formatter("%(levelname)s %(message)s"))
     logger.addHandler(handler)
 
-    run_events_path = str(os.getenv("MOVI_RUN_EVENTS_PATH", "")).strip()
+    run_events_path = str(os.getenv("FILEYARD_RUN_EVENTS_PATH", "")).strip()
     if run_events_path:
         events_path = Path(run_events_path)
         events_path.parent.mkdir(parents=True, exist_ok=True)
@@ -327,11 +327,11 @@ def _enrich_fields(
     cfg_workspace_id = _config_default("workspace_id")
     cfg_service = _config_default("service")
     cfg_component = _config_default("component")
-    env_trace_id = _env_default("MOVI_TRACE_ID")
-    env_request_id = _env_default("MOVI_REQUEST_ID")
-    env_session_id = _env_default("MOVI_SESSION_ID")
-    env_user_id = _env_default("MOVI_USER_ID")
-    env_workspace_root = _env_default("MOVI_WORKSPACE_ROOT")
+    env_trace_id = _env_default("FILEYARD_TRACE_ID")
+    env_request_id = _env_default("FILEYARD_REQUEST_ID")
+    env_session_id = _env_default("FILEYARD_SESSION_ID")
+    env_user_id = _env_default("FILEYARD_USER_ID")
+    env_workspace_root = _env_default("FILEYARD_WORKSPACE_ROOT")
     trace_id = str(
         enriched.get("trace_id")
         or enriched.get("run_id")

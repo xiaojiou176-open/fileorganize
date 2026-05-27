@@ -11,7 +11,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 start_ts="$(date +%s)"
-LOG_FILE="$(mktemp -t movi-pytest-heartbeat.XXXXXX.log)"
+LOG_FILE="$(mktemp -t fileyard-pytest-heartbeat.XXXXXX.log)"
 (
   "$@"
 ) >"$LOG_FILE" 2>&1 &

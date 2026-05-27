@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-DEFAULT_ROOT="$HOME/.cache/movi-shared-runners"
+DEFAULT_ROOT="$HOME/.cache/fileyard-shared-runners"
 
 usage() {
   cat <<'EOF'

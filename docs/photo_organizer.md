@@ -1,15 +1,15 @@
 ---
-title: Local Photo Organizer With Review-First AI Assistance | Movi
-description: Use Movi as a local photo organizer when you want AI-assisted planning, human review, dry-run safety, and rollback-ready recovery.
+title: Local Photo Organizer With Review-First AI Assistance | Fileyard
+description: Use Fileyard as a local photo organizer when you want AI-assisted planning, human review, dry-run safety, and rollback-ready recovery.
 ---
 
 ## Local Photo Organizer With Review-First AI Assistance
 
 Most photo organizers ask you to choose between two bad options: manual cleanup that takes forever, or automatic file mutation that starts moving images before you trust the plan.
 
-Movi is for the middle ground.
+Fileyard is for the middle ground.
 
-## Why Movi Fits Photo Work
+## Why Fileyard Fits Photo Work
 
 - Analyze drafts a manifest before files move
 - Review Queue lets you inspect the proposal first
@@ -32,4 +32,4 @@ Movi is for the middle ground.
 
 - [Quickstart](./quickstart.md)
 - [Operator Guide](./usage.md)
-- [Movi MCP v1](./mcp.md)
+- [Fileyard MCP v1](./mcp.md)

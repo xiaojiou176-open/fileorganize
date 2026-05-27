@@ -45,7 +45,7 @@ bootstrap_setuptools_from_dev_lock() {
 
 restore_prebuilt_venv_if_available() {
   local req_hash="$1"
-  local prebuilt_dir="${MOVI_PREBUILT_VENV_DIR:-}"
+  local prebuilt_dir="${FILEYARD_PREBUILT_VENV_DIR:-}"
   local prebuilt_hash=""
 
   if [ -z "$prebuilt_dir" ] || [ ! -x "$prebuilt_dir/bin/python" ] || [ ! -f "$prebuilt_dir/.movi_req_hash" ]; then
