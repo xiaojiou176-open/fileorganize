@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="650" viewBox="0 0 1400 650" role="img" aria-labelledby="title desc">
+  <title id="title">Fileyard 10-second tour</title>
+  <desc id="desc">Three cards showing intake, manifest review, and dry-run apply with rollback-ready output.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f7efe2" />
+      <stop offset="100%" stop-color="#efe4c6" />
+    </linearGradient>
+    <linearGradient id="card" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffdf8" />
+      <stop offset="100%" stop-color="#f7f0dd" />
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="650" fill="url(#bg)" rx="28" />
+  <text x="80" y="92" fill="#21323b" font-family="Georgia, 'Times New Roman', serif" font-size="42" font-weight="700">
+    See Fileyard in 10 seconds
+  </text>
+  <text x="80" y="132" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="23">
+    Intake chaos goes through review-first AI, then ends as a dry-run plan you can trust before any real move happens.
+  </text>
+
+  <g transform="translate(80 182)">
+    <rect width="380" height="364" rx="26" fill="url(#card)" stroke="#c6b98d" stroke-width="3" />
+    <circle cx="56" cy="54" r="24" fill="#c8653d" />
+    <text x="94" y="63" fill="#21323b" font-family="'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700">1. Point at the mess</text>
+    <text x="38" y="108" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">Photos, PDFs, screenshots,</text>
+    <text x="38" y="132" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">and recordings can share one inbox.</text>
+    <rect x="38" y="176" width="312" height="140" rx="18" fill="#21323b" />
+    <text x="62" y="210" fill="#f6f2e7" font-family="'Courier New', monospace" font-size="19">~/cleanup-batch/</text>
+    <text x="62" y="240" fill="#f6f2e7" font-family="'Courier New', monospace" font-size="18">IMG_3021.JPG</text>
+    <text x="62" y="267" fill="#f6f2e7" font-family="'Courier New', monospace" font-size="18">receipt-march.pdf</text>
+    <text x="62" y="294" fill="#f6f2e7" font-family="'Courier New', monospace" font-size="18">screen-ideas.png</text>
+  </g>
+
+  <g transform="translate(510 182)">
+    <rect width="380" height="364" rx="26" fill="url(#card)" stroke="#c6b98d" stroke-width="3" />
+    <circle cx="56" cy="54" r="24" fill="#356f65" />
+    <text x="94" y="63" fill="#21323b" font-family="'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700">2. Review the manifest</text>
+    <text x="38" y="108" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">AI drafts names and destinations,</text>
+    <text x="38" y="132" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">but you inspect them before anything moves.</text>
+    <rect x="38" y="176" width="312" height="140" rx="18" fill="#fff" stroke="#c6b98d" stroke-width="2" />
+    <text x="58" y="208" fill="#21323b" font-family="'Courier New', monospace" font-size="17">kind: screenshot</text>
+    <text x="58" y="236" fill="#21323b" font-family="'Courier New', monospace" font-size="17">title: sprint-ideas</text>
+    <text x="58" y="264" fill="#21323b" font-family="'Courier New', monospace" font-size="17">new_path: screenshots/2026/</text>
+    <text x="58" y="292" fill="#21323b" font-family="'Courier New', monospace" font-size="17">status: review-required</text>
+  </g>
+
+  <g transform="translate(940 182)">
+    <rect width="380" height="364" rx="26" fill="url(#card)" stroke="#c6b98d" stroke-width="3" />
+    <circle cx="56" cy="54" r="24" fill="#7e5c2f" />
+    <text x="94" y="63" fill="#21323b" font-family="'Helvetica Neue', Arial, sans-serif" font-size="28" font-weight="700">3. Dry-run the move</text>
+    <text x="38" y="108" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">Apply stays deterministic and dry-run first,</text>
+    <text x="38" y="132" fill="#50626a" font-family="'Helvetica Neue', Arial, sans-serif" font-size="17">with rollback ready if a batch needs to be undone.</text>
+    <rect x="38" y="176" width="312" height="140" rx="18" fill="#f2ead8" stroke="#c6b98d" stroke-width="2" />
+    <text x="58" y="208" fill="#21323b" font-family="'Courier New', monospace" font-size="17">dry_run: true</text>
+    <text x="58" y="236" fill="#21323b" font-family="'Courier New', monospace" font-size="17">moves_planned: 14</text>
+    <text x="58" y="264" fill="#21323b" font-family="'Courier New', monospace" font-size="17">rollback_manifest: ready</text>
+    <text x="58" y="292" fill="#21323b" font-family="'Courier New', monospace" font-size="17">report: apply-report.json</text>
+  </g>
+</svg>
