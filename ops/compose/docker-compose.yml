@@ -1,0 +1,75 @@
+services:
+  fileyard-ci:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+      - movi_venv:/root/.cache/fileyard/venv/default
+      - movi_playwright:/root/.cache/fileyard/playwright
+      - movi_webui_node_modules:/workspace/apps/webui/node_modules
+    environment:
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-}
+      FILEYARD_LIVE_TEST_URL: ${FILEYARD_LIVE_TEST_URL:-}
+      FILEYARD_ROLLBACK_HMAC_KEY: ${FILEYARD_ROLLBACK_HMAC_KEY:-}
+      FILEYARD_TRACE_ID: ${FILEYARD_TRACE_ID:-}
+      FILEYARD_SESSION_ID: ${FILEYARD_SESSION_ID:-}
+      FILEYARD_REQUEST_ID: ${FILEYARD_REQUEST_ID:-}
+      FILEYARD_USER_ID: ${FILEYARD_USER_ID:-}
+      TZ: "America/Los_Angeles"
+    tty: true
+
+  fileyard-web-api:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+      - movi_venv:/root/.cache/fileyard/venv/default
+      - movi_webui_node_modules:/workspace/apps/webui/node_modules
+    environment:
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-}
+      FILEYARD_ROLLBACK_HMAC_KEY: ${FILEYARD_ROLLBACK_HMAC_KEY:-}
+      FILEYARD_WEB_API_HOST: ${FILEYARD_WEB_API_HOST:-0.0.0.0}
+      FILEYARD_WEB_API_PORT: ${FILEYARD_WEB_API_PORT:-18080}
+      FILEYARD_WEBUI_HOST: ${FILEYARD_WEBUI_HOST:-0.0.0.0}
+      FILEYARD_WEBUI_PORT: ${FILEYARD_WEBUI_PORT:-5173}
+      TZ: "America/Los_Angeles"
+    command: ["bash", "tooling/runtime/run_web_api.sh", "--host", "0.0.0.0", "--port", "18080"]
+    ports:
+      - "${FILEYARD_WEB_API_PORT:-18080}:18080"
+      - "${FILEYARD_WEBUI_PORT:-5173}:5173"
+    tty: true
+
+  fileyard-webui:
+    image: ${FILEYARD_CI_IMAGE:-fileyard-ci:local}
+    working_dir: /workspace
+    volumes:
+      - ../..:/workspace
+      - movi_webui_node_modules:/workspace/apps/webui/node_modules
+    environment:
+      FILEYARD_IN_CONTAINER: "1"
+      FILEYARD_ALLOW_HOST_EXECUTION: "0"
+      FILEYARD_WEBUI_HOST: ${FILEYARD_WEBUI_HOST:-0.0.0.0}
+      FILEYARD_WEBUI_PORT: ${FILEYARD_WEBUI_PORT:-5173}
+      TZ: "America/Los_Angeles"
+    command: ["bash", "tooling/runtime/run_webui.sh", "--host", "0.0.0.0", "--port", "5173"]
+    depends_on:
+      - fileyard-web-api
+    network_mode: "service:fileyard-web-api"
+    tty: true
+
+volumes:
+  movi_venv:
+  movi_playwright:
+  movi_webui_node_modules:

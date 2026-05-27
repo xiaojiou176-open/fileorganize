@@ -1,0 +1,2 @@
+mode: managed
+reason: "新增 apps/webui/ React + Vite 前端工程，启用前端门禁（a11y + Gemini UI/UX 审计）。"

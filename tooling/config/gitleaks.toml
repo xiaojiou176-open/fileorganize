@@ -1,0 +1,11 @@
+title = "Fileyard gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Ignore machine-generated baseline/hash artifacts."
+paths = [
+  '''(^|/)\.secrets\.baseline$''',
+  '''(^|/)docs/_generated/render_state\.json$''',
+]

@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-recommended-scss"
+  ],
+  "plugins": [
+    "@stylistic/stylelint-plugin"
+  ],
+  "rules": {
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "layer",
+          "apply"
+        ]
+      }
+    ],
+    "declaration-no-important": true,
+    "declaration-block-no-redundant-longhand-properties": true,
+    "no-descending-specificity": true,
+    "custom-property-pattern": "^[a-z][a-z0-9-]*$"
+  }
+}
